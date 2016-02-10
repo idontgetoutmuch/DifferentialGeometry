@@ -6,20 +6,25 @@
 bibliography: DiffGeom.bib
 ---
 
-Proposition 58 in Barrett O'Neill's excellent book "Semi-Riemannian
-Geometry with Applications to Relativity" (@o1983semi) demonstrates
-that the Lie derivative of one vector field with respect to another is
-the same as the Lie bracket (of the two vector fields) although he
-calls the Lie bracket just bracket and does not define the Lie
-derivative preferring just to use its definition with giving it a
+Introduction
+============
+
+In proposition 58 in the excellent book @o1983semi, the author
+demonstrates that the Lie derivative of one vector field with respect
+to another is the same as the Lie bracket (of the two vector fields)
+although he calls the Lie bracket just bracket and does not define the
+Lie derivative preferring just to use its definition with giving it a
 name.
 
 The proof relies on a prior result where he shows a co-ordinate system
 at a point $p$ can be given to a vector field $X$ for which $X_p \neq
 0$ so that $X = \frac{\partial}{\partial x_1}$.
 
-This proof seems clearer (to me at any rate) and avoids having to
+Here's a proof seems clearer (to me at any rate) and avoids having to
 distinguish the case wehere the vector field is zero or non-zero.
+
+A Few Definitions
+=================
 
 Let $\phi: M \longrightarrow N$ be a smooth mapping and let $A$ be a
 $0,s$ tensor with $s \geq 0$ then define the **pullback** of $A$ by $\phi$
@@ -47,56 +52,47 @@ Note that the pullback of a vector field only exists in the case where
 $F$ is a diffeomorphism; in contradistinction, in the case of
 pullbacks of purely covariant tensors, the pullback always exists.
 
-In the terminolgoy of O'Neill (@o1983semi Defintion 20 Chapter 1), the
-fields are $F^{-1}$-related: $F^*{Y}_x \underset{F^{-1}}{\sim}
-Y_{Fx}$.
+From @o1983semi Chapter 1 Definition 20, let $\phi: M \rightarrow N$ be
+a smooth mapping. Vector fields $X$ on $M$ and $Y$ on $N$ are
+$F$-**related** written $X \underset{F}{\sim} Y$ if and only if
+$dF({X}_p) = Y_{Fp}$.
 
-By Lemma 
+The Alternative Proof
+=====================
+
+By Lemma 21 Chapter 1 of @o1983semi, $X$ and $Y$ are $F$-related if
+and only if $X(f \circ F) = Yf \circ F$.
+
+Since
+
+$$
+dF_x d(F^{-1})_{Fx}(X_{Fx}) = X_{Fx}
+$$
+
+the fields $F^*{Y}$ and $Y$ are $F$-related: $F^*{Y}_x
+\underset{F}{\sim} Y_{Fx}$. Thus we can apply the Lemma.
+
+$$
+(F^*{Y})(f \circ F) = (F^*{Y})(F^*{f}) =  Yf \circ F = F^*(Yf)
+$$
+
+Now by definition of the Lie Derivative where $\phi_t$ is the flow of
+the vector field $X$ we have
 
 $$
 \begin{aligned}
 L_X(Yf) &= \lim_{t \rightarrow 0} \frac{\phi_t^*(Yf) - Yf}{t} \\
-        &= \lim_{t \rightarrow 0} \frac{}{}
+        &= \lim_{t \rightarrow 0} \frac{(\phi_t^*{Y})(\phi_t^*{f}) - Yf}{t} \\
+        &= \lim_{t \rightarrow 0}
+           \frac{(\phi_t^*{Y})(\phi_t^*{f}) - (\phi_t^*{Y})f + (\phi_t^*{Y})f - Yf}{t} \\
+        &= \lim_{t \rightarrow 0}
+           \Bigg(
+           (\phi_t^*{Y})\frac{\phi_t^*{f} - f}{t} +
+           \frac{(\phi_t^*{Y}) - Y}{t}f
+           \Bigg) \\
+        &= Y(L_X f) + (L_X Y)f
 \end{aligned}
 $$
-
-$$
-Y(Xf) =
-DF_x(\tilde{Y})(Xf) =
-DF_x(\tilde{Y})\frac{\partial}{\partial t} f(\phi_t(a))\vert_{t=0}
-$$
-
-An alternative proof
-====================
-
-Let $\phi_t$ be the flow (FIXME: look in O'Neill) of a vector field
-$X$ then
-
-$$
-\frac{\partial}{\partial t} f(\phi_t(a))\vert_{t=0} = X_a(f).
-$$
-
-
-$$
-\frac{\partial}{\partial t}(f \circ \phi_t) =
-$$
-
-$$
-M \times \mathbb{R} \longrightarrow^{\phi_t}
-M \longrightarrow^{f}
-\mathbb{R}
-$$
-
-
-Let
-
-$$
-\frac{\mathrm{d}x}{\mathrm{d}t} = sin t
-$$
-
-Let $X = \partial / \partial x$ and
-$Y = \sin x \partial / \partial x + \cos y 
-
 
 Bibliography
 ============
