@@ -3,6 +3,7 @@
 % 7th April 2016
 
 \DeclareMathOperator*{\supp}{\mathrm{supp}}
+\DeclareMathOperator*{\interior}{\mathrm{int}}
 
 ---
 bibliography: DiffGeom.bib
@@ -15,10 +16,7 @@ In their paper @Betancourt2014, the authors give a corollary which
 starts with the phrase "Because the manifold is paracompact\ldots". It
 wasn't immediately clear why *the* manifold was paracompact or indeed
 what paracompactness meant although it was clearly something like
-compactness which means that every cover has a finite sub-cover. One
-might further guess that since a manifold is locally Euclidean that
-$\mathbb{R}^n$ really ought to be paracompact and that the local
-homeomorphisms somehow preserve this.
+compactness which means that every cover has a finite sub-cover.
 
 It turns out that *every* manifold is paracompact and that this is
 intimately related to partitions of unity.
@@ -112,7 +110,7 @@ W_p &= \phi_p^{-1}\big(\overline{B(0,2)}\big) \\
 \end{aligned}
 $$
 
-and further define
+and further define bump functions
 
 $$
 \psi_p(y) \triangleq
@@ -148,6 +146,57 @@ Because $M$ is a manifold, it has a countable basis $\{A_i\}_{i \in
 \mathbb{N}}$ and for any point $p$, there must exist $A_i \subset V_p$
 with $p \in A_i$. Choose one of these and call it $V_{p_i}$. This
 gives a countable cover of $M$ by such sets.
+
+Now define
+
+$$
+L_1 = W_{p_1} \subset V_{p_1} \cup V_{p_2} \cup \ldots \cup V_{p_{i(2)}}
+$$
+
+where, since $L_1$ is compact, $V_{p_2}, \ldots, V_{p_{i(2)}}$ is a
+finite subcover.
+
+And further define
+
+$$
+L_n = W_{p_1} \cup W_{p_2} \cup \ldots \cup W_{p_{i(n)}}
+      \subset
+      V_{p_1} \cup V_{p_2} \cup \ldots \cup V_{p_{i(n+1)}}
+$$
+
+where again, since $L_n$ is compact, $V_{p_{i(n)+1}}, \ldots,
+V_{p_{i(n+1)}}$ is a finite subcover.
+
+Now define
+
+$$
+\begin{aligned}
+K_n &= L_n \setminus \interior{L_{n-1}} \\
+U_n &= \interior(L_{n+1}) \setminus L_n
+\end{aligned}
+$$
+
+Then $K_n$ is compact, $U_n$ is open and $K_n \subset
+U_n$. Furthermore, $\bigcup_{n \in \mathbb{N}} K_n = M$ and $U_n$ only
+intersects with $U_{n-1}$ and $U_{n+1}$.
+
+Given any open cover ${\mathcal{O}}$ of $M$, each $K_n$ can be covered
+by a finite number of open sets in $U_n$ contained in some member of
+${\mathcal{O}}$. Thus every point in $K_n$ can be covered by at most a
+finite number of sets from $U_{n-1}, U_n$ and $U_{n+1}$ and which are
+contained in some member of${\mathcal{O}}$. This is a locally finite
+refinement of ${\mathcal{O}}$ and which is precisely the definition of
+*paracompactness*.
+
+To produce a partition of unity we define bump functions $\psi_j$ as
+above on this locally finite cover and note that locally finite
+implies that $\sum_j \psi_j$ is well defined. Again, as above, define
+
+$$
+X_j(y) = \frac{\psi_{j}(y)}{\sum_{i=1} \psi_{i}(y)}
+$$
+
+to get the required result.
 
 Bibliography
 ============
