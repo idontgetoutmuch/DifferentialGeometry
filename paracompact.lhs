@@ -100,7 +100,7 @@ Now take a point $p \in M$ centred in a chart $(U_p, \phi_p)$ so that,
 without loss of generality, $B(0,3) \subseteq \phi_p(U_p)$ (we can
 always choose $r_p$ so that the open ball $B(0,3r_p) \subseteq
 \phi'_p(U_p)$ and then define another chart $(U_p, \phi_p)$ with
-$\phi_p(x) = \phi'(x)/\|x\|$).
+$\phi_p(x) = \phi'_p(x)/\|x\|$).
 
 Define the images of the open and closed balls of radius $1$ and $2$
 respectively
@@ -137,14 +137,17 @@ $$
 X_j(y) = \frac{\psi_{p_j}(y)}{\sum_{i=1}^K \psi_{p_i}(y)}
 $$
 
+Then $X_j$ is smooth, $\supp{X_j} = \supp{\psi_{p_j}} \subset U_{p_j}$
+and $\sum_{j=1}^K X_j(y) = 1$. Thus $\{X_j\}$ is the required
+partition of unity.
 
+Paracompactness
+===============
 
-
-Further let
-
-$$
-V_p = \phi_p^{-1}(\{z \in \mathbb{R}^n : \|z\| < 2\}) = \psi_p^{-1}(0,\infty)
-$$
+Because $M$ is a manifold, it has a countable basis $\{A_i\}_{i \in
+\mathbb{N}}$ and for any point $p$, there must exist $A_i \subset V_p$
+with $p \in A_i$. Choose one of these and call it $V_{p_i}$. This
+gives a countable cover of $M$ by such sets.
 
 Bibliography
 ============
