@@ -3,16 +3,107 @@
 % 9th August 2016
 
 \begin{code}
+{-# OPTIONS_GHC -Wall                     #-}
+{-# OPTIONS_GHC -fno-warn-name-shadowing  #-}
+{-# OPTIONS_GHC -fno-warn-type-defaults   #-}
+{-# OPTIONS_GHC -fno-warn-unused-do-bind  #-}
+{-# OPTIONS_GHC -fno-warn-missing-methods #-}
+{-# OPTIONS_GHC -fno-warn-orphans         #-}
+
+{-# LANGUAGE DataKinds           #-}
+{-# LANGUAGE TypeOperators       #-}
+{-# LANGUAGE KindSignatures      #-}
+{-# LANGUAGE TypeFamilies        #-}
+{-# LANGUAGE TypeOperators       #-}
+{-# LANGUAGE Rank2Types          #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE PolyKinds           #-}
+
 import Graphics.Rendering.Chart
 import Graphics.Rendering.Chart.Backend.Diagrams
 import Diagrams.Backend.Cairo.CmdLine
-import Diagrams.Prelude hiding ( render, Renderable, sample )
+import Diagrams.Prelude hiding ( render, Renderable, sample, diff )
 import Diagrams.Backend.CmdLine
 
 import System.IO.Unsafe
+
+import Data.Number.Symbolic
+import Numeric.AD
+import Numeric.AD.Internal.Reverse hiding ( var )
+import Data.Reflection
+
+import GHC.TypeLits
+import Data.Proxy
+
+import Data.Vector.Fixed
 \end{code}
 
+$$
+\nabla_Y Z = \nabla_{Y^i \partial_i} Z^j \partial_j =
+Y^i\nabla_{\partial_i} (Z^j \partial_j) =
+Y^i(\partial_i Z^j)\partial_j + Y^i Z^j(\nabla_{\partial_i} \partial_i) =
+Y^i\frac{\partial Z^j}{\partial x_i}\partial_j + Y^i Z^j\Gamma^k_{ij}\partial_k
+$$
+
 \begin{code}
+foo :: forall a . Num a =>
+  (forall s . Reifies s Tape => [Reverse s a -> Reverse s a]) ->
+  (forall s . Reifies s Tape => [Reverse s a -> Reverse s a]) ->
+  (forall s . Reifies s Tape => [[[Reverse s a -> Reverse s a]]]) ->
+  [a] -> [[a]]
+foo yis zis gammaijks = jacobian bar
+  where
+    go :: Reifies s Tape => [Reverse s a] -> [Reverse s a]
+    go xs = Prelude.zipWith ($) zis (Prelude.zipWith ($) yis xs) -- [(g!!0) $ (f!!0) (xs!!0)]
+    bar :: Reifies s Tape => ([Reverse s a] -> [Reverse s a])
+    bar = (\[x] -> [(zis!!0) x])
+    baz :: [a] -> [[a]]
+    baz = jacobian bar
+    urk = jacobian (\[x] -> [(zis!!0) x])
+
+f :: Floating a => a -> a
+f x = x + 1
+
+test :: [[Sym Double]]
+test = jacobian (return . f) [var "x1", var "x2"]
+  where
+    f [x, y] = sqrt $ x^2 + y^2
+
+bar :: forall a . Num a =>
+       forall s . Reifies s Tape => ([Reverse s a -> Reverse s a],
+                                     [Reverse s a -> Reverse s a],
+                                     [[[Reverse s a -> Reverse s a]]]) ->
+       [a] -> [[a]]
+bar (_fs, _gs, _gammass) = undefined
+
+data Haar (a :: Nat) (b :: Nat) = Haar { unHaar :: Double -> Double }
+
+haar :: forall n k .
+        (KnownNat n, KnownNat k, (2 * k - 1 <=? 2^n - 1) ~ 'True) =>
+        Haar n (2 * k - 1)
+haar = Haar g where
+  g t | (k' - 1) * 2 ** (-n') < t && t <= k'       * 2 ** (-n') =  2 ** ((n' - 1) / 2)
+      | k'       * 2 ** (-n') < t && t <= (k' + 1) * 2 ** (-n') = -2 ** ((n' - 1) / 2)
+      | otherwise                                               =  0
+    where
+        n' = fromIntegral (natVal (Proxy :: Proxy n))
+        k' = 2 * (fromIntegral (natVal (Proxy :: Proxy k))) - 1
+\end{code}
+
+Now for example we can evaluate
+
+\begin{code}
+haar11 :: Double -> Double
+haar11 = unHaar (haar :: Haar 1 1)
+\end{code}
+
+    [ghci]
+    haar11 0.75
+
+but we if we try to evaluate *haar :: Haar 1 2* we get a type error.
+
+\begin{code}
+greatCircle :: RealFloat a => (a, a) -> (a, a) -> a -> (a, a)
 greatCircle (lon1, lat1) (lon2, lat2) f = (lon, lat)
   where
     d = acos(sin lat1 * sin lat2 + cos lat1 * cos lat2  * cos (lon1 - lon2))
@@ -172,3 +263,13 @@ $$
 0  & 0 & 0
 \end{matrix}
 $$
+
+https://en.wikipedia.org/wiki/Rhumb_line
+
+https://en.wikipedia.org/wiki/Teleparallelism
+
+https://books.google.co.uk/books?id=C0pJvMeKs38C&printsec=frontcover&dq=the+riddle+of+gravitation&hl=en&sa=X&redir_esc=y#v=snippet&q=mercator&f=false
+
+The riddle of gravitation Peter Gabriel Bergmann
+
+http://mathoverflow.net/questions/133342/torsion-and-parallel-transport
