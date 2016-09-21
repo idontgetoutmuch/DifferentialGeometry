@@ -9,19 +9,21 @@ bibliography: DiffGeom.bib
 Introduction
 ============
 
-In proposition 58 in the excellent book @o1983semi, the author
+In proposition 58 Chapter 1 in the excellent book @o1983semi, the author
 demonstrates that the Lie derivative of one vector field with respect
 to another is the same as the Lie bracket (of the two vector fields)
 although he calls the Lie bracket just bracket and does not define the
 Lie derivative preferring just to use its definition with giving it a
-name.
-
-The proof relies on a prior result where he shows a co-ordinate system
-at a point $p$ can be given to a vector field $X$ for which $X_p \neq
-0$ so that $X = \frac{\partial}{\partial x_1}$.
+name. The proof relies on a prior result where he shows a co-ordinate
+system at a point $p$ can be given to a vector field $X$ for which
+$X_p \neq 0$ so that $X = \frac{\partial}{\partial x_1}$.
 
 Here's a proof seems clearer (to me at any rate) and avoids having to
-distinguish the case wehere the vector field is zero or non-zero.
+distinguish the case wehere the vector field is zero or
+non-zero. These
+[notes](https://people.maths.ox.ac.uk/hitchin/hitchinnotes/manifolds2012.pdf)
+give a similar proof but, strangely for undergraduate level, elide
+some of the details.
 
 A Few Definitions
 =================
@@ -52,6 +54,10 @@ Note that the pullback of a vector field only exists in the case where
 $F$ is a diffeomorphism; in contradistinction, in the case of
 pullbacks of purely covariant tensors, the pullback always exists.
 
+For the proof below, we only need the pullback of functions and vector
+fields; the pullback for $(0,s)$ tensors with $s \geq 1$ is purely to
+give a bit of context.
+
 From @o1983semi Chapter 1 Definition 20, let $\phi: M \rightarrow N$ be
 a smooth mapping. Vector fields $X$ on $M$ and $Y$ on $N$ are
 $F$-**related** written $X \underset{F}{\sim} Y$ if and only if
@@ -63,21 +69,47 @@ The Alternative Proof
 By Lemma 21 Chapter 1 of @o1983semi, $X$ and $Y$ are $F$-related if
 and only if $X(f \circ F) = Yf \circ F$.
 
-Since
+Recalling that $dF(X_p)(f) = X_p(F \circ f)$ and since
 
 $$
 dF_x d(F^{-1})_{Fx}(X_{Fx}) = X_{Fx}
 $$
 
-the fields $F^*{Y}$ and $Y$ are $F$-related: $F^*{Y}_x
+we see that the fields $F^*{Y}$ and $Y$ are $F$-related: $F^*{Y}_x
 \underset{F}{\sim} Y_{Fx}$. Thus we can apply the Lemma.
 
 $$
 (F^*{Y})(f \circ F) = (F^*{Y})(F^*{f}) =  Yf \circ F = F^*(Yf)
 $$
 
-Now by definition of the Lie Derivative where $\phi_t$ is the flow of
-the vector field $X$ we have
+Although we don't need this, we can express the immediately above
+equivalence in a way similar to the rule for covariant tensors
+
+$$
+(F^*{Y})(f \otimes F) = (F^*{Y})\otimes(F^*{f})
+$$
+
+First let's calculate the Lie derivative of a function $f$ with
+respect to a vector field $X$ where $\phi_t$ is its flow
+
+$$
+\begin{aligned}
+L_X f &\triangleq \lim_{t \rightarrow 0} \frac{\phi_t^*(f) - f}{t} \\
+      &=          \lim_{t \rightarrow 0} \frac{f \circ \phi_t - f \circ \phi_0}{t} \\
+      &=          \lim_{t \rightarrow 0} \frac{f \circ \phi (t,x) - f \circ \phi (0, x)}{t} \\
+      &=          (\phi_x)'_0(f) \\
+      &=          X_x(f) \\
+      &=          (Xf)_x
+\end{aligned}
+$$
+
+Analogously defining the Lie derivative of $Y$ with respect to $X$
+
+$$
+(L_X Y) \triangleq \frac{(\phi_t^*{Y}) - Y}{t}f
+$$
+
+we have
 
 $$
 \begin{aligned}
@@ -93,6 +125,20 @@ L_X(Yf) &= \lim_{t \rightarrow 0} \frac{\phi_t^*(Yf) - Yf}{t} \\
         &= Y(L_X f) + (L_X Y)f
 \end{aligned}
 $$
+
+Since $L_X f = Xf$ we have
+
+$$
+X(Yf) = Y(Xf) + (L_X Y)f
+$$
+
+Thus 
+
+$$
+(L_X Y)f  = Y(Xf) - X(Yf) = [X,Y]f
+$$
+
+as required.
 
 Bibliography
 ============
