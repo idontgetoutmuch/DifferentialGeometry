@@ -1,6 +1,22 @@
-% Modelling an Epidemic
+% A Connection with Torsion
 % Dominic Steinitz
 % 9th August 2016
+
+---
+bibliography: DiffGeom.bib
+---
+
+Introduction
+============
+
+In most presentations of Riemannian geometry, e.g. @o1983semi, the
+fundamental theorem of Riemannian geometry ("the miracle of Riemannian
+geometry") is given: that for any semi-Riemannian manifold there is a
+unique torsion-free metric connection. I assume partly because of this
+and partly because the major application of Riemannian geometry is
+General Relativity, connections with torsion are given little if any
+attention.
+
 
 \begin{code}
 {-# OPTIONS_GHC -Wall                     #-}
@@ -44,6 +60,8 @@ Y^i\nabla_{\partial_i} (Z^j \partial_j) =
 Y^i(\partial_i Z^j)\partial_j + Y^i Z^j(\nabla_{\partial_i} \partial_i) =
 Y^i\frac{\partial Z^j}{\partial x_i}\partial_j + Y^i Z^j\Gamma^k_{ij}\partial_k
 $$
+
+Is using the AD package worth the fight with types?
 
 \begin{code}
 foo :: forall a . Num a =>
@@ -212,6 +230,96 @@ $$
 
 Consider the sphere $S^2 \triangleq \{(x, y, z) \in \mathbb{R}^ | x^2
 + y^2 + z^2 = 1\}$
+
+Connections
+===========
+
+The formula for the **conformal rescaling of the Levi-Civita connection** is an essential tool in Riemannian geometry, and its derivation is given in many sources. 
+
+As Isaac Solomon and Ted Shifrin have mentioned in the comments, a slick way to derive it is to consider $f = e^{2 \omega}$ and use the Koszul formula. The result will be in the form:
+$$
+\nabla' _X Y = \nabla _X Y + (X \omega )Y + (Y \omega )X - g(X,Y) \operatorname{grad}\omega \tag{1}
+$$
+
+*Proof.* The **Koszul formula** (see e.g. [here][1]) gives the following expression for the Levi-Civita connection $\nabla$ of the metric $g$:
+$$ 
+\begin{align}
+2 g(\nabla_X Y, Z) & = X \, g(Y,Z) + Y \, g(Z,X) - Z \, g(X,Y) \\ \tag{2}
+&- g(X,[Y,Z]) +  g(Y,[Z,X]) + g(Z,[X,Y])
+\end{align}
+$$
+
+
+Let $\nabla'$ be the Levi-Civita connection for the metric $g' = e^{2\omega}g$. Substituting these objects into (2)
+$$ 
+\begin{align}
+2 e^{2 \omega} g(\nabla'_X Y, Z) & = X \left( e^{2 \omega} g(Y,Z) \right) + Y \left( e^{2 \omega} g(Z,X) \right) - Z \left( e^{2 \omega} g(X,Y) \right) \\ 
+&- e^{2 \omega} g(X,[Y,Z]) + e^{2 \omega} g(Y,[Z,X]) + e^{2 \omega} g(Z,[X,Y])
+\end{align}
+$$
+and computing the derivatives using the product rule, we obtain
+$$ 
+\begin{align}
+2 e^{2 \omega} g(\nabla'_X Y, Z) & = e^{2 \omega} X  g(Y,Z) + e^{2 \omega} Y  g(Z,X)  - e^{2 \omega} Z g(X,Y) \\ 
+& + 2 e^{2 \omega} g(Y,Z) \, X \omega   + 2 e^{2 \omega} g(Z,X) \, Y \omega - 2  e^{2 \omega} g(X,Y) \, Z  \omega \\
+&- e^{2 \omega} g(X,[Y,Z]) + e^{2 \omega} g(Y,[Z,X]) + e^{2 \omega} g(Z,[X,Y])
+\end{align}
+$$
+
+In the last display we can divide both sides of the equation by $e^{2 \omega}$, which is a strictly positive function, to get
+$$ 
+\begin{align}
+2 g(\nabla'_X Y, Z) & = X  g(Y,Z) + Y  g(Z,X)  -Z g(X,Y) \\ 
+& + 2 g(Y,Z) \, X \omega   + 2 g(Z,X) \, Y \omega - 2  g(X,Y) \, Z  \omega \\
+&- g(X,[Y,Z]) + g(Y,[Z,X]) +  g(Z,[X,Y])
+\end{align}
+$$
+
+Using the Koszul formula (2) again we rewrite the above expression as
+$$ 
+\begin{align}
+2 g(\nabla'_X Y, Z) & = 2 g(\nabla_X Y, Z) + 2 g(Y,Z) \, X \omega   + 2 g(Z,X) \, Y \omega - 2  g(X,Y) \, Z  \omega
+\end{align}
+$$
+which is equivalent to (1) because vector field $Z$ is arbitrary, $g$ is non-degenerate, and $Z \omega = \mathrm{d} \omega (Z)$. Recall also that $\operatorname{grad} \omega = (\mathrm{d} \omega)^{\sharp}$.
+
+
+----------
+
+The version of this formula in terms of coordinates and the Christoffel symbols is obtained by a similar calculation, the result will be
+$$
+'\Gamma^{k}_{ij}=\Gamma^{k}_{ij} + \delta_{i}^{k} \partial_j \omega  + \delta_{j}^{k} \partial_i \omega - g_{i j} g^{k l} \partial_{l} \omega
+$$
+
+This can be also obtained as a consequence of (1).
+
+[1](http://books.google.co.nz/books?id=CGk1eRSjFIIC&pg=PA61)
+
+[2](http://math.stackexchange.com/questions/98113/conformal-transformation-of-the-curvature-and-related-quantities/98634#98634)
+
+[3](http://math.stackexchange.com/questions/661514/relation-between-two-riemannain-connections/662991#662991)
+
+[4](http://math.stackexchange.com/questions/761375/which-textbook-of-differential-geometry-will-introduce-conformal-transformation?rq=1)
+
+Better: @Gadea2010
+
+conformal metric
+
+https://en.wikipedia.org/wiki/Killing_vector_field
+https://en.wikipedia.org/wiki/Mercator_projection
+http://hackage.haskell.org/package/data-reify-cse-0.0.3/docs/Data-Reify-Graph-CSE.html
+http://jtobin.ca/automasymbolic-differentiation
+https://www.reddit.com/r/haskell/comments/3mapnk/symbolic_differentiation_in_haskell_i_cant_even/
+
+The mercator connection on the punctured 2-sphere
+
+$$
+\begin{aligned}
+(\dot{\theta})^2 \tan^2\beta - (\dot{\phi})^2 \sin^2\theta &= 0 \\
+2\dot{\theta}\ddot{\theta} \tan^2\beta - 2\dot{\phi}\ddot{\phi} \sin^2\theta - 2(\dot{\phi})^2 \sin\theta \cos\theta \dot{\theta} &= 0 \\
+\ddot{\phi} + \frac{\cos\theta}{\sin\theta}\dot{\phi}\dot{\theta} = 0
+\end{aligned}
+$$
 
 Introduction
 ============
