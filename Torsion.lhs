@@ -9,14 +9,79 @@ bibliography: DiffGeom.bib
 Introduction
 ============
 
-In most presentations of Riemannian geometry, e.g. @o1983semi, the
-fundamental theorem of Riemannian geometry ("the miracle of Riemannian
-geometry") is given: that for any semi-Riemannian manifold there is a
-unique torsion-free metric connection. I assume partly because of this
-and partly because the major application of Riemannian geometry is
-General Relativity, connections with torsion are given little if any
-attention.
+In most presentations of Riemannian geometry, e.g. @o1983semi and
+[Wikipedia](https://en.wikipedia.org/wiki/Fundamental_theorem_of_Riemannian_geometry),
+the fundamental theorem of Riemannian geometry ("the miracle of
+Riemannian geometry") is given: that for any semi-Riemannian manifold
+there is a unique torsion-free metric connection. I assume partly
+because of this and partly because the major application of Riemannian
+geometry is General Relativity, connections with torsion are given
+little if any attention.
 
+It turns out we are all very familiar with a connection with torsion:
+the Mercator projection. Some mathematical physics texts,
+e.g. @Nakahara2003, allude to this but leave the details to the
+reader. Moreover, this connection respects the metric induced from
+Euclidean space.
+
+The Induced Metric
+==================
+
+Before deriving the connection, we first need a metric on $S^2$. We
+follow the exposition given on
+[math.stackexchange.com](http://math.stackexchange.com/questions/402102/what-is-the-metric-tensor-on-the-n-sphere-hypersphere).
+
+We can define the metric of $S^{n-1}$ via pullback of the Eulcidean
+metric on ${\mathbb{R}}^{n}$.
+
+To start with we take $n$-dimension Cartesian co-ordinates:
+$(x_1,x_2......x_n)$ with the usual metric $g_{ij }= \delta_{ij}$,
+where $\delta$ is the Kronecker delta.
+
+We
+[specify](https://en.wikipedia.org/wiki/N-sphere#Spherical_coordinates)
+a chart $(U,x)$ on $S^{n-1}$ by $U = \{ (\phi_1, \phi_2, \ldots,
+\phi_{n-1}) \, |\, \phi_1, \phi_2, \ldots, \phi_{n-2} \in (0,
+\pi) \,\text{and}\, \phi_{n-1} \in (0, 2\pi) \}$ and by
+
+$$
+\begin{aligned}
+x_1 &= r{\cos \phi_1} \\
+x_p &= r{\cos \phi_p}{\Pi_{m=1}^{p-1}}{\sin \phi_{m}} \\
+x_n &= r{\Pi_{m=1}^{n-1}}{\sin \phi_{m}}
+\end{aligned}
+$$
+
+where $r$ is the radius of the hypersphere.
+
+The pullback of the Euclidean metric $\tilde{g} = x^*g$ is the
+metric tensor of the hypersphere. Its components are:
+
+$$\tilde{g}_{ab} = g_{ij} {\frac{\partial{x_i}}{\partial{\phi_a}}}
+{\frac{\partial{x_j}}{\partial{\phi_b}}} =
+{\frac{\partial{x_i}}{\partial{\phi_a}}}{\frac{\partial{x_i}}{\partial{\phi_b}}}$$
+
+1. $a \neq b$: for these components one obtains a series of terms
+with alternating signs which vanishes, $\tilde{g}_{ab}=0$ and thus all
+off-diagonal components of the tensor vanish.
+
+2. $a=b$: in this case we have $\tilde{g}_{11}=r^2$ and $\tilde{g}_{aa}
+={r^2}{\Pi_{m=1}^{a-1}}{\sin^2 \phi_{m}}$ where $2<a<{n-1}$.
+
+Thus we can write the metric of the hypersphere as:
+
+$$\tilde{g} = {r^2}{d{\phi_{1}}}{\otimes{}d{\phi_{1}}} +
+{r^2}{\Sigma_{a=2}^{n-1}}{\Pi_{m=1}^{a-1}}{\sin^2 \phi_{m}}{d{\phi_{a}}}{\otimes{}d{\phi_{a}}}
+$$
+
+In the case of $S^2$ with unit radius, this gives us the familiar metric:
+
+$$\tilde{g} = {d{\theta}}{\otimes{}d{\theta}} +
+{\sin^2 \theta}{d{\phi}}{\otimes{}d{\phi}}
+$$
+
+Loxodromes (Rhumb Lines)
+========================
 
 \begin{code}
 {-# OPTIONS_GHC -Wall                     #-}
@@ -179,58 +244,6 @@ chartEstimated title acts ests = toRenderable layout
            $ def
 \end{code}
 
-I will define the metric of $S^{n-1}$ via pullback of the Eulcidean
-metric on ${\mathbb{R}}^{n}$.
-
-To start with we take $n$-dimension Cartesian co-ordinates:
-$(x_1,x_2......x_n)$.
-The metric here is $g_{ij }= δ_{ij}$, where $δ$ is the Kronecker delta.
-
-We specify the surface patches of  $S^{n-1}$ by the parametrization  $f$:
-$$x_1=r{\cos(ϕ_1)},$$
-
-$$x_p=r{\cos(ϕ_p)}{\Pi_{m=1}^{p-1}}{\sin(ϕ_{m})},$$
-
-$$x_n=r{\Pi_{m=1}^{n-1}}{\sin(ϕ_{m})},$$
-
-Where $r$ is the radius of the hypersphere and the angles have the
-usual range.
-
-We see that the pullback of the Euclidean metric $g'_{ab} =
-(f^*g)_{ab}$ is the metric tensor of the hypersphere. It's components
-are:
-
-$$g'_{ab} = g_{ij} {\frac{\partial{x_i}}{\partial{ϕ_a}}}
-{\frac{\partial{x_j}}{\partial{ϕ_b}}} =
-{\frac{\partial{x_i}}{\partial{ϕ_a}}}{\frac{\partial{x_i}}{\partial{ϕ_b}}}$$
-
-We get $2$ cases here:
-
-i) $a>b$ or $b>a$, For these components one obtains a series of terms
-with alternating signs which vanishes, $g'_{ab}=0$ and thus all
-off-diagonal components of the tensor vanish.
-
-
-ii) $a=b$,
-
-$$g'_{11}=1$$
-
-$$g'_{aa} ={r^2}{\Pi_{m=1}^{a-1}}{\sin^2(ϕ_{m})}$$
-where $2<a<{n-1}$
-
-The determinant is very straight-forward to calculate:
-
-$$det[g'_{ab}] = {r^2}{\Pi_{m=1}^{n-1}}g'_{mm}$$
-
-Finally, we can write the metric of the hypersphere as:
-
-$$g' = {r^2}{d{ϕ_{1}}}{\otimes{}d{ϕ_{1}}} +
-{r^2}{\Sigma_{a=2}^{n-1}}{\Pi_{m=1}^{a-1}}{\sin^2(ϕ_{m})}{d{ϕ_{a}}}{\otimes{}d{ϕ_{a}}}
-$$
-
-Consider the sphere $S^2 \triangleq \{(x, y, z) \in \mathbb{R}^ | x^2
-+ y^2 + z^2 = 1\}$
-
 Connections
 ===========
 
@@ -250,7 +263,7 @@ $$
 $$
 
 
-Let $\nabla'$ be the Levi-Civita connection for the metric $g' = e^{2\omega}g$. Substituting these objects into (2)
+Let $\nabla'$ be the Levi-Civita connection for the metric $\tilde{g} = e^{2\omega}g$. Substituting these objects into (2)
 $$ 
 \begin{align}
 2 e^{2 \omega} g(\nabla'_X Y, Z) & = X \left( e^{2 \omega} g(Y,Z) \right) + Y \left( e^{2 \omega} g(Z,X) \right) - Z \left( e^{2 \omega} g(X,Y) \right) \\ 
