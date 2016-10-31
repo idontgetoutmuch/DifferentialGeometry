@@ -47,3 +47,20 @@ h[2,2] = 1
 nabla_h = h.connection(); nabla_h
 riem_h = h.riemann() ; riem_h
 t_h = nabla_h.torsion(); t_h
+
+N = Manifold(2, 'N',r'\mathcal{N}', start_index=1)
+c_n_x_y.<x,y> = N.chart()
+f_n_x_y = c_n_x_y.frame()
+c_n_r_theta.<r,theta> = N.chart()
+f_n_r_theta = c_n_r_theta.frame()
+n_x_y_to_r_theta = c_n_x_y.transition_map(c_n_r_theta, (sqrt(x^2 + y^2), arctan(y/x)))
+print(n_x_y_to_r_theta)
+print(n_x_y_to_r_theta.display())
+n_x_y_to_r_theta.set_inverse(r * cos(theta), r * sin(theta))
+g_e = N.metric('g_e')
+g_e[1,1], g_e[2,2] = 1, 1
+print(g_e.display(f_n_x_y))
+nab_e = g_e.connection()
+print(nab_e)
+print(nab_e.display(f_n_x_y))
+print(nab_e.display(f_n_r_theta))
