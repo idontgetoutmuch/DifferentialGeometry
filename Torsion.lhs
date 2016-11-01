@@ -83,6 +83,46 @@ $$
 Loxodromes (Rhumb Lines)
 ========================
 
+Apparently sailors used to navigate by following a particular compass
+heading; the radial lines on a compass rose are called "rhumbs" and
+this method was known as sailing on a rhumb, nowadays the synonym
+[loxodrome seems](https://en.wikipedia.org/wiki/Rhumb_line) to be
+preferred. These routes will trace out a curve on the sphere which
+make a constant angle $\beta$ with meridians ($\phi = \text{constant}$).
+
+At a point where the curve $(\theta (t), \phi (t))$ meets the meridian
+$\phi = \text{constant}$
+
+$$
+\cos \beta = \frac{\langle \partial_\theta, \dot{\alpha}(t)\rangle}{|\partial_\theta||\dot{\alpha}(t)|} =
+\frac{\dot{\theta}}{\sqrt{\dot{\theta}^2 + \sin^2 \theta \dot{\phi}^2}}
+$$
+
+where as usual we have written $\langle X, Y\rangle$ for $g(X, Y)$ and
+$|X| = g(X, X)$. We thus obtain
+
+$$
+\begin{aligned}
+\dot{\theta}^2 \tan^2\beta - \dot{\phi}^2 \sin^2\theta &= 0 \\
+\frac{\dot{\theta}}{\sin \theta} &= \pm \frac{\dot{\phi}}{\tan \beta}
+\end{aligned}
+$$
+
+Choosing a suitable parameterisation, $\phi(t) = at + b$ say, we further obtain
+
+$$
+\begin{aligned}
+\ddot{\phi} &= 0 \\
+2\dot{\theta}\ddot{\theta} \tan^2\beta - 2\dot{\phi}\ddot{\phi} \sin^2\theta - 2\dot{\phi}^2 \sin\theta \cos\theta \dot{\theta} &= 0 \\
+\ddot{\phi} + \frac{\cos\theta}{\sin\theta}\dot{\phi}\dot{\theta} = 0
+\end{aligned}
+$$
+
+
+
+Haskell
+=======
+
 \begin{code}
 {-# OPTIONS_GHC -Wall                     #-}
 {-# OPTIONS_GHC -fno-warn-name-shadowing  #-}
@@ -128,7 +168,6 @@ $$
 
 Is using the AD package worth the fight with types?
 
-\begin{code}
 foo :: forall a . Num a =>
   (forall s . Reifies s Tape => [Reverse s a -> Reverse s a]) ->
   (forall s . Reifies s Tape => [Reverse s a -> Reverse s a]) ->
@@ -144,13 +183,6 @@ foo yis zis gammaijks = jacobian bar
     baz = jacobian bar
     urk = jacobian (\[x] -> [(zis!!0) x])
 
-f :: Floating a => a -> a
-f x = x + 1
-
-test :: [[Sym Double]]
-test = jacobian (return . f) [var "x1", var "x2"]
-  where
-    f [x, y] = sqrt $ x^2 + y^2
 
 bar :: forall a . Num a =>
        forall s . Reifies s Tape => ([Reverse s a -> Reverse s a],
@@ -158,6 +190,15 @@ bar :: forall a . Num a =>
                                      [[[Reverse s a -> Reverse s a]]]) ->
        [a] -> [[a]]
 bar (_fs, _gs, _gammass) = undefined
+
+\begin{code}
+f :: Floating a => a -> a
+f x = x + 1
+
+test :: [[Sym Double]]
+test = jacobian (return . f) [var "x1", var "x2"]
+  where
+    f [x, y] = sqrt $ x^2 + y^2
 
 data Haar (a :: Nat) (b :: Nat) = Haar { unHaar :: Double -> Double }
 
@@ -325,14 +366,6 @@ http://jtobin.ca/automasymbolic-differentiation
 https://www.reddit.com/r/haskell/comments/3mapnk/symbolic_differentiation_in_haskell_i_cant_even/
 
 The mercator connection on the punctured 2-sphere
-
-$$
-\begin{aligned}
-(\dot{\theta})^2 \tan^2\beta - (\dot{\phi})^2 \sin^2\theta &= 0 \\
-2\dot{\theta}\ddot{\theta} \tan^2\beta - 2\dot{\phi}\ddot{\phi} \sin^2\theta - 2(\dot{\phi})^2 \sin\theta \cos\theta \dot{\theta} &= 0 \\
-\ddot{\phi} + \frac{\cos\theta}{\sin\theta}\dot{\phi}\dot{\theta} = 0
-\end{aligned}
-$$
 
 Introduction
 ============
