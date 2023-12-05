@@ -1,0 +1,19 @@
+* A General Relativity Bibliography
+
+I started with cite:o1983semi which I still think is the best but
+really quite hard going. It comes the closest to explaining what an
+observer is. It stays away from overuse of indices. I think one only
+needs to read chapters 1--6, 12 and 13.
+
+For differential forms I read cite:darling_1994 but it doesn't cover
+relativity.
+
+These cite:tong-gr-lecture-notes are pretty good but I didn't really
+follow his introductory chapter and skipped most of it. Maybe I could
+now get more out of it. He doesn't say what an observer is but he does
+use forms for some calculations instead of the raw curvature tensor to
+make things easier.
+
+bibliography:DiffGeom.bib
+bibliographystyle:unsrt
+
