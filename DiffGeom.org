@@ -14,6 +14,57 @@ now get more out of it. He doesn't say what an observer is but he does
 use forms for some calculations instead of the raw curvature tensor to
 make things easier.
 
+** Phil's Bibliography
+
+ 1. cite:needham:2021DifferentialGeometry
+ 2. cite:needham:1998complex
+ 3. cite:needham:2023ComplexAnalysis
+
 bibliography:DiffGeom.bib
 bibliographystyle:unsrt
+
+* A Proposal
+
+I'd like to run a series of workshops (this might not be the right
+name) in which everyone contributes to our collective understanding of
+General Relativity.
+
+I'd like the end goal to be: how do gravitational waves get generated
+by binary stars for example and how did LIGO actually detect such
+waves. I'd like to avoid the "tensor is as a tensor does approach" but
+this may not be entirely possible.
+
+There's a lot of stuff we'd have to understand on the way
+(e.g. variational principles and differential geometry) and we might
+not actually get there. But if you don't start something you never get
+there.
+
+Rather than spending a year creating notes that never see the light of
+day, I am proposing we set off without the notes for gravitational
+waves and create them as we go along.
+
+I can certainly start the ball rolling with a talk on "Is a Straight
+Lines Always the Shortest Distance: Some Steps Towards General
+Relativity". The idea would be go through some concepts from
+differential geometry and even write down the Einstein Equation whilst
+noting down which concepts need to be explained in further workshops.
+
+1. I am in and would like to prepare some material.
+2. I'd like to participate but can't (yet) commit to preparing material.
+3. This is too pretentious for words.
+
+I assume I can somehow book a room in the University but maybe only
+Dan or Barry can do that. I see no harm in advertising it within the
+University and possibly more widely. Who knows? An expert on GR may
+live locally and be keen to share their knowledge.
+
+
+* Some Random Links
+
+This section is for my working notes.
+
+https://www.quora.com/What-is-the-geometric-interpretation-of-the-concept-of-Connection-in-differential-geometry
+
+
+
 
