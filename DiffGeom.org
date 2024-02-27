@@ -1,3 +1,59 @@
+#+LATEX_HEADER: \usepackage{amsthm}
+
+\newtheoremstyle{defnstyle}{}{}{}{}{\scshape}{.}{\newline}{}
+
+\theoremstyle{defnstyle}
+\newtheorem{defn}{Definition}
+
+* The Lectures
+
+** Manifolds
+
+Cryptically: a manifold is locally Euclidean. Let's take this as our
+starting point rather than, as with some approaches, start with the
+definition of a set, a topology, a topological manifold and finally a
+differential manifold.
+
+We need to relate a set to Euclidean space:
+
+\begin{defn}[Co-ordinate Chart]
+A co-ordinate chart on a set $X$ is a subset $U \subseteq X$
+and a bijection
+
+$$
+\phi: U \longrightarrow \phi(U) \subseteq \mathbb{R}^n
+$$
+
+onto an open\footnote{Pre-requisites: what is a
+topololgy, what is an open set, what is a continuous function} set $\phi(U)$ of $\mathbb{R}^n$.
+\end{defn}
+
+These bijections had better be compatible:
+
+\begin{defn}[Atlas]
+An atlas is a collection of co-ordinate charts $\{U_\alpha, \phi_\alpha\}_{\alpha \in I}$ such that
+
+ 1. $X$ is covered by the $\{U_\alpha, \phi_\alpha\}_{\alpha \in I}$.
+ 2. $\forall \alpha, \beta \in I$ , $\phi_\alpha(U_\alpha \cap U_\beta)$ is open in $\mathbb{R}^n$.
+ 3. The map $$\phi_\beta \circ \phi_\alpha^{-1}: \phi_\alpha(U_\alpha
+    \cap U_\beta) \longrightarrow \phi_\beta(U_\alpha \cap U_\beta)$$
+    is $C^\infty$ with $C^\infty$ inverse.
+\end{defn}
+
+ 1. $X$ is covered by the $\{U_\alpha, \phi_\alpha\}_{\alpha \in I}$.
+ 2. $\forall \alpha, \beta \in I$ , $\phi_\alpha(U_\alpha \cap U_\beta)$ is open in $\mathbb{R}^n$.
+ 3. The map $$\phi_\beta \circ \phi_\alpha^{-1}: \phi_\alpha(U_\alpha
+    \cap U_\beta) \longrightarrow \phi_\beta(U_\alpha \cap U_\beta)$$
+    is $C^\infty$ with $C^\infty$ inverse.
+
+* The Einstein Field Equations
+
+$$
+S_{EH} = \int {\mathcal{L}}_{EH}\sqrt{-g}\,\mathrm{d}^4 x
+$$
+
+To start with let's take ${\mathcal{L}}_{EH} = R$ where $R$ is the Ricci scalar.
+
 * A General Relativity Bibliography
 
 I started with cite:o1983semi which I still think is the best but
@@ -58,13 +114,45 @@ Dan or Barry can do that. I see no harm in advertising it within the
 University and possibly more widely. Who knows? An expert on GR may
 live locally and be keen to share their knowledge.
 
+* Course Contents
+
+** Prerequisites
+
+Obviously multivariate calculus.
+
+Linear algebra to some level.
+
+** Topics
+
+ 1. What is a manifold
+ 2. Cotangent Space
+ 3. Tangent Space
+ 4. Vector Fields
+ 5. Differential Forms
+ 6. Tensors(?)
+ 7. Connections (via principal bundles? This may be taking things too far so probably just affine connections).
+ 8. Theorem Egregium (nothing to do with relativity but fun).
+ 9. Connections with torsion (Mercator).
+ 10. Geodesics aka straight lines.
+ 11. Metrics - compatatibility with the connection.
+ 12. Levi-Civita.
+ 13. Schwarzschild metric.
+ 14. Perihelion of Mercury
+ 15. Gravitational time dilation.
+ 16. Red shift (not sure I care about this).
+ 17. Stress Energy tensor - electromagnetism as the example - can we
+     use a Nelkon example?
+ 18. Principle of Least Action.
+ 19. Einstein Equations via least action.
+ 20. Gravitational waves as a solition to the Einstein equations.
+ 21. Sources of gravitational waves: binary systems (stars, black holes).
+
 
 * Some Random Links
 
 This section is for my working notes.
 
 https://www.quora.com/What-is-the-geometric-interpretation-of-the-concept-of-Connection-in-differential-geometry
-
 
 
 
