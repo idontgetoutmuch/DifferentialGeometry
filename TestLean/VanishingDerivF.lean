@@ -117,7 +117,57 @@ example
         _ = (h ∘ φ_β.toFun ∘ φ_α.invFun) '' (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) := h06.symm
 
     exact h08
+  have h2 : ∀ x ∈ (φ_α.toFun '' (φ_α.source ∩ φ_β.source)),
+            g x = (h ∘ φ_β.toFun ∘ φ_α.invFun) x := by sorry
+  have h1 : ∀ x ∈ (φ_α.toFun '' (φ_α.source ∩ φ_β.source)),
+            fderiv ℝ g x = fderiv ℝ (h ∘ φ_β.toFun ∘ φ_α.invFun) x := by
+    intros x hx
+    simp [h2 x hx]
+    sorry
   sorry
+
+-- set_option trace.Meta.Tactic.simp.rewrite true
+
+example
+  (f : M → ℝ)
+  (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+  (hΦ_Α : φ_α ∈ atlas (EuclideanSpace ℝ (Fin m)) M)
+  (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+  (hΦ_Β : φ_β ∈ atlas (EuclideanSpace ℝ (Fin m)) M) :
+
+      let Dg : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] ℝ) :=
+        λ x => fderiv ℝ (f ∘ φ_α.invFun)
+                        (φ_α.toFun x)
+
+      let Dh : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] ℝ) :=
+        λ x => fderiv ℝ (f ∘ φ_β.invFun)
+                        (φ_β.toFun x)
+
+      ∀ x ∈ φ_α.source ∩ φ_β.source, (∀ v, Dg x v = 0) <-> (∀ v, Dh x v = 0) := by
+
+  let g := f ∘ φ_α.invFun
+  let h := f ∘ φ_β.invFun
+  have h2 : ∀ x ∈ (φ_α.toFun '' (φ_α.source ∩ φ_β.source)),
+            g x = (h ∘ φ_β.toFun ∘ φ_α.invFun) x := by sorry
+  have h1 : ∀ x ∈ (φ_α.toFun '' (φ_α.source ∩ φ_β.source)),
+            fderiv ℝ g x = fderiv ℝ (h ∘ φ_β.toFun ∘ φ_α.invFun) x := by
+    intros x hx
+    simp [h2 x hx]
+    sorry
+  sorry
+
+example
+  (f g : ℝ → ℝ)
+  (h2 : ∀ x ∈ Set.univ, f x = g x) :
+  ∀ x ∈ Set.univ, fderiv ℝ f x = fderiv ℝ g x := by
+    intros x _
+    have eq_fg : f = g := funext (λ y => h2 y (Set.mem_univ y))
+    rw [eq_fg]
+
+example (f g : ℝ → ℝ) (z : ℝ) (U : Set ℝ) (hfg : ∀ x ∈ U, f x = g x) (hz : z ∈ U) :
+  fderivWithin ℝ f U z = fderivWithin ℝ g U z := by
+    have hs : Set.EqOn f g U := hfg
+    exact fderivWithin_congr' hs hz
 
 #check λ (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m))) (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m))) =>
   Set.mem_image (φ_α.invFun ∘ φ_α.toFun) (φ_α.source ∩ φ_β.source)
