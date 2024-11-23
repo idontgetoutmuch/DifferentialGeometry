@@ -169,6 +169,39 @@ example (f g : ℝ → ℝ) (z : ℝ) (U : Set ℝ) (hfg : ∀ x ∈ U, f x = g 
     have hs : Set.EqOn f g U := hfg
     exact fderivWithin_congr' hs hz
 
+example {m n : ℕ}
+  (f g : (Fin m → ℝ) → (Fin n → ℝ)) (z : Fin m → ℝ) (U : Set (Fin m → ℝ))
+  (hfg : ∀ x ∈ U, f x = g x) (hz : z ∈ U) :
+  fderivWithin ℝ f U z = fderivWithin ℝ g U z := by
+  have hs : Set.EqOn f g U := hfg
+  exact fderivWithin_congr' hs hz
+
+example
+  (f : M → ℝ)
+  (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+  (hΦ_Α : φ_α ∈ atlas (EuclideanSpace ℝ (Fin m)) M)
+  (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+  (hΦ_Β : φ_β ∈ atlas (EuclideanSpace ℝ (Fin m)) M)
+   (g : EuclideanSpace ℝ (Fin m) → ℝ := f ∘ φ_α.invFun)
+   (h : EuclideanSpace ℝ (Fin m) → ℝ := f ∘ φ_β.invFun) :
+
+   ∀ z ∈ (φ_α.toFun '' (φ_α.source ∩ φ_β.source)),
+  fderivWithin ℝ g (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) z =
+  fderivWithin ℝ (h ∘ ↑φ_β.toPartialEquiv ∘ φ_α.invFun) (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) z := by
+
+   have hfg  : ∀ x ∈ (φ_α.toFun '' (φ_α.source ∩ φ_β.source)),
+            g x = (h ∘ φ_β.toFun ∘ φ_α.invFun) x := by
+     sorry
+
+   have hd : ∀ z ∈ (φ_α.toFun '' (φ_α.source ∩ φ_β.source)),
+             fderivWithin ℝ g (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) z =
+             fderivWithin ℝ (h ∘ φ_β.toFun ∘ φ_α.invFun) (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) z := by
+     intros z hz
+     have hs : Set.EqOn g (h ∘ φ_β.toFun ∘ φ_α.invFun) (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) := hfg
+
+     exact fderivWithin_congr' hs hz
+   exact hd
+
 #check λ (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m))) (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m))) =>
   Set.mem_image (φ_α.invFun ∘ φ_α.toFun) (φ_α.source ∩ φ_β.source)
 
