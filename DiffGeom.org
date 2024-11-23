@@ -70,6 +70,16 @@ now get more out of it. He doesn't say what an observer is but he does
 use forms for some calculations instead of the raw curvature tensor to
 make things easier.
 
+https://tales.mbivert.com/on-heraeus-winter-school-tutorials/#tutorial-pdfs--missing-tutorial-videos
+
+https://ncatlab.org/nlab/show/volume+form
+volume form
+https://math.stackexchange.com/questions/70938/natural-and-coordinate-free-definition-for-the-riemannian-volume-form
+
+A treasure trove of explanations
+https://virtualmath1.stanford.edu/~conrad/diffgeomPage/handouts/mapmaking.pdf
+https://virtualmath1.stanford.edu/~conrad/diffgeomPage/handouts.html
+
 ** Phil's Bibliography
 
  1. cite:needham:2021DifferentialGeometry
@@ -156,3 +166,1257 @@ https://www.quora.com/What-is-the-geometric-interpretation-of-the-concept-of-Con
 
 
 
+https://www.intlpress.com/site/pub/files/_fulltext/journals/pamq/2010/0006/0002/PAMQ-2010-0006-0002-a008.pdf
+
+** Lie Groups, Lie Algebras and the Exponential Map
+
+https://www.cis.upenn.edu/~cis6100/cis61005sl8.pdf
+cis61005sl8.pdf
+
+
+** Schwarzschild Spacetime without Coordinates
+
+Not sure why I have this as it seems to have a lot of indices
+
+https://www.intlpress.com/site/pub/files/_fulltext/journals/pamq/2010/0006/0002/PAMQ-2010-0006-0002-a008.pdf
+
+We discuss how to construct the full Schwarzschild (Kruskal- Szekeres)
+spacetime in one swoop by using the bundle of orthonormal Lorentz
+frames and the Einstein equation without the use of coordinates. We
+never have to write down the Kruskal-Szekeres or an equivalent form of
+the metric.
+
+** Inkscape
+
+Should I use this for the diagrams for principal bundles, connections?
+
+** Other
+
+A fibre bundle approach to U(1)
+symmetries in physics
+https://amslaurea.unibo.it/16776/1/tesi_mazzoni_finale_1.pdf
+
+This would seem to be wrong but does derive the force from U(1)
+https://math.sun.ac.za/bbartlett/assets/The%20geometry%20of%20force.pdf
+
+https://www.damtp.cam.ac.uk/user/tong/em/el4.pdf
+For the change of the EM 2 form under a boost
+
+and his gauge theory
+https://www.damtp.cam.ac.uk/user/tong/gaugetheory/gt.pdf
+
+Differential
+Geometry in
+Physics Gabriel Lugo
+https://libres.uncg.edu/ir/uncw/f/lugo2021-1.2.pdf
+
+Differential Geometry and General Relativity: Volume 1 (Graduate Texts
+in Physics) Hardcover – 29 Aug. 2023 by Canbin Liang (Author), Bin
+Zhou (Author, Translator), Weizhen Jia (Translator)
+
+Ernest
+https://ernestyalumni.wordpress.com/category/qft/
+
+https://github.com/ernestyalumni/Gravite/blob/master/LaTeXetpdfs/Gravity_Notes_grande.pdf
+
+** Under transformations naively and otherwise
+
+https://en.wikipedia.org/wiki/Lorentz_force
+
+https://web.mit.edu/sahughes/www/8.022/lec11.pdf
+https://web.mit.edu/sahughes/www/8.022/lec12.pdf
+
+** Maybe Haskell Approach
+
+https://groups.csail.mit.edu/mac/users/gjs/6946/calculus-indexed.pdf
+
+** Other books
+
+Gauge Fields, Knots and Gravity
+
+https://proofwiki.org/wiki/Derivatives_of_Unit_Vectors_in_Polar_Coordinates#google_vignette
+
+https://legacy.cs.indiana.edu/~hansona/papers/EguchiGilkeyHanson1980.pdf
+
+** From GPT
+
+No, the domain of the connection 1-form $\omega$ on the frame bundle $LM$ is not sections of the frame bundle, but rather the tangent vectors to the frame bundle $LM$. To clarify:
+
+### 1. Connection 1-Form $\omega$
+
+The connection 1-form $\omega$ is a $\mathfrak{gl}(n, \mathbb{R})$-valued 1-form on the frame bundle $LM$. Formally:
+$$
+\omega \in \Omega^1(LM, \mathfrak{gl}(n, \mathbb{R}))
+$$
+This means that $\omega$ assigns to each tangent vector in the frame bundle $LM$ a Lie algebra element in $\mathfrak{gl}(n, \mathbb{R})$.
+
+### 2. Domain of $\omega$
+
+The domain of $\omega$ is $TLM$, the tangent bundle of the frame bundle $LM$. For any point $p \in LM$ and tangent vector $v \in T_p LM$, $\omega(p)(v)$ is an element of $\mathfrak{gl}(n, \mathbb{R})$.
+
+### 3. Sections of the Frame Bundle
+
+A section $\sigma: U \to LM$ of the frame bundle is a map from an open subset $U \subseteq M$ to the frame bundle $LM$. The section $\sigma$ provides a way to pull back the connection 1-form $\omega$ from the frame bundle $LM$ to the base manifold $U \subseteq M$.
+
+### 4. Pullback of $\omega$ via $\sigma$
+
+When you have a local section $\sigma: U \to LM$, you can pull back the connection 1-form $\omega$ to $U$. This pullback, denoted by $\sigma^*\omega$, is a $\mathfrak{gl}(n, \mathbb{R})$-valued 1-form on $U$:
+$$
+\sigma^*\omega \in \Omega^1(U, \mathfrak{gl}(n, \mathbb{R}))
+$$
+The pullback is defined by:
+$$
+(\sigma^*\omega)(v) = \omega(\sigma_*(v))
+$$
+for any tangent vector $v \in TU$. Here, $\sigma_*: TU \to TLM$ is the pushforward of the section $\sigma$, which maps a tangent vector $v \in T_m U$ to a tangent vector $\sigma_*(v) \in T_{\sigma(m)} LM$.
+
+### Summary
+
+- The connection 1-form $\omega$ is defined on the tangent bundle of the frame bundle $TLM$, not on sections of the frame bundle.
+- Sections of the frame bundle can be used to pull back $\omega$ to the base manifold, resulting in a $\mathfrak{gl}(n, \mathbb{R})$-valued 1-form on the base manifold.
+
+So, in summary, while $\omega$ itself is not applied directly to sections, sections are used to pull back $\omega$ to the base manifold. The primary domain of $\omega$ is indeed the tangent bundle of the frame bundle $TLM$.
+
+*** Part II
+
+No, $\Gamma(U)$ and $\Omega^1(U)$ are not the same.
+
+### $\Gamma(U)$
+
+- $\Gamma(U)$ typically denotes the space of sections of a fiber bundle over the open subset $U$ of a manifold $M$.
+- If we are talking about the tangent bundle $TM$, $\Gamma(U)$ represents the space of vector fields on $U$, which are smooth sections of the tangent bundle restricted to $U$.
+
+Formally:
+$$ \Gamma(U, TM) = \{ X: U \to TM \mid X \text{ is a smooth section of } TM \} $$
+This means that $\Gamma(U, TM)$ consists of all smooth vector fields defined on the open subset $U$.
+
+
+### $\Omega^1(U)$
+
+- $\Omega^1(U)$ denotes the space of 1-forms on the open subset $U$.
+- A 1-form is a smooth section of the cotangent bundle $T^*M$.
+
+Formally:
+$$ \Omega^1(U) = \Gamma(U, T^*M) = \{ \alpha: U \to T^*M \mid \alpha \text{ is a smooth section of } T^*M \} $$
+This means that $\Omega^1(U)$ consists of all smooth 1-forms defined on the open subset $U$.
+
+### Distinction
+
+- $\Gamma(U, TM)$ is the space of vector fields, which are sections of the tangent bundle.
+- $\Omega^1(U)$ is the space of 1-forms, which are sections of the cotangent bundle.
+
+They are different objects because one deals with vector fields (tangent vectors) and the other deals with differential 1-forms (covectors).
+
+### Summary
+
+In summary, $\Gamma(U)$ and $\Omega^1(U)$ refer to different spaces:
+- $\Gamma(U, TM)$ or simply $\Gamma(U)$ is the space of smooth vector fields on $U$.
+- $\Omega^1(U)$ is the space of smooth 1-forms on $U$.
+
+These spaces are related but distinct, as vector fields and 1-forms are dual to each other.
+
+*** Part III
+
+A $\mathfrak{gl}(n, \mathbb{R})$-valued 1-form $\omega \in \Omega^1(U, \mathfrak{gl}(n, \mathbb{R})$ takes a vector field $X \in \Gamma(U, TM)$ and returns a section of the Lie algebra bundle $\mathfrak{gl}(n, \mathbb{R})$ over $U$. 
+
+In other words, for a vector field $X \in \Gamma(U)$, $\omega(X)$ is a smooth map from $U$ to $\mathfrak{gl}(n, \mathbb{R})$. More concretely, $\omega$ evaluated on the vector field $X$ at each point $p \in U$ gives an element of the Lie algebra $\mathfrak{gl}(n, \mathbb{R})$.
+
+### Formally:
+
+1. **Connection 1-Form**:
+   $$
+   \omega \in \Omega^1(U, \mathfrak{gl}(n, \mathbb{R})) 
+   $$
+   This means that $\omega$ is a $\mathfrak{gl}(n, \mathbb{R})$-valued 1-form on $U$.
+
+2. **Vector Field**:
+   $$
+   X \in \Gamma(U, TM)
+   $$
+   This means that $X$ is a smooth section of the tangent bundle $TM$ over $U$, or equivalently, a vector field on $U$.
+
+3. **Evaluation**:
+   $$
+   \omega(X) \in \Gamma(U, \mathfrak{gl}(n, \mathbb{R}))
+   $$
+   This means that $\omega(X)$ is a smooth map from $U$ to $\mathfrak{gl}(n, \mathbb{R})$. For each point $p \in U$, $\omega(X)_p \in \mathfrak{gl}(n, \mathbb{R})$.
+
+### Concretely:
+
+- At each point $p \in U$, the vector field $X$ gives a tangent vector $X_p \in T_p U$.
+- The 1-form $\omega$, when applied to the vector field $X$, produces a map:
+  $$
+  p \mapsto \omega_p(X_p)
+  $$
+- Here, $\omega_p$ is a linear map from $T_p U$ to $\mathfrak{gl}(n, \mathbb{R})$, and $X_p$ is the tangent vector at $p$.
+
+Therefore, $\omega(X)$ is a section of the bundle whose fibers are the Lie algebra $\mathfrak{gl}(n, \mathbb{R})$. In practical terms, at each point $p$ in the domain $U$, $\omega(X)$ assigns an element of $\mathfrak{gl}(n, \mathbb{R})$.
+
+### Summary:
+
+For a $\mathfrak{gl}(n, \mathbb{R})$-valued 1-form $\omega$ and a vector field $X$,
+- $\omega(X)$ is a section of the bundle with fiber $\mathfrak{gl}(n, \mathbb{R})$.
+- It returns a smooth map from the open subset $U$ to $\mathfrak{gl}(n, \mathbb{R})$, associating to each point $p \in U$ an element $\omega_p(X_p) \in \mathfrak{gl}(n, \mathbb{R})$.
+
+*** For my question
+
+Let's clarify the nature of \(\omega\) in this context.
+
+### 1. The Connection 1-Form \(\omega\)
+
+The connection 1-form \(\omega\) is initially defined on the frame bundle \(LM\). It is a \(\mathfrak{gl}(n, \mathbb{R})\)-valued 1-form, meaning:
+\[
+\omega \in \Omega^1(LM, \mathfrak{gl}(n, \mathbb{R}))
+\]
+This form assigns to each tangent vector in \(LM\) an element of the Lie algebra \(\mathfrak{gl}(n, \mathbb{R})\).
+
+### 2. Pulling Back \(\omega\)
+
+To work with \(\omega\) in the context of the base manifold \(M\), we use a local section \(\sigma: U \to LM\). The pullback of \(\omega\) via \(\sigma\) gives a \(\mathfrak{gl}(n, \mathbb{R})\)-valued 1-form on \(U\):
+\[
+\sigma^*\omega \in \Omega^1(U, \mathfrak{gl}(n, \mathbb{R}))
+\]
+This pullback is defined for any vector field \(X \in \Gamma(U, TM)\) by:
+\[
+(\sigma^*\omega)(X) = \omega(\sigma_*(X))
+\]
+
+### 3. The Nature of \(\sigma^*\omega\)
+
+The pullback \(\sigma^*\omega\) is a \(\mathfrak{gl}(n, \mathbb{R})\)-valued 1-form on \(U\). This means \(\sigma^*\omega\) is a section of the cotangent bundle of \(U\) with values in \(\mathfrak{gl}(n, \mathbb{R})\):
+\[
+\sigma^*\omega \in \Omega^1(U) \otimes \mathfrak{gl}(n, \mathbb{R})
+\]
+Or equivalently:
+\[
+\sigma^*\omega \in \Gamma(U, T^*U \otimes \mathfrak{gl}(n, \mathbb{R}))
+\]
+
+### 4. Evaluating \(\sigma^*\omega\) on a Vector Field
+
+When \(\sigma^*\omega\) is evaluated on a vector field \(X \in \Gamma(U, TM)\), it produces a \(\mathfrak{gl}(n, \mathbb{R})\)-valued function on \(U\). Explicitly:
+\[
+(\sigma^*\omega)(X): U \to \mathfrak{gl}(n, \mathbb{R})
+\]
+At each point \(p \in U\), \((\sigma^*\omega)(X)_p\) is an element of \(\mathfrak{gl}(n, \mathbb{R})\).
+
+### Summary
+
+- \(\omega\) is initially a \(\mathfrak{gl}(n, \mathbb{R})\)-valued 1-form on the frame bundle \(LM\).
+- The pullback \(\sigma^*\omega\) via a local section \(\sigma\) is a \(\mathfrak{gl}(n, \mathbb{R})\)-valued 1-form on \(U\), meaning it is a section of the cotangent bundle on \(U\) with values in \(\mathfrak{gl}(n, \mathbb{R})\).
+- When \(\sigma^*\omega\) is evaluated on a vector field \(X \in \Gamma(U, TM)\), it yields a \(\mathfrak{gl}(n, \mathbb{R})\)-valued function on \(U\).
+
+So, to directly answer your question: Yes, the pullback \(\sigma^*\omega\) is a section of the cotangent bundle on \(U\) with values in the Lie algebra \(\mathfrak{gl}(n, \mathbb{R})\).
+
+*** Working
+
+$\left(\Phi_g\right)_*\left(H_q P\right)=H_{\Phi_g(q)} P \quad \forall g \in G, q \in P$
+
+& =X_{p \triangleleft g}^{\left(\operatorname{Ad}_{g^{-1}}\right)_* A}(f),
+
+& =\omega_{p \triangleleft g}\left(X_{p \triangleleft g}^{\left(\operatorname{Ad}_{g-1}\right)_* A}\right) \\
+
+** Not needed from notebook
+
+### Principal $GL(n, \mathbb{R})$-Bundle Structure
+
+To form $LpM$ into a principal $GL(n, \mathbb{R})$-bundle over $M$, where $n = \dim M$:
+
+1. **Total Space**: $LpM$ is the space of ordered bases of $T_pM$ at each point $p \in M$.
+
+2. **Projection Map**: $\pi: LpM \to M$ is defined by $\pi(e_1, e_2, \ldots, e_n) = p$, where $(e_1, e_2, \ldots, e_n)$ is a basis for $T_pM$.
+
+3. **Action of $GL(n, \mathbb{R})$**: The action of $g \in GL(n, \mathbb{R})$ on a basis $(e_1, e_2, \ldots, e_n)$ is given by:
+   $$
+   e_i' = \sum_{j=1}^n g_{ij} e_j
+   $$
+   for $i = 1, 2, \ldots, n$, where $(e_1', e_2', \ldots, e_n')$ is the new basis after applying $g$.
+
+   $$g^a_1 e_a$$
+
+5. **Principal Bundle Properties**:
+   - The action of $GL(n, \mathbb{R})$ is free and transitive on the fibers.
+   - The projection map and action are smooth.
+
+Hence, $LpM$ with this projection and action forms a principal $GL(n, \mathbb{R})$-bundle over $M$.
+
+* Log for [2024-08-18 Sun 17:39]
+
+S2 = Manifold(2, 'S^2', latex_name = r'S^2', start_index = 1)
+U = S2.open_subset('U')
+polar.<th,ph> = U.chart(r'th:(0,pi):\theta ph:(0,2*pi):\phi')
+
+LM = Manifold(6, 'FrameBundle', latex_name=r'LM', start_index=1)
+V = LM.open_subset('V')
+frame_chart.<th,ph,v11, v12, v21, v22> = V.chart()
+
+Is it possible to define a Lie algebra-valued 1-form on a manifold?
+Ideally I would like to define such a form on a principal bundle. I
+could define real-valued 1-forms and use some sort of indexing
+convention but then I end up with a débauches d'indices as Cartan
+might have said.
+
+My objective is to show in Sage Manifolds how to lift a connection
+1-form on the base manifold to a connection 1-form on the principal
+bundle. In my example, I am using the frame bundle over the open
+subset $U = (0,\pi) \times (0, 2\pi)$ of the sphere. Thus the Lie
+group is GL(2) and the Lie algebra is any 2 x 2 matrix.
+
+* Log for [2024-08-27 Tue 14:54]
+
+https://webusers.imj-prg.fr/~elisha.falbel/poly.pdf (this
+https://adebray.github.io/lecture_notes/m392c_RG_notes.pdf may be of
+interest)
+
+\begin{aligned}
+\left(R_g^* \theta\right)_x\left(B\right) & = \theta_{xg}\left(\left.\left(R_g\right)_*\right|_e\left(B\right)\right) \\
+& =\left(L_{x g}\right)_*\left(\left.\frac{\mathrm{d}}{\mathrm{d} t}\right|_{t=0} \left(x e^{t X^B_x} g\right)\right) \\
+& =\left.\frac{\mathrm{d}}{\mathrm{d} t}\right|_{t=0}(x g)^{-1}\left(x e^{t X^B_x} g\right) \\
+& =\left.\frac{\mathrm{d}}{\mathrm{d} t}\right|_{t=0} g^{-1} e^{t X^B_x} g \\
+& =\mathrm{Ad}_{g-1} X^B_x .
+\end{aligned}
+
+https://www.columbia.edu/~ask2262/MathSeniorThesis2023/KudinoorMathSeniorThesisMarch2023.pdf
+
+Also demystifying gauge symmetry
+
+https://diposit.ub.edu/dspace/bitstream/2445/192109/1/tfg_de_muniategui_climente_martin.pdf
+
+https://terrytao.wordpress.com/2008/09/27/what-is-a-gauge/
+
+Search term "electromagnetism connection gauge principal bundle maxwell"
+
+Fundamental Vector Field U(1)
+
+import Mathlib.Analysis.Manifold.SmoothMap
+import Mathlib.Analysis.Manifold.SmoothStructure
+
+-- Open the locale for manifolds
+open_locale manifold
+
+-- Define the manifolds and smooth maps
+variables {M N P : Type*}
+  [smooth_manifold_with_corners I (model_prod 𝓘(ℝ, ℝ) ℝ) M]
+  [smooth_manifold_with_corners I (model_prod 𝓘(ℝ, ℝ) ℝ) N]
+  [smooth_manifold_with_corners I (model_prod 𝓘(ℝ, ℝ) ℝ) P]
+
+variables (f : M → N) (g : N → P)
+
+-- Assume f and g are smooth maps
+variables [smooth_map I (model_prod 𝓘(ℝ, ℝ) ℝ) I (model_prod 𝓘(ℝ, ℝ) ℝ) f]
+          [smooth_map I (model_prod 𝓘(ℝ, ℝ) ℝ) I (model_prod 𝓘(ℝ, ℝ) ℝ) g]
+
+-- Prove that the composition g ∘ f is smooth
+lemma smooth_map_comp (hf : smooth_map I (model_prod 𝓘(ℝ, ℝ) ℝ) I (model_prod 𝓘(ℝ, ℝ) ℝ) f)
+  (hg : smooth_map I (model_prod 𝓘(ℝ, ℝ) ℝ) I (model_prod 𝓘(ℝ, ℝ) ℝ) g) :
+  smooth_map I (model_prod 𝓘(ℝ, ℝ) ℝ) I (model_prod 𝓘(ℝ, ℝ) ℝ) (g ∘ f) :=
+begin
+  -- Use the composition theorem
+  exact hg.comp hf,
+end
+
+
+
+
+-- Define the manifolds and smooth maps
+variables {M : Type*}
+
+* Log for [2024-09-16 Mon 12:36]
+
+-- import Mathlib.Geometry.Manifold.VectorBundle.SmoothSection
+-- import Mathlib.Geometry.Manifold.VectorBundle.Hom
+-- import Mathlib.Geometry.Manifold.VectorBundle.Pullback
+-- import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+-- import Mathlib.Geometry.Manifold.Instances.Sphere
+
+-- import Mathlib.Analysis.NormedSpace.Connected
+-- import Mathlib.LinearAlgebra.TensorProduct
+-- import Mathlib.Analysis.NormedSpace.Dual
+
+
+
+variable {𝕜 : Type*} [NontriviallyNormedField 𝕜]
+
+https://www.reddit.com/r/emacs/comments/sgcwuq/usepackage_unrecognized_keyword_straight/
+
+-- import Mathlib.Geometry.Manifold.ChartedSpace
+-- import Mathlib.geometry.manifold.SmoothManifoldWithCorners
+import Mathlib
+
+-- variable {𝕜 : Type*} [NontriviallyNormedField 𝕜]
+
+-- variable
+--   -- declare a smooth manifold `M` over the pair `(E, H)`.
+--   {E : Type*} [NormedAddCommGroup E] [NormedSpace 𝕜 E] {H : Type*} [TopologicalSpace H]
+--   (I : ModelWithCorners 𝕜 E H) {M : Type*} [TopologicalSpace M] [ChartedSpace H M]
+--   [SmoothManifoldWithCorners I M]
+
+import Mathlib
+
+variable {M : Type*} [TopologicalSpace M] [ChartedSpace ℝ M] [SmoothManifoldWithCorners (𝓡 1) M]
+
+-- import Mathlib.Geometry.Manifold.ChartedSpace
+-- import Mathlib.geometry.manifold.SmoothManifoldWithCorners
+import Mathlib
+
+variable {𝕜 : Type*} [NontriviallyNormedField 𝕜]
+
+variable
+  {E : Type*} [NormedAddCommGroup E] [NormedSpace 𝕜 E] {H : Type*} [TopologicalSpace H]
+  (I : ModelWithCorners 𝕜 E H) {M : Type*} [TopologicalSpace M] [ChartedSpace H M]
+  [SmoothManifoldWithCorners I M]
+
+variable
+  {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+  (I : ModelWithCorners ℝ E ℝ) {M : Type*} [TopologicalSpace M] [ChartedSpace ℝ M]
+  [SmoothManifoldWithCorners I M]
+  
+open Manifold
+
+variable
+  (n : ℕ) {M : Type*} [TopologicalSpace M] [ChartedSpace ℝ M]
+  [SmoothManifoldWithCorners (𝓡 n) M]
+  
+variable
+  {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+  (I : ModelWithCorners ℝ E ℝ) {M : Type*} [TopologicalSpace M] [ChartedSpace ℝ M]
+  [SmoothManifoldWithCorners (𝓡 1) M]
+  
+
+-- variable {M : Type*} [TopologicalSpace M] [ChartedSpace ℝ M] [SmoothManifoldWithCorners (𝓡 1) M]
+
+* Log for [2024-09-17 Tue 08:08]
+
+variable
+  (n : ℕ) {M : Type*} [TopologicalSpace M] [ChartedSpace ℝ M]
+  [SmoothManifoldWithCorners (𝓡 n) M]
+  
+variable
+  {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+  (I : ModelWithCorners ℝ E ℝ) {M : Type*} [TopologicalSpace M] [ChartedSpace ℝ M]
+  [SmoothManifoldWithCorners (𝓡 1) M]
+
+** Sort of working
+
+variable {𝕜 : Type*} [NontriviallyNormedField 𝕜]
+
+variable
+  {E : Type*} [NormedAddCommGroup E] [NormedSpace 𝕜 E] {H : Type*} [TopologicalSpace H]
+  (I : ModelWithCorners 𝕜 E H) {M : Type*} [TopologicalSpace M] [ChartedSpace H M]
+  [SmoothManifoldWithCorners I M]
+
+variable
+  {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+  (I : ModelWithCorners ℝ E ℝ) {M : Type*} [TopologicalSpace M] [ChartedSpace ℝ M]
+  [SmoothManifoldWithCorners I M]
+  
+open Manifold
+
+#check (𝓡 1)
+#check SmoothManifoldWithCorners (𝓡 1)
+
+import Mathlib.Topology.Basic
+
+-- Define two topological spaces
+variables {X Y : Type} [TopologicalSpace X] [TopologicalSpace Y]
+
+-- Define a map between the spaces
+variable (f : X → Y)
+
+-- Define the continuity of f
+theorem continuous_map : Continuous f :=
+begin
+  -- The proof goes here, depending on the specific map and topologies.
+  -- In this case, we'll assume `f` is continuous.
+  exact continuous_id,
+end
+
+** Question
+
+import Mathlib
+
+open Manifold
+
+variable
+  (m : ℕ) {M : Type*}
+   [TopologicalSpace M]
+   [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
+   [SmoothManifoldWithCorners (𝓡 m) M]
+
+variable
+  (n : ℕ) {N : Type*}
+   [TopologicalSpace N]
+   [ChartedSpace (EuclideanSpace ℝ (Fin n)) N]
+   [SmoothManifoldWithCorners (𝓡 n) N]
+
+variable
+  (p : ℕ) {P : Type*}
+   [TopologicalSpace P]
+   [ChartedSpace (EuclideanSpace ℝ (Fin p)) P]
+   [SmoothManifoldWithCorners (𝓡 p) P]
+
+variable {X Y Z : Type} [TopologicalSpace X] [TopologicalSpace Y] [TopologicalSpace Z]
+
+theorem compositionOfContinuousFunctions {f : X → Y} {g : Y -> Z} (hf : Continuous f) (hg : Continuous g) (IsOpen s) :=
+  IsOpen s
+  IsOpen (g ⁻¹' s)
+  IsOpen (f ⁻¹' (g ⁻¹' s))
+
+
+-- #check Continuous
+
+** My Goal
+
+I started off some time ago thinking I could a) produce some lectures
+on General Relativity without a débauches d'indices (as Cartan would
+say) and maybe as part of this do a simulation of two black holes
+coalescing to produce a gravitational wave. Clearly way too ambitious!
+
+Also some time ago I contributed a small example of a connection with
+torsion to the computer algebra package for General Relativity, Sage
+Manifolds. This package is great as it saves a lot of work
+e.g. calculating the components of a Rank 4 tensor in 4 dimensions and
+ensures that you don't make (some) mistakes. There used to be an
+example of the Faraday tensor but this suffered from bitrot so I
+offered to write a small example showing how to derive and maybe use
+the Faraday tensor.
+
+In a way Sage Manifolds is great but it is basically Python and gives
+very opaque error messages (for me at any rate). After I had done much
+reading, I realised that I could express electromagnetism as a Gauge
+Theory (a connection on a principal bundle over a base manifold). But
+Sage Manifolds does not support principal bundle (at least as far as I
+can tell). So I started off defining a principal bundle etc in Sage but the
+whole experience became very frustrating and then I saw a lot of work
+had been done in Lean on maths and differential geometry.
+
+So here I am several rabbit holes within rabbit holes but nonetheless
+having a lot of fun.
+
+** More crud
+
+import Mathlib
+
+open Manifold
+
+variable
+  (m : ℕ) {M : Type*}
+   [TopologicalSpace M]
+   [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
+   [SmoothManifoldWithCorners (𝓡 m) M]
+
+variable
+  (n : ℕ) {N : Type*}
+   [TopologicalSpace N]
+   [ChartedSpace (EuclideanSpace ℝ (Fin n)) N]
+   [SmoothManifoldWithCorners (𝓡 n) N]
+
+-- example {f : M → N} (hf : sorry f) :
+    sorry := by sorry
+    
+-- #check SmoothMap
+
+
+variable {X Y Z : Type} [TopologicalSpace X] [TopologicalSpace Y] [TopologicalSpace Z]
+
+-- example {f : X → Y} : Continuous f ↔ ∀ s, IsOpen s → IsOpen (f ⁻¹' s) :=
+--   continuous_def
+  
+-- #check continuous_def
+
+-- Define two topological spaces
+-- variable {X Y Z : Type} [MetricSpace X] [MetricSpace Y] [MetricSpace Z]
+
+variable (S : Set Z)
+
+theorem compositionOfContinuousFunctions {f : X → Y} {g : Y -> Z} (hf : Continuous f) (hg : Continuous g) (hS : IsOpen S) :
+    Continuous (g ∘ f) := by
+    have hg_preimage : IsOpen (g ⁻¹' S) := hg.isOpen_preimage S hS
+    have fg_preimage : IsOpen (f⁻¹' (g⁻¹' S)) := hf.isOpen_preimage (g⁻¹' S) hg_preimage
+    sorry
+  
+
+-- example {f : X → Y} {g : Y -> Z} (hf : Continuous f) (hg : Continuous g) (hS : IsOpen S) :
+--   sorry
+
+theorem compositionOfContinuousFunctions {f : X → Y} {g : Y -> Z} (hf : Continuous f) (hg : Continuous g) (IsOpen s) :=
+  IsOpen s
+  IsOpen (g ⁻¹' s)
+  IsOpen (f ⁻¹' (g ⁻¹' s))
+  Continuous (g ∘ f)
+
+
+-- #check Continuous
+
+-- variable {f : M -> N} [SmoothMap M N f]
+
+** Response
+
+Well de gustibus but no doubt in a few months time of working in Lean
+such a proof will be lucidity itself. I am impressed by your
+undergraduates.
+
+Here's my "squinting":
+
+So =rw [continuous_def]= rewrites =Continuous= as given by the definition
+
+#+BEGIN_SRC lean4
+Continuous f ↔ ∀ s, IsOpen s → IsOpen (f ⁻¹' s)
+#+END_SRC
+
+By saying =intro s hs=, Lean somehow knows that $s$ is meant to be an
+open set in the codomain of $g \circ f$, which is $Z$ (and =hs= is a
+proof of this?).
+
+=g ⁻¹' U= is open by the proof(?) =hg= that =g= is continuous to the
+open set =s= (with a proof of openness = hs=).
+
+#+BEGIN_SRC lean4
+IsOpen (g ⁻¹' s) := hg s hs
+#+END_SRC
+
+We next show that =f ⁻¹' (g ⁻¹' s)= is open using the proof(?) =hf= on
+the open set =(g ⁻¹' s)= (which is open by =hg_preimage=).
+
+And we are done.
+
+* Log for [2024-09-19 Thu 09:52]
+
+le_top.{u} {α : Type u} [LE α] [OrderTop α] {a : α} : a ≤ ⊤
+
+example [TopologicalSpace X] [TopologicalSpace Y] {x₀ : X} (f : X → X → Y)
+    (hf : ContinuousAt (Function.uncurry f) (x₀, x₀)) :
+    ContinuousAt (fun x ↦ f x x) x₀ :=
+  hf.comp_of_eq (continuousAt_id.prod continuousAt_id) rfl -- works
+
+theorem ContinuousAt.comp_of_eq {g : Y → Z} (hg : ContinuousAt g y)
+    (hf : ContinuousAt f x) (hy : f x = y) : ContinuousAt (g ∘ f) x := by subst hy; exact hg.comp hf
+
+theorem Bar {X Y Z : Type*} [TopologicalSpace X] [TopologicalSpace Y] [TopologicalSpace Z]
+  {f : X → Y} {g : Y → Z} {x : X} {y : Y}
+  (hf : ContinuousAt f x) (hg : ContinuousAt g y) (hy : f x = y) : ContinuousAt (g ∘ f) x := by subst hy; exact hg.comp hf
+
+nonrec theorem Baz {g : Y → Z} (hg : ContinuousAt g (f x))
+    (hf : ContinuousAt f x) : ContinuousAt (g ∘ f) x :=
+  hg.comp hf
+
+* Log for [2024-09-21 Sat 18:09]
+
+def getChartAt (p : M) : LocalHomeomorph M (EuclideanSpace ℝ m) :=
+  chartAt (EuclideanSpace ℝ m) p
+
+* Log for [2024-09-22 Sun 08:50]
+
+There is a variety of constructions of Brownian motion in the literature. The approach we have
+followed goes back to one of the great pioneers of Brownian motion, the French mathematician
+Paul Lévy. Lévy’s construction has the advantage that continuity properties of
+Brownian motion can be obtained from the construction. An alternative is to first show that a
+Markov process with the correct transition probabilities can be constructed, and then to use an
+abstract criterion, like Kolmogorov’s criterion for the existence of a continuous version of the
+process.
+
+`/Users/dom/.elan/toolchains/leanprover--lean4---v4.12.0-rc1/bin/lake setup-file /Users/dom/Dropbox/Tidy/DifferentialGeometry/mathematics_in_lean/MIL/Test2.lean Init Mathlib LLMlean` failed:
+
+stderr:
+⚠ [5118/5122] Built LLMlean.API
+warning: ././.lake/packages/llmlean/././LLMlean/API.lean:283:46: unused variable `state`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+warning: ././.lake/packages/llmlean/././LLMlean/API.lean:287:47: unused variable `state`
+note: this linter can be disabled with `set_option linter.unusedVariables false`
+warning: ././.lake/packages/llmlean/././LLMlean/API.lean:367:20: `Lean.HashSet` has been deprecated, use `Std.HashSet` instead
+warning: ././.lake/packages/llmlean/././LLMlean/API.lean:367:38: `Lean.HashSet.empty` has been deprecated, use `Std.HashSet.empty` instead
+warning: ././.lake/packages/llmlean/././LLMlean/API.lean:385:20: `Lean.HashSet` has been deprecated, use `Std.HashSet` instead
+warning: ././.lake/packages/llmlean/././LLMlean/API.lean:385:38: `Lean.HashSet.empty` has been deprecated, use `Std.HashSet.empty` instead
+warning: ././.lake/packages/llmlean/././LLMlean/API.lean:403:20: `Lean.HashSet` has been deprecated, use `Std.HashSet` instead
+warning: ././.lake/packages/llmlean/././LLMlean/API.lean:403:38: `Lean.HashSet.empty` has been deprecated, use `Std.HashSet.empty` instead
+warning: ././.lake/packages/llmlean/././LLMlean/API.lean:440:20: `Lean.HashSet` has been deprecated, use `Std.HashSet` instead
+warning: ././.lake/packages/llmlean/././LLMlean/API.lean:440:38: `Lean.HashSet.empty` has been deprecated, use `Std.HashSet.empty` instead
+warning: ././.lake/packages/llmlean/././LLMlean/API.lean:459:20: `Lean.HashSet` has been deprecated, use `Std.HashSet` instead
+warning: ././.lake/packages/llmlean/././LLMlean/API.lean:459:38: `Lean.HashSet.empty` has been deprecated, use `Std.HashSet.empty` instead
+warning: ././.lake/packages/llmlean/././LLMlean/API.lean:477:20: `Lean.HashSet` has been deprecated, use `Std.HashSet` instead
+warning: ././.lake/packages/llmlean/././LLMlean/API.lean:477:38: `Lean.HashSet.empty` has been deprecated, use `Std.HashSet.empty` instead
+✖ [5119/5122] Building LLMlean.LLMstep
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/LeanSearchClient/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/llmlean/.lake/build/lib:././.lake/build/lib DYLD_LIBRARY_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/build/lib:/Users/dom/.elan/toolchains/leanprover--lean4---v4.12.0-rc1/lib/lean:/Users/dom/.elan/toolchains/leanprover--lean4---v4.12.0-rc1/lib /Users/dom/.elan/toolchains/leanprover--lean4---v4.12.0-rc1/bin/lean ././.lake/packages/llmlean/././LLMlean/LLMstep.lean -R ././.lake/packages/llmlean/./. -o ././.lake/packages/llmlean/.lake/build/lib/LLMlean/LLMstep.olean -i ././.lake/packages/llmlean/.lake/build/lib/LLMlean/LLMstep.ilean -c ././.lake/packages/llmlean/.lake/build/ir/LLMlean/LLMstep.c --json
+error: ././.lake/packages/llmlean/././LLMlean/LLMstep.lean:25:2: unknown attribute [widget]
+error: ././.lake/packages/llmlean/././LLMlean/LLMstep.lean:134:6: unknown identifier 'Widget.saveWidgetInfo'
+error: ././.lake/packages/llmlean/././LLMlean/LLMstep.lean:122:6: invalid {...} notation, expected type is not known
+error: Lean exited with code 1
+Some required builds logged failures:
+- LLMlean.LLMstep
+error: build failed
+
+def smooth_comp_f (φ : local_homeomorph N (euclidean_space ℝ (fin n))) 
+                  (ψ : local_homeomorph M (euclidean_space ℝ (fin m))) :
+                  Prop :=
+  smooth ((𝓡 m).prod (𝓡 n)) (euclidean_space ℝ (fin n)) (λ x, φ.to_fun (f (ψ.inv_fun x)))
+
+  def smooth_comp_g (φ : ((chartAt (EuclideanSpace ℝ (Fin n)) q).toFun))
+                  (ψ : ((chartAt (EuclideanSpace ℝ (Fin m)) p).invFun)) :
+                  Prop :=
+  sorry -- Smooth ((𝓡 m).prod (𝓡 n)) (EuclideanSpace ℝ (Fin n)) (λ x => φ.to_fun (f (ψ.inv_fun x)))
+
+  type expected, got
+  (↑(chartAt (EuclideanSpace ℝ (Fin n)) q).toPartialEquiv : N → EuclideanSpace ℝ (Fin n))
+
+  def smooth_comp_g (φ : PartialHomeomorph P (EuclideanSpace ℝ (Fin p))) 
+                  (ψ : PartialHomeomorph N (EuclideanSpace ℝ (Fin n))) :
+                  Prop :=
+  Smooth (𝓡 n) (𝓡 p) (φ.toFun ∘ g ∘ ψ.invFun)
+
+  
+theorem smooth_composition_of_smooth_maps' {f : M → N} {g : N → P} (hf : smooth_map f) (hg : smooth_map g) :
+    smooht_map (g ∘ f) := by
+  sorry
+
+* Log for [2024-09-24 Tue 08:03]
+
+-- theorem smooth_composition_of_smooth_maps {f : M → N} {g : N → P}
+--   (hf : smooth_map m n f) (hg : smooth_map n p g) : smooth_map m p (g ∘ f) :=
+--   fun x =>
+--     let φ := chartAt (EuclideanSpace ℝ (Fin p)) (g (f x))
+--     let ψ := chartAt (EuclideanSpace ℝ (Fin n)) (f x)
+--     let χ := chartAt (EuclideanSpace ℝ (Fin m)) x
+--     -- First, show that ψ ∘ f ∘ χ⁻¹ is smooth
+--     have h1 : Smooth (𝓡 m) (𝓡 n) (ψ.toFun ∘ f ∘ χ.invFun) := hf x
+--     -- Second, show that φ ∘ g ∘ ψ⁻¹ is smooth
+--     have h2 : Smooth (𝓡 n) (𝓡 p) (φ.toFun ∘ g ∘ ψ.invFun) := hg (f x)
+--     -- Now, use the smoothness of the compositions
+--     suffices Smooth (𝓡 m) (𝓡 p) (φ.toFun ∘ g ∘ f ∘ χ.invFun) by
+--       exact this
+--     -- Combine them: φ ∘ g ∘ ψ⁻¹ ∘ ψ ∘ f ∘ χ⁻¹
+--     show Smooth (𝓡 m) (𝓡 p) (φ.toFun ∘ g ∘ ψ.invFun ∘ ψ.toFun ∘ f ∘ χ.invFun) from
+--           Smooth.comp h2 h1
+
+
+-- Theorem: composition of smooth maps is smooth
+-- theorem smooth_composition_of_smooth_maps {f : M → N} {g : N → P}
+--   (hf : smooth_map m n f) (hg : smooth_map n p g) : smooth_map m p (g ∘ f) :=
+--   fun x =>
+--   let φ := chartAt (EuclideanSpace ℝ (Fin p)) (g (f x))
+--   let ψ := chartAt (EuclideanSpace ℝ (Fin n)) (f x)
+--   let χ := chartAt (EuclideanSpace ℝ (Fin m)) x
+--   suffices Smooth (𝓡 m) (𝓡 p) (φ.toFun ∘ g ∘ f ∘ χ.invFun) by
+--       exact this
+--   Smooth.comp (hg (f x)) (hf x)
+--   sorry
+
+import Mathlib
+
+open Manifold
+
+variable
+  (m : ℕ) {M : Type*}
+  [TopologicalSpace M]
+  [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
+  [SmoothManifoldWithCorners (𝓡 m) M]
+
+variable
+  (n : ℕ) {N : Type*}
+  [TopologicalSpace N]
+  [ChartedSpace (EuclideanSpace ℝ (Fin n)) N]
+  [SmoothManifoldWithCorners (𝓡 n) N]
+
+variable
+  (p : ℕ) {P : Type*}
+  [TopologicalSpace P]
+  [ChartedSpace (EuclideanSpace ℝ (Fin p)) P]
+  [SmoothManifoldWithCorners (𝓡 p) P]
+
+-- Definition of a smooth map using charts of the manifolds
+def smooth_map (f : M → N) : Prop :=
+  ∀ (x : M), Smooth (𝓡 m) (𝓡 n)
+    ((chartAt (EuclideanSpace ℝ (Fin n)) (f x)).toFun ∘ f ∘ (chartAt (EuclideanSpace ℝ (Fin m)) x).invFun)
+
+-- Theorem: Composition of smooth maps is smooth
+theorem smooth_composition_of_smooth_maps {f : M → N} {g : N → P}
+  (hf : smooth_map m n f) (hg : smooth_map n p g) : smooth_map m p (g ∘ f) :=
+  fun x =>
+    let φ := chartAt (EuclideanSpace ℝ (Fin p)) (g (f x))
+    let ψ := chartAt (EuclideanSpace ℝ (Fin n)) (f x)
+    let χ := chartAt (EuclideanSpace ℝ (Fin m)) x
+    -- Show ψ ∘ f ∘ χ⁻¹ is smooth
+    have h1 : Smooth (𝓡 m) (𝓡 n) (ψ.toFun ∘ f ∘ χ.invFun) := hf x
+    -- Show φ ∘ g ∘ ψ⁻¹ is smooth
+    have h2 : Smooth (𝓡 n) (𝓡 p) (φ.toFun ∘ g ∘ ψ.invFun) := hg (f x)
+    -- Now, combine these to show φ ∘ g ∘ f ∘ χ⁻¹ is smooth
+    have : (φ.toFun ∘ g ∘ ψ.invFun ∘ ψ.toFun ∘ f ∘ χ.invFun) =
+           (φ.toFun ∘ g ∘ f ∘ χ.invFun) := by simp [Function.comp]
+    sorry
+
+
+- Theorem: Composition of smooth maps is smooth
+theorem smooth_composition_of_smooth_maps {f : M → N} {g : N → P}
+  (hf : smooth_map m n f) (hg : smooth_map n p g) : smooth_map m p (g ∘ f) :=
+  fun x =>
+    let φ := chartAt (EuclideanSpace ℝ (Fin p)) (g (f x))
+    let ψ := chartAt (EuclideanSpace ℝ (Fin n)) (f x)
+    let χ := chartAt (EuclideanSpace ℝ (Fin m)) x
+    -- Show ψ ∘ f ∘ χ⁻¹ is smooth
+    have h1 : Smooth (𝓡 m) (𝓡 n) (ψ.toFun ∘ f ∘ χ.invFun) := hf x
+    -- Show φ ∘ g ∘ ψ⁻¹ is smooth
+    have h2 : Smooth (𝓡 n) (𝓡 p) (φ.toFun ∘ g ∘ ψ.invFun) := hg (f x)
+
+    -- Show that ψ.invFun ∘ ψ.toFun is the identity on its source
+    have h_eq : ∀ y ∈ ψ.source, ψ.invFun (ψ.toFun y) = y := 
+      by intro y hy; exact PartialHomeomorph.left_inv ψ hy
+
+    have h_combined : ∀ z, φ.toFun (g (ψ.invFun (ψ.toFun (f (χ.invFun z))))) = φ.toFun (g (f (χ.invFun z))) :=
+      by apply h_eq
+    
+    sorry
+
+f (χ.invFun x) ∈ ψ.source ->
+
+* Log for [2024-09-25 Wed 11:19]
+
+let V_f_x := ψ.source
+let U_x := χ.source ∩ f ⁻¹' V_f_x
+let chart_U : chart (EuclideanSpace ℝ (Fin m)) (M) :=
+  { toFun := χ.toFun,
+    invFun := χ.invFun,
+    source := U_x,
+    target := χ.target }
+
+* Log for [2024-09-26 Thu 10:14]
+
+ have h_foo : ∀ y ∈ interior (χ.source ∩ f ⁻¹' ψ.source), f y ∈ ψ.source := by
+          intros y hy  -- Introduce the point y and the hypothesis that y is in the interior
+          -- Since y is in the interior, it must be in the intersection
+          have h_in_inter : y ∈ χ.source ∧ f ⁻¹' ψ.source := interior_subset (χ.source ∩ f ⁻¹' ψ.source) hy,
+
+          -- From h_in_inter, extract that y is in χ.source and also f(y) is in ψ.source
+          have h_f_inv : y ∈ f ⁻¹' ψ.source := h_in_inter.2, -- This gives us that y is in the preimage of ψ.source
+
+          -- Now show that f(y) is in ψ.source
+          exact h_f_inv  -- By definition of the preimage
+
+       have h_bar : ∀ y ∈ interior (χ.source ∩ f ⁻¹' ψ.source), f y ∈ ψ.source := by
+          intros y hy  -- Introduce the point y and the hypothesis
+          -- Now you can use the properties of the interior and the openness of the sets
+          have h_inter : y ∈ χ.source ∧ f y ∈ ψ.source := 
+          -- Since y is in the interior of the intersection, it is in the intersection
+            interior_subset (χ.source ∩ f ⁻¹' ψ.source) hy
+
+          -- Now apply the image f to the point y
+          exact h_inter.2  -- h_inter.2 will give you f(y) ∈ ψ.source
+
+
+* Log for [2024-09-27 Fri 07:13]
+
+I want to say that for all p in N the intersection of U and the
+(source of the) chart at p is open and the union of all such sets
+(over p) is open (and must equal U). I further want to say that the
+image under the chart is open and then since ((chartAt (EuclideanSpace
+ℝ (Fin n)) (f x)).toFun ∘ f ∘ (chartAt (EuclideanSpace ℝ (Fin m))
+x).invFun) is continuous, i
+
+I want for
+
+theorem smooth_is_continuous {Homeomorph ψ : M -> (EuclideanSpace ℝ (Fin m))}
+                             {Homeomorph φ : N -> (EuclideanSpace ℝ (Fin n))}
+                             (f : M -> N): Continuous f := by
+
+  rw [continuous_def] at *
+  intro U hU
+  by_cases hnU : (Nonempty U)
+  have h_open_phiU : IsOpen (φ '' U) := by
+      exact PartialHomeomorph.left_inv φ hU
+  sorry
+
+  -- Since U is open in N, φ(U) is open in ℝ^n (homeomorphism property)
+  let U' := phi.toFun '' U
+
+* Log for [2024-09-28 Sat 09:59]
+
+have baz : id ∘ f = f := by
+    funext x
+    rfl
+  
+  have bar : (φ.invFun ∘ φ.toFun) ∘ f ∘ ψ.invFun = id ∘ f ∘ ψ.invFun := by
+    rw [foo]
+
+  have eek : id ∘ (f ∘ ψ.invFun) = f ∘ ψ.invFun := by
+    funext x
+    rfl
+
+lemma fun_linv {α β : Type} (f : α → β) (g : β → α) (h_inv : ∀ x, g (f x) = x ∧ ∀ y, f (g y) = y) :
+  g ∘ f = id := 
+by
+  funext x
+  exact (h_inv x).1
+
+lemma fun_rinv {α β : Type} (f : α → β) (g : β → α) (h_inv : ∀ x, g (f x) = x ∧ ∀ y, f (g y) = y) :
+  f ∘ g = id := 
+by
+  funext y
+  -- Apply g to y and then use h_inv
+  have : f (g y) = y := (h_inv (g (f (g y)))).2 y
+  exact this
+
+
+have foo : φ.invFun ∘ φ.toFun = id := 
+   funext φ.left_inv
+
+  have urk : (φ.invFun ∘ φ.toFun) ∘ f ∘ ψ.invFun = f ∘ ψ.invFun := by
+    rw [foo]
+    funext x
+    rfl
+
+  have urg : (φ.invFun ∘ φ.toFun) ∘ f ∘ ψ.invFun = φ.invFun ∘ φ.toFun ∘ f ∘ ψ.invFun := by
+    rw [fun_assoc]
+
+  have arg : φ.invFun ∘ φ.toFun ∘ f ∘ ψ.invFun = f ∘ ψ.invFun := by
+    rw [urg, foo]
+
+  have brg : φ.invFun ∘ φ.toFun ∘ f ∘ ψ.invFun = φ.invFun ∘ (φ.toFun ∘ (f ∘ ψ.invFun)) := by
+    exact
+
+
+    have h_inv : ∀ x, φ.invFun (φ.toFun x) = x ∧ ∀ y, φ.toFun (φ.invFun y) = y := by
+    intro x
+    exact ⟨φ.left_inv x, φ.right_inv x⟩
+
+  have h_inv : ∀ x, φ.invFun (φ.toFun x) = x ∧ ∀ y, φ.toFun (φ.invFun y) = y := by
+    intro x
+    exact ⟨φ.right_inv x, φ.left_inv x⟩
+
+  have hg_postimageSimp : (φ.invFun ∘ φ.toFun) ∘ f ∘ ψ.invFun = f ∘ ψ.invFun := by
+    apply foo φ.toFun φ.invFun f ψ.toFun
+    sorry
+* Log for [2024-09-29 Sun 08:41]
+
+lemma fun_assoc {M N P Q : Type*}
+ [TopologicalSpace M] [TopologicalSpace N] [TopologicalSpace P] [TopologicalSpace Q]
+ {f : M → N} {g : N → P} {h : P → Q} : (h ∘ g) ∘ f = h ∘ (g ∘ f) := by
+   funext x
+   rfl
+
+lemma fun_inv {α β γ : Type} (f : α → β) (g : β → α)
+           (h1 : γ → α)
+           (h_inv : ∀ x, g (f x) = x ∧ ∀ y, f (g y) = y) :
+  (g ∘ f) ∘ h1 = id ∘ h1 :=
+by
+  funext x
+  have LHS : (g ∘ f) (h1 (x)) = h1 (x) := (h_inv (h1 (x))).1
+  exact LHS
+
+theorem foo {α β γ : Type} (f : α → β) (g : β → α)
+           (h : γ → α)
+           (h_inv : ∀ x, g (f x) = x ∧ ∀ y, f (g y) = y) :
+  (g ∘ f) ∘ h = h :=
+by
+  have bar : (g ∘ f) ∘ h = id ∘ h := fun_inv f g h h_inv
+  rw [bar]
+  funext x
+  rfl
+
+have hh : Continuous ψ.invFun := ψ.continuous_invFun
+  rw [continuous_def] at *
+
+  have qux : IsOpen (f ⁻¹' U) := hh ((ψ.invFun) ⁻¹' (f ⁻¹' U)) baz
+
+* Log for [2024-09-30 Mon 15:46]
+
+https://leanprover.zulipchat.com/#narrow/stream/113489-new-members/topic/Why.20does.20rewrite.20fail.3F/near/473438095
+
+So you can do this
+
+have baz_eq : f ∘ (ψ.invFun ∘ ψ.toFun) = f := by
+      funext x
+      have h : ψ.invFun (ψ.toFun x) = x := ψ.left_inv x
+      rw [Function.comp_apply, Function.comp_apply]
+      rw [h]
+
+or trust the simplifier(?)
+
+  have baz_eq : f ∘ (ψ.invFun ∘ ψ.toFun) = f := by
+    simp
+
+have harg : (f ⁻¹' U) = (ψ.toFun) ⁻¹' ((ψ.invFun) ⁻¹' (f  ⁻¹' U)) := by
+    funext x
+    have eek : (f ∘ (ψ.invFun ∘ ψ.toFun)) x = f x := by simp
+    have aak : (f ∘ ψ.invFun ∘ ψ.toFun) x = f x := by simp
+    have bbk : f (ψ.invFun (ψ.toFun x)) = f x := by simp [baz_eq]
+    -- have fff : ∀ u ∈ (f  ⁻¹' U) f u ∈ U := ????
+    sorry
+
+  have garg  : f ⁻¹' U = (ψ.invFun ∘ ψ.toFun) ⁻¹' (f  ⁻¹' U) := by
+    ext x
+    simp only [Function.comp_apply]
+
+
+    have baz_eq : f ∘ (ψ.invFun ∘ ψ.toFun) = f := by
+    simp
+
+  have harg : (f ⁻¹' U) = (ψ.toFun) ⁻¹' ((ψ.invFun) ⁻¹' (f  ⁻¹' U)) := by
+    funext x
+    have bbk : f (ψ.invFun (ψ.toFun x)) = f x := by simp [baz_eq]
+    -- have fff : ∀ u ∈ (f  ⁻¹' U) f u ∈ U := ????
+    sorry
+
+* Log for [2024-10-01 Tue 09:35]
+
+ lake	0.5	4.86	21	10	Apple	0.0	0.00	1885	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lake	0.0	0.21	1	0	Apple	0.0	0.00	1455	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lake	0.0	0.19	1	0	Apple	0.0	0.00	1465	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lake	0.4	4.69	21	9	Apple	0.0	0.00	1914	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lake	0.3	4.66	21	10	Apple	0.0	0.00	2046	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lake	0.5	4.80	21	10	Apple	0.0	0.00	1865	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lake	0.3	4.69	21	9	Apple	0.0	0.00	2060	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lake	0.4	5.00	21	9	Apple	0.0	0.00	1725	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lake	0.5	4.82	21	9	Apple	0.0	0.00	1943	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	0.0	3.34	11	1	Apple	0.0	0.00	1780	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	0.0	7.85	11	1	Apple	0.0	0.00	1694	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	0.0	0.26	9	1	Apple	0.0	0.00	1513	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	0.0	12.00	11	1	Apple	0.0	0.00	1667	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	0.0	0.07	6	1	Apple	0.0	0.00	1880	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	11.5	15.26	4	0	Apple	0.0	0.00	3950	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	0.0	7.12	11	1	Apple	0.0	0.00	1835	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	11.2	19.17	4	0	Apple	0.0	0.00	3855	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	0.0	0.35	6	1	Apple	0.0	0.00	1962	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	0.0	2.44	11	1	Apple	0.0	0.00	1568	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	0.0	5.17	11	1	Apple	0.0	0.00	1541	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	0.0	10.89	25	0	Apple	0.0	0.00	1505	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	0.0	0.06	6	1	Apple	0.0	0.00	2044	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	11.2	11.83	4	0	Apple	0.0	0.00	4064	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	0.0	1.82	7	1	Apple	0.0	0.00	1999	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	0.0	0.07	6	1	Apple	0.0	0.00	1904	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	12.0	12.10	4	0	Apple	0.0	0.00	4060	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	0.0	0.07	6	1	Apple	0.0	0.00	1936	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	11.5	11.27	4	0	Apple	0.0	0.00	4083	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	0.0	4.39	11	1	Apple	0.0	0.00	1583	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	11.8	11.63	4	0	Apple	0.0	0.00	4065	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	0.0	4.85	11	1	Apple	0.0	0.00	1633	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	11.3	13.82	4	0	Apple	0.0	0.00	4002	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	0.0	7.23	5	0	Apple	0.0	0.00	1502	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	0.0	3.94	11	1	Apple	0.0	0.00	1810	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	0.0	0.06	6	1	Apple	0.0	0.00	1860	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	11.8	11.00	4	0	Apple	0.0	0.00	4093	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	12.8	11.29	4	0	Apple	0.0	0.00	4084	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	0.0	7.28	11	1	Apple	0.0	0.00	1643	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	0.0	6.00	11	1	Apple	0.0	0.00	1752	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	0.0	2.53	11	1	Apple	0.0	0.00	1512	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	12.2	16.71	4	0	Apple	0.0	0.00	3917	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	11.9	17.55	4	0	Apple	0.0	0.00	3899	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	11.6	10.56	4	0	Apple	0.0	0.00	4103	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	0.0	0.06	6	1	Apple	0.0	0.00	2056	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	0.0	0.07	6	1	Apple	0.0	0.00	1721	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	11.3	9.31	5	0	Apple	0.0	0.00	4114	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	11.0	7.64	4	0	Apple	0.0	0.00	4159	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	10.9	7.69	4	0	Apple	0.0	0.00	4158	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	12.9	8.14	4	0	Apple	0.0	0.00	4154	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	10.9	7.23	4	0	Apple	0.0	0.00	4182	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	12.0	7.39	4	0	Apple	0.0	0.00	4178	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	11.4	7.33	4	0	Apple	0.0	0.00	4179	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	11.8	6.60	4	0	Apple	0.0	0.00	4204	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	11.0	5.95	4	0	Apple	0.0	0.00	4219	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	11.2	5.99	4	0	Apple	0.0	0.00	4215	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	11.0	5.46	4	0	Apple	0.0	0.00	4227	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	11.8	5.67	4	0	Apple	0.0	0.00	4223	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	12.0	5.13	4	0	Apple	0.0	0.00	4232	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	11.7	5.44	4	0	Apple	0.0	0.00	4224	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	11.8	4.70	4	0	Apple	0.0	0.00	4238	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	12.2	4.62	4	0	Apple	0.0	0.00	4240	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	11.3	4.58	4	0	Apple	0.0	0.00	4241	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	11.2	4.44	4	0	Apple	0.0	0.00	4242	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	11.0	3.97	4	0	Apple	0.0	0.00	4245	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	11.7	4.52	4	0	Apple	0.0	0.00	4244	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	12.1	3.96	4	0	Apple	0.0	0.00	4247	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	12.8	4.53	4	0	Apple	0.0	0.00	4243	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	11.8	4.00	4	0	Apple	0.0	0.00	4246	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	12.8	3.67	4	0	Apple	0.0	0.00	4252	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	11.5	3.62	4	0	Apple	0.0	0.00	4248	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	12.4	3.30	4	0	Apple	0.0	0.00	4257	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	12.1	3.69	4	0	Apple	0.0	0.00	4253	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	12.2	3.64	4	0	Apple	0.0	0.00	4249	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	11.6	3.47	4	0	Apple	0.0	0.00	4254	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	11.4	3.54	4	0	Apple	0.0	0.00	4250	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	11.9	3.37	4	0	Apple	0.0	0.00	4255	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	11.8	2.93	4	0	Apple	0.0	0.00	4259	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	11.6	2.92	4	0	Apple	0.0	0.00	4258	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	12.1	2.66	4	0	Apple	0.0	0.00	4261	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	12.8	2.34	4	0	Apple	0.0	0.00	4263	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	11.8	2.00	4	0	Apple	0.0	0.00	4266	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	13.5	2.15	4	0	Apple	0.0	0.00	4265	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	14.3	2.15	4	0	Apple	0.0	0.00	4264	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	11.7	1.31	4	0	Apple	0.0	0.00	4273	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	13.2	1.63	4	0	Apple	0.0	0.00	4270	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	12.5	1.60	4	0	Apple	0.0	0.00	4271	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	11.9	1.89	4	0	Apple	0.0	0.00	4267	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	14.8	1.59	2	0	Apple	0.0	0.00	4272	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	12.4	1.90	4	0	Apple	0.0	0.00	4268	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	12.7	1.02	4	0	Apple	0.0	0.00	4277	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	12.7	1.13	2	0	Apple	0.0	0.00	4276	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	12.4	0.80	2	0	Apple	0.0	0.00	4279	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	13.1	1.12	2	0	Apple	0.0	0.00	4275	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	13.1	0.96	2	0	Apple	0.0	0.00	4278	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	13.1	1.33	2	0	Apple	0.0	0.00	4274	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	(null)	0.24	2	0	Apple	0.0	0.00	4286	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	(null)	0.53	2	0	Apple	0.0	0.00	4282	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	(null)	0.11	2	0	Apple	0.0	0.00	4287	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	(null)	0.41	2	0	Apple	0.0	0.00	4283	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	(null)	0.39	2	0	Apple	0.0	0.00	4284	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	(null)	0.62	2	0	Apple	0.0	0.00	4280	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	(null)	0.29	2	0	Apple	0.0	0.00	4285	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ lean	(null)	0.57	2	0	Apple	0.0	0.00	4281	dom		0 bytes	0 bytes	0 bytes	No	No	No	(null)	No	0 bytes	0	0 bytes	0	0 bytes	0 bytes	0 bytes	-	0 bytes	0 bytes	No	(null)	
+ 
+
+* Log for [2024-10-02 Wed 11:54]
+
+  have baz_eq : f ∘ (ψ.invFun ∘ ψ.toFun) = f := by
+      funext x
+      have h : ψ.invFun (ψ.toFun x) = x := ψ.left_inv x
+      rw [Function.comp_apply, Function.comp_apply]
+      rw [h]
+
+  have garg  : f ⁻¹' U = (ψ.invFun ∘ ψ.toFun) ⁻¹' (f  ⁻¹' U) := by
+    ext x
+    simp [Set.mem_preimage]
+
+      have h_inv : ∀ (y : N), φ.invFun (φ.toFun y) = y ∧ ∀ (x : EuclideanSpace ℝ (Fin n)), φ.toFun (φ.invFun x) = x := by
+    intro y
+    exact ⟨φ.left_inv y, φ.right_inv⟩
+
+  have hg_postimageSimp : (φ.invFun ∘ φ.toFun) ∘ f = f := by
+    funext x
+    exact φ.left_inv (f x)
+
+* Log for [2024-10-03 Thu 09:35]
+
+https://leanprover.zulipchat.com/#narrow/stream/113489-new-members/topic/difference.20between.20.60.3A.3D.20by.20rw.20.5Bh.5D.60.20and.20.60.3A.3D.20h.60
+
+* Log for [2024-11-18 Mon 10:29]
+
+  let U_inter := φ_α.source ∩ φ_β.source
+  let φ_α_restricted : charted_space.chart M := {
+    source := U_α ∩ U_β,
+    to_fun := φ_α.to_fun,
+    inv_fun := φ_α.inv_fun,
+    left_inv := λ x hx, φ_α.left_inv hx.1,
+    right_inv := λ y hy, φ_α.right_inv hy.1
+  }
+
+       have h1g : φ_α.invFun ⁻¹' (φ_α.source ∩ φ_β.source) =
+                (φ_α.invFun ⁻¹' φ_α.source) ∩ (φ_α.invFun ⁻¹' φ_β.source) := Set.preimage_inter
+
+* Log for [2024-11-19 Tue 08:41]
+
+(φ_α.invFun ∘ φ_α.toFun) '' (φ_α.source ∩ φ_β.source) =
+                     φ_α.invFun '' (φ_α.toFun '' (φ_α.source ∩ φ_β.source))
+
+(f ∘ g) '' A = f '' (g '' A)
+
+* Log for [2024-11-21 Thu 09:26]
+
+example
+  (f : M → ℝ)
+  (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+  (hΦ_Α : φ_α ∈ atlas (EuclideanSpace ℝ (Fin m)) M)
+  (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+  (hΦ_Β : φ_β ∈ atlas (EuclideanSpace ℝ (Fin m)) M) :
+
+      let Dg : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] ℝ) :=
+        λ x => fderiv ℝ (f ∘ φ_α.invFun)
+                        (φ_α.toFun x)
+
+      let Dh : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] ℝ) :=
+        λ x => fderiv ℝ (f ∘ φ_β.invFun)
+                        (φ_β.toFun x)
+
+      ∀ x ∈ φ_α.source ∩ φ_β.source, (∀ v, Dg x v = 0) <-> (∀ v, Dh x v = 0) := by
+
+  let g := f ∘ φ_α.invFun
+  let h := f ∘ φ_β.invFun
+  let B := φ_α.source ∩ φ_β.source
+  let A := φ_α.toFun '' B
+  let p := f ∘ (φ_β.invFun ∘ φ_β.toFun)
+
+  have h0 : g '' A = (h ∘ φ_β.toFun ∘ φ_α.invFun) '' A :=
+    -- have h01 : g '' A = (f ∘ φ_α.invFun) '' A := rfl
+    -- have h02 : (h ∘ φ_β.toFun ∘ φ_α.invFun) '' A  = (f ∘ φ_β.invFun ∘ φ_β.toFun ∘ φ_α.invFun) '' A := rfl
+    -- have h03 : (f ∘ φ_β.invFun ∘ φ_β.toFun ∘ φ_α.invFun) '' A =
+    --            (f ∘ (φ_β.invFun ∘ φ_β.toFun) ∘ φ_α.invFun) '' A := rfl
+    -- have h07 : (φ_α.invFun ∘ φ_α.toFun) '' B = φ_α.invFun '' (φ_α.toFun '' B) := by rw [<-Set.image_comp]
+    -- have h03 : (p ∘ φ_α.invFun) ''         A = p '' (φ_α.invFun '' A)         := by rw [Set.image_comp]
+    -- have h04 : p '' (φ_α.invFun '' A)  = p '' (φ_α.invFun '' (φ_α.toFun '' B)) := rfl
+    have h05 : ∀ y, y ∈ φ_α.source -> φ_α.invFun (φ_α.toFun y) = y := λ h hy => φ_α.left_inv hy
+    have h04 : φ_α.source ∩ φ_β.source ⊆ (φ_α.invFun '' (φ_α.toFun '' (φ_α.source ∩ φ_β.source))) := by
+      intros x hx
+      have h04a : x ∈ φ_α.source := hx.1
+      have h04b : φ_α.invFun (φ_α.toFun x) = x := h05 _ h04a
+      have h04z : (φ_α.invFun ∘ φ_α.toFun) x = φ_α.invFun (φ_α.toFun x) := rfl
+      have h04y : (φ_α.invFun ∘ φ_α.toFun) x = x := by
+        rw [h04z]
+        exact h04b
+      have h04c : (φ_α.invFun ∘ φ_α.toFun) x ∈ (φ_α.invFun ∘ φ_α.toFun) '' (φ_α.source ∩ φ_β.source) := by
+        exact Set.mem_image_of_mem (φ_α.invFun ∘ φ_α.toFun) hx
+      have h04d : x ∈ (φ_α.invFun ∘ φ_α.toFun) '' (φ_α.source ∩ φ_β.source) :=
+        by rw [h04y] at h04c
+           exact h04c
+      have h04e : (φ_α.invFun ∘ φ_α.toFun) '' (φ_α.source ∩ φ_β.source) =
+                  φ_α.invFun '' (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) := by rw [<-Set.image_comp]
+      rw [h04e] at h04d
+      exact h04d
+    sorry
+
+type mismatch
+  Set.mem_image (φ_α.invFun ∘ ↑φ_α.toPartialEquiv) (φ_α.source ∩ φ_β.source)
+has type
+
+∀ (x : M),
+    x ∈ φ_α.invFun ∘ ↑φ_α.toPartialEquiv '' (φ_α.source ∩ φ_β.source) ↔
+      ∃ z ∈ φ_α.source ∩ φ_β.source, (φ_α.invFun ∘ ↑φ_α.toPartialEquiv) z = x : Prop
+
+but is expected to have type
+  x ∈ φ_α.invFun ∘ ↑φ_α.toPartialEquiv '' (φ_α.source ∩ φ_β.source) ↔
+    ∃ z ∈ φ_α.source ∩ φ_β.source, (φ_α.invFun ∘ ↑φ_α.toPartialEquiv) z = x : Prop
+
+I have
+
+  (f : M → ℝ)
+  (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+  (hΦ_Α : φ_α ∈ atlas (EuclideanSpace ℝ (Fin m)) M)
+  (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+  (hΦ_Β : φ_β ∈ atlas (EuclideanSpace ℝ (Fin m)) M) :
+
+  have h02 : φ_α.source ∩ φ_β.source ⊆ (φ_α.invFun '' (φ_α.toFun '' (φ_α.source ∩ φ_β.source))) := by
+  have h03 : (φ_α.invFun '' (φ_α.toFun '' (φ_α.source ∩ φ_β.source))) ⊆  φ_α.source ∩ φ_β.source := by
+
+and thus
+
+  have h04 : φ_α.source ∩ φ_β.source = φ_α.invFun '' (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) := by
+
+But now I need
+
+φ_α.source ∩ φ_β.source = φ_β.invFun '' (φ_β.toFun '' (φ_α.source ∩ φ_β.source))
+
+The proof will be almost identical so I shouldn't need to do it again?
+
+have h06 : φ_α.source ∩ φ_β.source = φ_β.invFun '' (φ_β.toFun '' (φ_α.source ∩ φ_β.source)) :=
+  by rw [←h04]
+
+* Log for [2024-11-23 Sat 10:54]
+
+
+open Real
+
+@[simp] lemma deriv_one_minus (x : ℝ) : deriv (fun (y : ℝ) ↦ 1 - y) x = -1 := by
+  have onem (y : ℝ) : 1 - y = -(y + -1) := by ring
+  simp_rw [onem]
+  simp
+
+@[simp] lemma diff_1_minusp (p : ℝ) : DifferentiableAt ℝ (fun p => 1 - p) p := by
+  have (p : ℝ) : 1 - p = -(p - 1) := by ring
+  simp_rw [this]
+  apply differentiableAt_neg_iff.mpr
+  apply DifferentiableAt.add_const
+  simp
+
+lemma deriv_log_one_sub (x : ℝ) (hh : x ≠ 1): deriv (fun p ↦ log (1 - p)) x = -(1-x)⁻¹ := by
+  have (x : ℝ) : log (1 - x) = ((fun x ↦ log x) ∘ (1 - ·)) x := by simp
+  simp_rw [this]
+  rw [deriv.comp]  -- How to apply chain rule without this ugly hack?
+  · simp
+  · simp
+    exact sub_ne_zero.mpr hh.symm
+  · simp
