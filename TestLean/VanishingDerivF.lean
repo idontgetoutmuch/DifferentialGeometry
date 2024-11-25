@@ -183,7 +183,13 @@ example
   (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
   (hΦ_Β : φ_β ∈ atlas (EuclideanSpace ℝ (Fin m)) M)
    (g : EuclideanSpace ℝ (Fin m) → ℝ := f ∘ φ_α.invFun)
-   (h : EuclideanSpace ℝ (Fin m) → ℝ := f ∘ φ_β.invFun) :
+   (h : EuclideanSpace ℝ (Fin m) → ℝ := f ∘ φ_β.invFun)
+   (Dg : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] ℝ) :=
+        λ x => fderiv ℝ (f ∘ φ_α.invFun)
+                        (φ_α.toFun x))
+   (Dh : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] ℝ) :=
+        λ x => fderiv ℝ (f ∘ φ_β.invFun)
+                        (φ_β.toFun x)) :
 
    ∀ z ∈ (φ_α.toFun '' (φ_α.source ∩ φ_β.source)),
   fderivWithin ℝ g (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) z =
@@ -200,7 +206,64 @@ example
      have hs : Set.EqOn g (h ∘ φ_β.toFun ∘ φ_α.invFun) (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) := hfg
 
      exact fderivWithin_congr' hs hz
+
    exact hd
+
+variable (f : ((Fin m) -> ℝ) → ℝ) (f' : ((Fin m) -> ℝ) →L[ℝ] ℝ) (x : (Fin m) -> ℝ)
+
+example : Prop := HasFDerivAt f f' x
+
+example : Prop :=
+  let foo := λ (f : ((Fin m) -> ℝ) → ℝ) (f' : ((Fin m) -> ℝ) →L[ℝ] ℝ) (x : (Fin m) -> ℝ) => HasFDerivAt f f' x
+  sorry
+
+example
+  (f : M → ℝ)
+  (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+  (hΦ_Α : φ_α ∈ atlas (EuclideanSpace ℝ (Fin m)) M)
+  (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+  (hΦ_Β : φ_β ∈ atlas (EuclideanSpace ℝ (Fin m)) M)
+   (g : EuclideanSpace ℝ (Fin m) → ℝ := f ∘ φ_α.invFun)
+   (h : EuclideanSpace ℝ (Fin m) → ℝ := f ∘ φ_β.invFun)
+   (Dg : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] ℝ) :=
+        λ x => fderiv ℝ (f ∘ φ_α.invFun)
+                        (φ_α.toFun x))
+   (Dh : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] ℝ) :=
+        λ x => fderiv ℝ (f ∘ φ_β.invFun)
+                        (φ_β.toFun x)) : true := by
+
+   have baz: fderiv ℝ (φ_α.symm.trans φ_β).toFun =
+             fderiv ℝ (((φ_α.symm.trans φ_β).toFun) : EuclideanSpace ℝ (Fin m) -> (EuclideanSpace ℝ (Fin m))) := sorry
+
+   let bab := λ x y => HasFDerivAt h (Dh x) y
+   let bac := λ y => fderiv ℝ (φ_α.symm.trans φ_β).toFun y
+   let bad := λ x => (Dh x).comp (fderiv ℝ (φ_α.symm.trans φ_β).toFun (φ_α x))
+
+   let foo := λ (f : ((Fin m) -> ℝ) → ℝ) (f' : ((Fin m) -> ℝ) →L[ℝ] ℝ) (x : (Fin m) -> ℝ) => HasFDerivAt f f' x
+   let fop := λ (x : M) (g : EuclideanSpace ℝ (Fin m) → (Fin m -> ℝ)) => (Dh x).comp (fderiv ℝ g (φ_α x))
+   let foq := λ x => fop x ((φ_α.symm.trans φ_β).toFun)
+
+   have fos :  ∀ x ∈ φ_α.source ∩ φ_β.source,
+    (foq x) = ((Dh x) :  EuclideanSpace ℝ (Fin m) →L[ℝ] ℝ) := sorry
+
+   -- let bae := λ (f' : ℝ) (x : EuclideanSpace ℝ (Fin m)) =>
+   --   HasDerivAt (h ∘ (φ_β.toFun ∘ φ_α.invFun)) f' x
+   -- let bae := λ f' x => HasDerivAt (h ∘ (φ_β.toFun ∘ φ_α.invFun)) f' x
+                     -- ((Dh x).comp (fderiv ℝ (φ_α.symm.trans φ_β).toFun (φ_α x)))
+
+   -- have baa : ∀ x ∈ φ_α.source ∩ φ_β.source,
+   --   HasDerivAt (h ∘ (φ_β.toFun ∘ φ_α.invFun)) ((Dh x).comp (fderiv ℝ (φ_α.symm.trans φ_β).toFun))
+
+   have foo : ∀ x ∈ φ_α.source ∩ φ_β.source, (Dh x) = ((Dh x) :  EuclideanSpace ℝ (Fin m) →L[ℝ] ℝ)
+              -- HasFDerivAt (h ∘ (φ_β.toFun ∘ φ_α.invFun)) ((Dh x).comp (φ_β.toFun ∘ φ_α.invFun)') z =
+              -- HasFDerivAt (h ∘ (φ_β.toFun ∘ φ_α.invFun)) (Dh.comp (φ_β.toFun ∘ φ_α.invFun)') z
+              := by
+     intros x hx
+     have bar : (fderivWithin ℝ (φ_β.toFun ∘ φ_α.invFun) (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) (φ_α x) : EuclideanSpace ℝ (Fin m) →L[ℝ] EuclideanSpace ℝ (Fin m))=
+                fderivWithin ℝ (φ_β.toFun ∘ φ_α.invFun) (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) (φ_α x) := by rfl
+     sorry
+
+   sorry
 
 #check λ (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m))) (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m))) =>
   Set.mem_image (φ_α.invFun ∘ φ_α.toFun) (φ_α.source ∩ φ_β.source)
