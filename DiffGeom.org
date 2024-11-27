@@ -1420,3 +1420,41 @@ lemma deriv_log_one_sub (x : ℝ) (hh : x ≠ 1): deriv (fun p ↦ log (1 - p)) 
   · simp
     exact sub_ne_zero.mpr hh.symm
   · simp
+
+* Log for [2024-11-26 Tue 14:20]
+
+As part of my journey to learn lean I thought I would prove a fairly
+simple fact about smooht differential manifolds: that the vanishing of a
+derivative is co-ordinate invariant or more simply if a derivative
+vanishes in one chart then it vanishes in any other.
+
+Let $f : M \longrightarrow \mathbb{R}$ be smooth then $g :=
+f\phi_\alpha^{-1}$ is $C^\infty$. Suppose its derivative vanishes at
+$\phi_\alpha(a) = (x_1(a), x_2(a), \ldots, x_n(a))$. Now take another
+chart and define $h := f\phi_\beta^{-1}$
+
+$$
+g = f \varphi_\alpha^{-1}=f \varphi_\beta^{-1} \varphi_\beta \varphi_\alpha^{-1}=h \varphi_\beta \varphi_\alpha^{-1}
+$$
+
+which we can write as
+
+$$
+g\left(x_1, \ldots, x_n\right)=h\left(y_1(x), \ldots, y_n(x)\right)
+$$
+
+By the chain rule we have
+
+$$
+\frac{\partial g}{\partial x_i}\Big|_{\phi_\alpha(a)} = \sum_j \frac{\partial h}{\partial y_j}\Big|_{\phi_\beta(a)} \frac{\partial y_j}{\partial x_i}\Big|_{\phi_\alpha(a)}
+$$
+
+Since $\phi_\alpha$ and $\phi_\beta$ are charts on a smooth manifold
+$\varphi_\beta \varphi_\alpha^{-1}$ is invertible with a Jacobian of
+full rank (at $a$).
+
+Thus $D g_{x(a)} = 0$ if and only if $D h_{y(a)} = 0$
+
+So this is what I have
+
+
