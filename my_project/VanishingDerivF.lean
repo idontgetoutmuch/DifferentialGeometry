@@ -119,6 +119,14 @@ example
 
     sorry
 
+variable
+  (m : ℕ) {M : Type*}
+  [TopologicalSpace M]
+  [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
+  [SmoothManifoldWithCorners (𝓡 m) M]
+
+#check ContMDiff (𝓡 m)
+
 example
   (m : ℕ) {M : Type*}
   [TopologicalSpace M]
@@ -148,7 +156,7 @@ example
              (fderiv ℝ h ((φ_α.symm.trans φ_β).toFun (φ_α x))).comp (fderiv ℝ (φ_α.symm.trans φ_β).toFun (φ_α x)) := by
 
 
-    have smooth_h : SmoothAt (𝓡 m) 𝓘(ℝ, ℝ) h ((φ_α.symm.trans φ_β).toFun (φ_α x)) := by
+    have smooth_h : ContMDiffAt (𝓡 m) 𝓘(ℝ, ℝ) h ((φ_α.symm.trans φ_β).toFun (φ_α x)) := by
       have bar : SmoothAt (𝓡 m) 𝓘(ℝ, ℝ) f (φ_β.invFun (φ_β x)) := sorry
       have baz : SmoothAt (𝓡 m) (𝓡 m) φ_β.invFun (φ_β x) := sorry
       have foo : SmoothAt (𝓡 m) 𝓘(ℝ, ℝ) (f ∘ φ_β.invFun) (φ_β x) := SmoothAt.comp (φ_β x) bar baz
