@@ -104,6 +104,62 @@ example
       mfderivWithin (𝓡 m) (𝓡 1) g' (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) x :=
        mfderivWithin_congr_of_eq_on_open g' g' (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) h2o h1
 
+    have bah : fderiv ℝ (h ∘ (φ_α.symm.trans φ_β).toFun) (φ_α x) =
+             (fderiv ℝ h ((φ_α.symm.trans φ_β).toFun (φ_α x))).comp (fderiv ℝ (φ_α.symm.trans φ_β).toFun (φ_α x)) := by
+
+      have smooth_h : ContMDiffAt (𝓡 m) 𝓘(ℝ, ℝ) h ((φ_α.symm.trans φ_β).toFun (φ_α x)) := by
+        have bar : ContMDiffAt (𝓡 m) 𝓘(ℝ, ℝ) f (φ_β.invFun (φ_β x)) := sorry
+        have baz : ContMDiffAt (𝓡 m) (𝓡 m) φ_β.invFun (φ_β x) := sorry
+        have foo : ContMDiffAt (𝓡 m) 𝓘(ℝ, ℝ) (f ∘ φ_β.invFun) (φ_β x) := ContMDiffAt.comp (φ_β x) bar baz
+        sorry
+
+      have hg : DifferentiableAt ℝ h ((φ_α.symm.trans φ_β).toFun (φ_α x)) := sorry
+      have hf : DifferentiableAt ℝ (φ_α.symm.trans φ_β).toFun (φ_α x) := sorry
+      exact fderiv_comp (φ_α x) hg hf
+
+    sorry
+
+example
+  (m : ℕ) {M : Type*}
+  [TopologicalSpace M]
+  [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
+  [SmoothManifoldWithCorners (𝓡 m) M]
+  (f : M → ℝ)
+  (smooth_f : Smooth (𝓡 m) 𝓘(ℝ, ℝ) f)
+  (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+  (hΦ_Α : φ_α ∈ atlas (EuclideanSpace ℝ (Fin m)) M)
+  (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+  (hΦ_Β : φ_β ∈ atlas (EuclideanSpace ℝ (Fin m)) M)
+
+  (g : EuclideanSpace ℝ (Fin m) → ℝ := f ∘ φ_α.invFun)
+  (h : EuclideanSpace ℝ (Fin m) → ℝ := f ∘ φ_β.invFun)
+
+  (Dg : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] ℝ) :=
+    λ x => fderiv ℝ g (φ_α.toFun x))
+
+  (Dh : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] ℝ) :=
+    λ x => fderiv ℝ h (φ_β.toFun x))
+
+   (x : M) (hx : x ∈  φ_α.source ∩ φ_β.source)
+
+      : (∀ v, Dg x v = 0) <-> (∀ v, Dh x v = 0) := by
+
+  have bah : fderiv ℝ (h ∘ (φ_α.symm.trans φ_β).toFun) (φ_α x) =
+             (fderiv ℝ h ((φ_α.symm.trans φ_β).toFun (φ_α x))).comp (fderiv ℝ (φ_α.symm.trans φ_β).toFun (φ_α x)) := by
+
+
+    have smooth_h : SmoothAt (𝓡 m) 𝓘(ℝ, ℝ) h ((φ_α.symm.trans φ_β).toFun (φ_α x)) := by
+      have bar : SmoothAt (𝓡 m) 𝓘(ℝ, ℝ) f (φ_β.invFun (φ_β x)) := sorry
+      have baz : SmoothAt (𝓡 m) (𝓡 m) φ_β.invFun (φ_β x) := sorry
+      have foo : SmoothAt (𝓡 m) 𝓘(ℝ, ℝ) (f ∘ φ_β.invFun) (φ_β x) := SmoothAt.comp (φ_β x) bar baz
+      sorry
+
+    have hg : DifferentiableAt ℝ h ((φ_α.symm.trans φ_β).toFun (φ_α x)) := sorry
+    have hf : DifferentiableAt ℝ (φ_α.symm.trans φ_β).toFun (φ_α x) := sorry
+    exact fderiv.comp (φ_α x) hg hf
+
+  sorry
+
 def hbo : IsOpen myBall := Metric.isOpen_ball
 def heq : ∀ x ∈ myBall, id x = id x := by
   intros x hx
@@ -183,79 +239,3 @@ example
 #check continuousWithinAt_id
 #check ContinuousOn.isOpen_preimage
 #check PartialEquiv
-
-example
-  (m : ℕ) {M : Type*}
-  [TopologicalSpace M]
-  [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
-  [SmoothManifoldWithCorners (𝓡 m) M]
-  (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m))) :
-    IsOpen (φ_α.invFun ⁻¹' φ_α.source) := by
-    -- have h0 : IsOpen φ_α.target := φ_α.open_target
-    have h1 : IsOpen φ_α.source := φ_α.open_source
-    have h2 : ContinuousOn φ_α.invFun φ_α.target := φ_α.continuousOn_invFun
-    -- have h3 : φ_α.invFun '' φ_α.target = φ_α.source :=  φ_α.symm_image_target_eq_source
-    sorry
-      -- have h_eq : ∀ x ∈ φ_α.source, φ_α.invFun (φ_α.toFun x) = x := φ_α.left_inv'
-      -- have h_source : IsOpen φ_α.source := φ_α.open_source
-      -- have h_eq : φ_α.invFun ⁻¹' φ_α.source = φ_α.target := sorry
-      -- have h_sourcf : φ_α.invFun  ⁻¹' φ_α.source ⊆ φ_α.target := sorry
-      -- have foo :φ_α.toFun ⁻¹' φ_α.target = φ_α.source := sorry
-      -- have h_cont : ContinuousOn φ_α.invFun φ_α.target := φ_α.continuousOn_invFun
-      -- exact  ContinuousOn.isOpen_preimage h_cont φ_α.open_target h_sourcf h_source
-
-example
-  (m : ℕ) {M : Type*}
-  [TopologicalSpace M]
-  [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
-  [SmoothManifoldWithCorners (𝓡 m) M]
-  (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m))) :
-    IsOpen (φ_α.invFun ⁻¹' φ_α.source) := by
-    have h1 : IsOpen φ_α.source := φ_α.open_source
-    have h2 : ContinuousOn φ_α.invFun φ_α.target := φ_α.continuousOn_invFun
-    have hc : φ_α.source ⊆ φ_α.toFun ⁻¹' φ_α.target := φ_α.source_preimage_target
-    have h4 : φ_α.toFun '' φ_α.source = φ_α.target := φ_α.image_source_eq_target
-    have hd : φ_α.source ⊆ φ_α.invFun '' φ_α.target := sorry
-
-    -- have h0 : IsOpen φ_α.target := φ_α.open_target
-    have h3 : φ_α.invFun '' φ_α.target = φ_α.source :=  φ_α.symm_image_target_eq_source
-    have h4 : φ_α.toFun '' φ_α.source = φ_α.target := φ_α.image_source_eq_target
-    have h5 : φ_α.invFun ⁻¹' φ_α.source = φ_α.target := sorry
-    have h6 : φ_α.symm.source = φ_α.target := φ_α.symm_source
-    have h8 : φ_α.symm.target = φ_α.source := φ_α.symm_target
-    have h7 : φ_α.symm.toFun = φ_α.invFun := φ_α.invFun_eq_coe
-    have h9 : φ_α.invFun ⁻¹' φ_α.source = φ_α.invFun ⁻¹' φ_α.symm.target := by rw [h8]
-    have ha : φ_α.invFun ⁻¹' φ_α.symm.target = φ_α.symm.toFun ⁻¹' φ_α.symm.target := by rw [h7]
-    have hc : φ_α.source ⊆ φ_α ⁻¹' φ_α.target := φ_α.source_preimage_target
-    have hb : φ_α.symm.toFun ⁻¹' φ_α.symm.target = φ_α.symm.source := sorry
-    have h4 : φ_α.toFun '' φ_α.source = φ_α.target := φ_α.image_source_eq_target
-    have h5 : φ_α.invFun ⁻¹' φ_α.source = φ_α.target := sorry
-    sorry
-
-  example
-  (m : ℕ) {M : Type*}
-  [TopologicalSpace M]
-  [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
-  [SmoothManifoldWithCorners (𝓡 m) M]
-  (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m))) :
-    IsOpen (φ_α.invFun ⁻¹' φ_α.source) := by
-    have h1 : IsOpen φ_α.source := φ_α.open_source
-    have h2 : ContinuousOn φ_α.invFun φ_α.target := φ_α.continuousOn_invFun
-    have hc : φ_α.source ⊆ φ_α.toFun ⁻¹' φ_α.target := φ_α.source_preimage_target
-    have h4 : φ_α.toFun '' φ_α.source = φ_α.target := φ_α.image_source_eq_target
-    have hd : φ_α.source ⊆ φ_α.invFun '' φ_α.target := sorry
-
-    -- have h0 : IsOpen φ_α.target := φ_α.open_target
-    have h3 : φ_α.invFun '' φ_α.target = φ_α.source :=  φ_α.symm_image_target_eq_source
-    have h4 : φ_α.toFun '' φ_α.source = φ_α.target := φ_α.image_source_eq_target
-    have h5 : φ_α.invFun ⁻¹' φ_α.source = φ_α.target := sorry
-    have h6 : φ_α.symm.source = φ_α.target := φ_α.symm_source
-    have h8 : φ_α.symm.target = φ_α.source := φ_α.symm_target
-    have h7 : φ_α.symm.toFun = φ_α.invFun := φ_α.invFun_eq_coe
-    have h9 : φ_α.invFun ⁻¹' φ_α.source = φ_α.invFun ⁻¹' φ_α.symm.target := by rw [h8]
-    have ha : φ_α.invFun ⁻¹' φ_α.symm.target = φ_α.symm.toFun ⁻¹' φ_α.symm.target := by rw [h7]
-    have hc : φ_α.source ⊆ φ_α ⁻¹' φ_α.target := φ_α.source_preimage_target
-    have hb : φ_α.symm.toFun ⁻¹' φ_α.symm.target = φ_α.symm.source := sorry
-    have h4 : φ_α.toFun '' φ_α.source = φ_α.target := φ_α.image_source_eq_target
-    have h5 : φ_α.invFun ⁻¹' φ_α.source = φ_α.target := sorry
-    sorry
