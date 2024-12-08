@@ -91,8 +91,11 @@ example
       sorry
 
     have h2o : IsOpen (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) := by
-      have ho : IsOpen (φ_α.source ∩ φ_β.source) := sorry
-      have hs : φ_α.source ∩ φ_β.source ⊆  φ_α.source := sorry
+      have ho : IsOpen (φ_α.source ∩ φ_β.source) := by
+        have ho1 : IsOpen φ_α.source := φ_α.open_source
+        have ho2 : IsOpen φ_β.source := φ_β.open_source
+        exact IsOpen.and ho1 ho2
+      have hs : φ_α.source ∩ φ_β.source ⊆  φ_α.source := inf_le_left
       have h2 : φ_α.toFun = φ_α := φ_α.toFun_eq_coe
       rw [h2]
       have h1 := φ_α.isOpen_image_iff_of_subset_source hs
@@ -107,10 +110,10 @@ example
     have bah : fderiv ℝ (h ∘ (φ_α.symm.trans φ_β).toFun) (φ_α x) =
              (fderiv ℝ h ((φ_α.symm.trans φ_β).toFun (φ_α x))).comp (fderiv ℝ (φ_α.symm.trans φ_β).toFun (φ_α x)) := by
 
-      have smooth_h : ContMDiffAt (𝓡 m) 𝓘(ℝ, ℝ) h ((φ_α.symm.trans φ_β).toFun (φ_α x)) := by
-        have bar : ContMDiffAt (𝓡 m) 𝓘(ℝ, ℝ) f (φ_β.invFun (φ_β x)) := sorry
-        have baz : ContMDiffAt (𝓡 m) (𝓡 m) φ_β.invFun (φ_β x) := sorry
-        have foo : ContMDiffAt (𝓡 m) 𝓘(ℝ, ℝ) (f ∘ φ_β.invFun) (φ_β x) := ContMDiffAt.comp (φ_β x) bar baz
+      have smooth_h : ContMDiffAt (𝓡 m) 𝓘(ℝ, ℝ) ⊤ h ((φ_α.symm.trans φ_β).toFun (φ_α x)) := by
+        have bar : ContMDiffAt (𝓡 m) 𝓘(ℝ, ℝ) ⊤ f (φ_β.invFun (φ_β x)) := sorry
+        have baz : ContMDiffAt (𝓡 m) (𝓡 m) ⊤ φ_β.invFun (φ_β x) := sorry
+        have foo : ContMDiffAt (𝓡 m) 𝓘(ℝ, ℝ) ⊤ (f ∘ φ_β.invFun) (φ_β x) := ContMDiffAt.comp (φ_β x) bar baz
         sorry
 
       have hg : DifferentiableAt ℝ h ((φ_α.symm.trans φ_β).toFun (φ_α x)) := sorry
@@ -125,7 +128,7 @@ variable
   [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
   [SmoothManifoldWithCorners (𝓡 m) M]
 
-#check ContMDiff (𝓡 m)
+#check ContMDiff (𝓡 m) 𝓘(ℝ, ℝ) ⊤
 
 example
   (m : ℕ) {M : Type*}
@@ -133,7 +136,7 @@ example
   [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
   [SmoothManifoldWithCorners (𝓡 m) M]
   (f : M → ℝ)
-  (smooth_f : Smooth (𝓡 m) 𝓘(ℝ, ℝ) f)
+  (smooth_f : ContMDiff (𝓡 m) 𝓘(ℝ, ℝ) ⊤ f)
   (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
   (hΦ_Α : φ_α ∈ atlas (EuclideanSpace ℝ (Fin m)) M)
   (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
@@ -156,15 +159,15 @@ example
              (fderiv ℝ h ((φ_α.symm.trans φ_β).toFun (φ_α x))).comp (fderiv ℝ (φ_α.symm.trans φ_β).toFun (φ_α x)) := by
 
 
-    have smooth_h : ContMDiffAt (𝓡 m) 𝓘(ℝ, ℝ) h ((φ_α.symm.trans φ_β).toFun (φ_α x)) := by
-      have bar : SmoothAt (𝓡 m) 𝓘(ℝ, ℝ) f (φ_β.invFun (φ_β x)) := sorry
-      have baz : SmoothAt (𝓡 m) (𝓡 m) φ_β.invFun (φ_β x) := sorry
-      have foo : SmoothAt (𝓡 m) 𝓘(ℝ, ℝ) (f ∘ φ_β.invFun) (φ_β x) := SmoothAt.comp (φ_β x) bar baz
+    have smooth_h : ContMDiffAt (𝓡 m) 𝓘(ℝ, ℝ) ⊤ h ((φ_α.symm.trans φ_β).toFun (φ_α x)) := by
+      have bar : ContMDiffAt (𝓡 m) 𝓘(ℝ, ℝ) ⊤ f (φ_β.invFun (φ_β x)) := sorry
+      have baz : ContMDiffAt (𝓡 m) (𝓡 m) ⊤ φ_β.invFun (φ_β x) := sorry
+      have foo : ContMDiffAt (𝓡 m) 𝓘(ℝ, ℝ) ⊤ (f ∘ φ_β.invFun) (φ_β x) := ContMDiffAt.comp (φ_β x) bar baz
       sorry
 
     have hg : DifferentiableAt ℝ h ((φ_α.symm.trans φ_β).toFun (φ_α x)) := sorry
     have hf : DifferentiableAt ℝ (φ_α.symm.trans φ_β).toFun (φ_α x) := sorry
-    exact fderiv.comp (φ_α x) hg hf
+    exact fderiv_comp (φ_α x) hg hf
 
   sorry
 
