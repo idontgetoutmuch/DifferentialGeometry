@@ -34,26 +34,24 @@ example
   [TopologicalSpace M]
   [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
   [SmoothManifoldWithCorners (𝓡 m) M]
-  (f : M → ℝ)
-  (f' : M → (EuclideanSpace ℝ (Fin 1)))
+  (f : M → (EuclideanSpace ℝ (Fin 1)))
   (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
   (hΦ_Α : φ_α ∈ atlas (EuclideanSpace ℝ (Fin m)) M)
   (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
   (hΦ_Β : φ_β ∈ atlas (EuclideanSpace ℝ (Fin m)) M)
 
-  (x : M) (hx : x ∈  φ_α.source ∩ φ_β.source) : true := by
+  (x : M) (hx : x ∈  φ_α.source ∩ φ_β.source) :
+    mfderiv (𝓡 m) (𝓡 1) (f ∘ φ_α.invFun) (φ_α.toFun x) = 0 ↔
+    mfderiv (𝓡 m) (𝓡 1) (f ∘ φ_β.invFun) (φ_β.toFun x) = 0 := by
 
-    let g : EuclideanSpace ℝ (Fin m) → ℝ := f ∘ φ_α.invFun
-    let h : EuclideanSpace ℝ (Fin m) → ℝ := f ∘ φ_β.invFun
+    let g : EuclideanSpace ℝ (Fin m) → (EuclideanSpace ℝ (Fin 1)) := f ∘ φ_α.invFun
+    let h : EuclideanSpace ℝ (Fin m) → (EuclideanSpace ℝ (Fin 1)) := f ∘ φ_β.invFun
 
-    let g' : EuclideanSpace ℝ (Fin m) → (EuclideanSpace ℝ (Fin 1)) := f' ∘ φ_α.invFun
-    let h' : EuclideanSpace ℝ (Fin m) → (EuclideanSpace ℝ (Fin 1)) := f' ∘ φ_β.invFun
+    let Dg : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] EuclideanSpace ℝ (Fin 1)) :=
+      λ x => mfderiv (𝓡 m) (𝓡 1) g (φ_α.toFun x)
 
-    -- let Dg : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] ℝ) :=
-    --   λ x => fderiv ℝ g (φ_α.toFun x)
-
-    -- let Dh : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] ℝ) :=
-    --   λ x => fderiv ℝ h (φ_β.toFun x)
+    let Dh : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] EuclideanSpace ℝ (Fin 1)) :=
+      λ x => mfderiv (𝓡 m) (𝓡 1) g (φ_β.toFun x)
 
     have h2o : IsOpen (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) := by
       have ho : IsOpen (φ_α.source ∩ φ_β.source) := by
@@ -67,33 +65,33 @@ example
       rw [h1]
       exact ho
 
-    have h1 : ∀ x ∈ φ_α.source ∩ φ_β.source, g' (φ_α.toFun x) = (h' ∘ (φ_α.symm.trans φ_β).toFun) (φ_α.toFun x) := by
+    have h1 : ∀ x ∈ φ_α.source ∩ φ_β.source, g (φ_α.toFun x) = (h ∘ (φ_α.symm.trans φ_β).toFun) (φ_α.toFun x) := by
       intros x hx
       have h1a : ∀ y ∈ φ_α.source, φ_α.invFun (φ_α.toFun y) = y := λ h hy => φ_α.left_inv hy
       have h1b : x ∈ φ_α.source := hx.1
       have h1c : φ_α.invFun (φ_α.toFun x) = x := h1a _ h1b
-      have h1d : g' (φ_α.toFun x) = f' x := by
-        calc  g' (φ_α.toFun x) = (f' ∘ φ_α.invFun) (φ_α.toFun x) := rfl
-              _ = f' (φ_α.invFun (φ_α.toFun x)) := rfl
-              _ = f' x := by rw [h1c]
+      have h1d : g (φ_α.toFun x) = f x := by
+        calc  g (φ_α.toFun x) = (f ∘ φ_α.invFun) (φ_α.toFun x) := rfl
+              _ = f (φ_α.invFun (φ_α.toFun x)) := rfl
+              _ = f x := by rw [h1c]
 
       have h1g : ∀ y ∈ φ_β.source, φ_β.invFun (φ_β.toFun y) = y := λ h hy => φ_β.left_inv hy
       have h1h : x ∈ φ_β.source := hx.2
       have h1i : φ_β.invFun (φ_β.toFun x) = x := h1g _ h1h
-      have h1j : (h' ∘ (φ_α.symm.trans φ_β).toFun) (φ_α.toFun x) = f' x := by
+      have h1j : (h ∘ (φ_α.symm.trans φ_β).toFun) (φ_α.toFun x) = f x := by
         calc
-         (h' ∘ (φ_α.symm.trans φ_β).toFun) (φ_α.toFun x) = h' (φ_β.toFun (φ_α.invFun (φ_α.toFun x))) := rfl
-         _ = f' (φ_β.invFun (φ_β.toFun (φ_α.invFun (φ_α.toFun x)))) := rfl
-         _ = f' (φ_β.invFun (φ_β.toFun x)) := by rw [h1c]
-         _ = f' x := by rw [h1i]
+         (h ∘ (φ_α.symm.trans φ_β).toFun) (φ_α.toFun x) = h (φ_β.toFun (φ_α.invFun (φ_α.toFun x))) := rfl
+         _ = f (φ_β.invFun (φ_β.toFun (φ_α.invFun (φ_α.toFun x)))) := rfl
+         _ = f (φ_β.invFun (φ_β.toFun x)) := by rw [h1c]
+         _ = f x := by rw [h1i]
 
-      have h1k : g' (φ_α.toFun x) = (h' ∘ (φ_α.symm.trans φ_β).toFun) (φ_α.toFun x) := by
+      have h1k : g (φ_α.toFun x) = (h ∘ (φ_α.symm.trans φ_β).toFun) (φ_α.toFun x) := by
         rw [h1d]
         rw [h1j]
 
       exact h1k
 
-    have g1 : ∀ x ∈ φ_α.toFun '' (φ_α.source ∩ φ_β.source), g' x = (h' ∘ (φ_α.symm.trans φ_β).toFun) x := by
+    have g1 : ∀ x ∈ φ_α.toFun '' (φ_α.source ∩ φ_β.source), g x = (h ∘ (φ_α.symm.trans φ_β).toFun) x := by
       rintro x ⟨y, hy, rfl⟩
       exact h1 y hy
 
@@ -110,16 +108,13 @@ example
       exact ho
 
     have h2 : ∀ x ∈ φ_α.toFun '' (φ_α.source ∩ φ_β.source),
-      mfderivWithin (𝓡 m) (𝓡 1) g' (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) x =
-      mfderivWithin (𝓡 m) (𝓡 1) (h' ∘ (φ_α.symm.trans φ_β).toFun) (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) x :=
-       mfderivWithin_congr_of_eq_on_open g' (h' ∘ (φ_α.symm.trans φ_β).toFun) (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) h2o g1
+      mfderivWithin (𝓡 m) (𝓡 1) g (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) x =
+      mfderivWithin (𝓡 m) (𝓡 1) (h ∘ (φ_α.symm.trans φ_β).toFun) (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) x :=
+       mfderivWithin_congr_of_eq_on_open g (h ∘ (φ_α.symm.trans φ_β).toFun) (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) h2o g1
 
-    have bah : fderiv ℝ (h ∘ (φ_α.symm.trans φ_β).toFun) (φ_α x) =
-             (fderiv ℝ h ((φ_α.symm.trans φ_β).toFun (φ_α x))).comp (fderiv ℝ (φ_α.symm.trans φ_β).toFun (φ_α x)) := by
-
-      have hg : DifferentiableAt ℝ h ((φ_α.symm.trans φ_β).toFun (φ_α x)) := sorry
-      have hf : DifferentiableAt ℝ (φ_α.symm.trans φ_β).toFun (φ_α x) := sorry
-      exact fderiv_comp (φ_α x) hg hf
+    have bah : mfderiv (𝓡 m) (𝓡 1) (h ∘ (φ_α.symm.trans φ_β).toFun) (φ_α x) =
+               (mfderiv (𝓡 m) (𝓡 1) h ((φ_α.symm.trans φ_β).toFun (φ_α x))).comp (mfderiv (𝓡 m) (𝓡 m) (φ_α.symm.trans φ_β).toFun (φ_α x)) := by
+      sorry
 
     sorry
 
@@ -128,6 +123,11 @@ variable
   [TopologicalSpace M]
   [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
   [SmoothManifoldWithCorners (𝓡 m) M]
+
+variable (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+variable (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+
+#check mfderivWithin (𝓡 m) (𝓡 m) (φ_α.symm.trans φ_β).toFun (φ_α.toFun '' (φ_α.source ∩ φ_β.source))
 
 #check ContMDiff (𝓡 m) 𝓘(ℝ, ℝ) ⊤
 
