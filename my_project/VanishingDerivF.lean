@@ -1,5 +1,7 @@
 import Mathlib
 import Mathlib.Topology.ContinuousOn
+import Mathlib.Geometry.Manifold.ChartedSpace
+import Mathlib.Geometry.Manifold.SmoothManifoldWithCorners
 
 open Manifold
 
@@ -24,10 +26,13 @@ theorem mfderivWithin_congr_of_eq_on_open
 
 def myBall : Set (EuclideanSpace ℝ (Fin 1)) := Metric.ball ((EuclideanSpace.single 1 1)  : EuclideanSpace ℝ (Fin 1)) 1
 
+open SmoothManifoldWithCorners
+
 #check fderiv
 #synth ChartedSpace (EuclideanSpace ℝ (Fin 1)) (EuclideanSpace ℝ (Fin 1))
 #synth SmoothManifoldWithCorners (𝓡 1) (EuclideanSpace ℝ (Fin 1))
 #check mfderiv (𝓡 1) (𝓡 1) id sorry
+#check maximalAtlas (EuclideanSpace ℝ (Fin m)) M
 
 example
   (m : ℕ) {M : Type*}
@@ -36,9 +41,9 @@ example
   [SmoothManifoldWithCorners (𝓡 m) M]
   (f : M → (EuclideanSpace ℝ (Fin 1)))
   (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
-  (hΦ_Α : φ_α ∈ atlas (EuclideanSpace ℝ (Fin m)) M)
+  (hΦ_Α : φ_α ∈ maximalAtlas (𝓡 m) M)
   (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
-  (hΦ_Β : φ_β ∈ atlas (EuclideanSpace ℝ (Fin m)) M)
+  (hΦ_Β : φ_β ∈ maximalAtlas (𝓡 m) M)
 
   (x : M) (hx : x ∈  φ_α.source ∩ φ_β.source) :
     mfderiv (𝓡 m) (𝓡 1) (f ∘ φ_α.invFun) (φ_α.toFun x) = 0 ↔
@@ -52,6 +57,8 @@ example
 
     let Dh : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] EuclideanSpace ℝ (Fin 1)) :=
       λ x => mfderiv (𝓡 m) (𝓡 1) g (φ_β.toFun x)
+
+    have smooth_chart_h : ContMDiffAt (𝓡 m) (𝓡 m) ⊤ φ_α.toFun x := sorry
 
     have h2o : IsOpen (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) := by
       have ho : IsOpen (φ_α.source ∩ φ_β.source) := by
@@ -112,11 +119,20 @@ example
       mfderivWithin (𝓡 m) (𝓡 1) (h ∘ (φ_α.symm.trans φ_β).toFun) (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) x :=
        mfderivWithin_congr_of_eq_on_open g (h ∘ (φ_α.symm.trans φ_β).toFun) (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) h2o g1
 
+    let s := φ_α.toFun '' (φ_α.source ∩ φ_β.source)
+
+    have h3 : MDifferentiableWithinAt (𝓡 m) (𝓡 m) (φ_α.symm.trans φ_β).toFun s (φ_α x) := by
+      sorry
+
     have bah : mfderiv (𝓡 m) (𝓡 1) (h ∘ (φ_α.symm.trans φ_β).toFun) (φ_α x) =
                (mfderiv (𝓡 m) (𝓡 1) h ((φ_α.symm.trans φ_β).toFun (φ_α x))).comp (mfderiv (𝓡 m) (𝓡 m) (φ_α.symm.trans φ_β).toFun (φ_α x)) := by
       sorry
 
     sorry
+
+#check mfderiv_comp_mfderivWithin
+#check HasMFDerivAt.comp_hasMFDerivWithinAt
+#check MDifferentiableWithinAt.comp
 
 variable
   (m : ℕ) {M : Type*}
@@ -127,9 +143,49 @@ variable
 variable (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
 variable (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
 
+example (m : ℕ) {M : Type*}
+  [TopologicalSpace M]
+  [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
+  [SmoothManifoldWithCorners (𝓡 m) M]
+  (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+  (hΦ_Α : φ_α ∈ maximalAtlas (𝓡 m) M)
+  (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+  (hΦ_Β : φ_β ∈ maximalAtlas (𝓡 m) M)
+  (x : M) (hx : x ∈  φ_α.source ∩ φ_β.source) :
+    ContMDiffWithinAt (𝓡 m) (𝓡 m) ⊤ (φ_α.symm.trans φ_β).toFun (φ_α.toFun '' (φ_α.source ∩ φ_β.source))
+    (φ_α x) := by
+    have h1 : ContMDiffOn (𝓡 m) (𝓡 m) ⊤ φ_α φ_α.source := contMDiffOn_of_mem_maximalAtlas hΦ_Α
+    sorry
+
+-- import Mathlib
+
+open scoped Manifold
+open SmoothManifoldWithCorners
+
+example (m : ℕ) {M : Type*}
+    [TopologicalSpace M] [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
+    [SmoothManifoldWithCorners (𝓡 m) M]
+    (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+    (hΦ_Α : φ_α ∈ maximalAtlas (𝓡 m) M)
+    (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+    (hΦ_Β : φ_β ∈ maximalAtlas (𝓡 m) M)
+    (x : M) (hx : x ∈  φ_α.source ∩ φ_β.source) :
+    ContMDiffAt (𝓡 m) (𝓡 m) ⊤ (φ_α.symm.trans φ_β) (φ_α x) := by
+  simp only [PartialHomeomorph.coe_trans]
+  apply ContMDiffAt.comp (I' := 𝓡 m)
+  · apply contMDiffAt_of_mem_maximalAtlas hΦ_Β
+    simpa [hx.1] using hx.2
+  · apply contMDiffAt_symm_of_mem_maximalAtlas hΦ_Α
+    exact PartialHomeomorph.map_source φ_α hx.1
+
+
+#check contMDiffOn_of_mem_maximalAtlas
+
+#check maximalAtlas (𝓡 m) M
+
 #check mfderivWithin (𝓡 m) (𝓡 m) (φ_α.symm.trans φ_β).toFun (φ_α.toFun '' (φ_α.source ∩ φ_β.source))
 
-#check ContMDiff (𝓡 m) 𝓘(ℝ, ℝ) ⊤
+#check ContMDiff (𝓡 m) (𝓡 1) ⊤
 
 example
   (m : ℕ) {M : Type*}
