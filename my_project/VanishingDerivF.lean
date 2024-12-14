@@ -28,11 +28,11 @@ def myBall : Set (EuclideanSpace ℝ (Fin 1)) := Metric.ball ((EuclideanSpace.si
 
 open SmoothManifoldWithCorners
 
-#check fderiv
-#synth ChartedSpace (EuclideanSpace ℝ (Fin 1)) (EuclideanSpace ℝ (Fin 1))
-#synth SmoothManifoldWithCorners (𝓡 1) (EuclideanSpace ℝ (Fin 1))
-#check mfderiv (𝓡 1) (𝓡 1) id sorry
-#check maximalAtlas (EuclideanSpace ℝ (Fin m)) M
+-- #check fderiv
+-- #synth ChartedSpace (EuclideanSpace ℝ (Fin 1)) (EuclideanSpace ℝ (Fin 1))
+-- #synth SmoothManifoldWithCorners (𝓡 1) (EuclideanSpace ℝ (Fin 1))
+-- #check mfderiv (𝓡 1) (𝓡 1) id sorry
+-- #check maximalAtlas (EuclideanSpace ℝ (Fin m)) M
 
 example
   (m : ℕ) {M : Type*}
@@ -40,6 +40,7 @@ example
   [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
   [SmoothManifoldWithCorners (𝓡 m) M]
   (f : M → (EuclideanSpace ℝ (Fin 1)))
+  (hs : ContMDiff (𝓡 m) (𝓡 1) ⊤ f)
   (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
   (hΦ_Α : φ_α ∈ maximalAtlas (𝓡 m) M)
   (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
@@ -51,14 +52,29 @@ example
 
     let g : EuclideanSpace ℝ (Fin m) → (EuclideanSpace ℝ (Fin 1)) := f ∘ φ_α.invFun
     let h : EuclideanSpace ℝ (Fin m) → (EuclideanSpace ℝ (Fin 1)) := f ∘ φ_β.invFun
+    have h17 : ContMDiffAt (𝓡 m) (𝓡 1) ⊤ g (φ_α x) := by
+      have h1 : ContMDiffAt (𝓡 m) (𝓡 m) ⊤ φ_α.symm (φ_α x) :=
+        contMDiffAt_symm_of_mem_maximalAtlas hΦ_Α (φ_α.map_source hx.1)
+      exact ContMDiffAt.comp (I' := 𝓡 m) (φ_α x) (ContMDiff.contMDiffAt hs) h1
+
+    have h17b : ContMDiffAt (𝓡 m) (𝓡 1) ⊤ h (φ_β x) := by
+      have h1 : ContMDiffAt (𝓡 m) (𝓡 m) ⊤ φ_β.symm (φ_β x) :=
+        contMDiffAt_symm_of_mem_maximalAtlas hΦ_Β (φ_β.map_source hx.2)
+      exact ContMDiffAt.comp (I' := 𝓡 m) (φ_β x) (ContMDiff.contMDiffAt hs) h1
+
+    have h18 : MDifferentiableAt (𝓡 m) (𝓡 1) g (φ_α x) := ContMDiffAt.mdifferentiableAt h17 le_top
+    have h18b : MDifferentiableAt (𝓡 m) (𝓡 1) h (φ_β x) := ContMDiffAt.mdifferentiableAt h17b le_top
 
     let Dg : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] EuclideanSpace ℝ (Fin 1)) :=
       λ x => mfderiv (𝓡 m) (𝓡 1) g (φ_α.toFun x)
 
     let Dh : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] EuclideanSpace ℝ (Fin 1)) :=
-      λ x => mfderiv (𝓡 m) (𝓡 1) g (φ_β.toFun x)
+      λ x => mfderiv (𝓡 m) (𝓡 1) h (φ_β.toFun x)
 
-    have smooth_chart_h : ContMDiffAt (𝓡 m) (𝓡 m) ⊤ φ_α.toFun x := sorry
+    have hgAkaf : HasMFDerivAt (𝓡 m) (𝓡 1) g (φ_α x) (Dg x) :=
+      MDifferentiableAt.hasMFDerivAt h18
+    have hhAkag : HasMFDerivAt (𝓡 m) (𝓡 1) h (φ_β x) (Dh x) :=
+      MDifferentiableAt.hasMFDerivAt h18b
 
     have h2o : IsOpen (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) := by
       have ho : IsOpen (φ_α.source ∩ φ_β.source) := by
@@ -139,15 +155,27 @@ example
         exact h7
       exact h8
 
-    have bah : mfderiv (𝓡 m) (𝓡 1) (h ∘ (φ_α.symm.trans φ_β).toFun) (φ_α x) =
-               (mfderiv (𝓡 m) (𝓡 1) h ((φ_α.symm.trans φ_β).toFun (φ_α x))).comp (mfderiv (𝓡 m) (𝓡 m) (φ_α.symm.trans φ_β).toFun (φ_α x)) := by
-      sorry
+    let Dαβ : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] EuclideanSpace ℝ (Fin m)) :=
+      λ x => mfderiv (𝓡 m) (𝓡 m) ((φ_α.symm.trans φ_β).toFun) (φ_α.toFun x)
+
+    have h23 : MDifferentiableAt (𝓡 m) (𝓡 m) (φ_α.symm.trans φ_β) (φ_α x) := ContMDiffAt.mdifferentiableAt h3 le_top
+
+    have h31 : HasMFDerivAt (𝓡 m) (𝓡 m)  (φ_α.symm.trans φ_β) (φ_α x) (Dαβ x) :=
+      MDifferentiableAt.hasMFDerivAt h23
+
+    have h41 : (φ_α.symm ≫ₕ φ_β) (φ_α x) = (φ_β x) := by
+      rw [PartialHomeomorph.trans_apply]
+      congr
+      exact PartialHomeomorph.left_inv φ_α (Set.mem_of_mem_inter_left hx)
+
+    have h61 : HasMFDerivAt (𝓡 m) (𝓡 1) h ((φ_α.symm ≫ₕ φ_β) (φ_α x)) (Dh x) := by
+      rw [h41]
+      exact hhAkag
+
+    have baa : HasMFDerivAt (𝓡 m) (𝓡 1) (h ∘ ((φ_α.symm.trans φ_β).toFun)) (φ_α x) ((Dh x).comp (Dαβ x)) := by
+      apply HasMFDerivAt.comp (φ_α x) h61 h31
 
     sorry
-
-#check mfderiv_comp_mfderivWithin
-#check HasMFDerivAt.comp_hasMFDerivWithinAt
-#check MDifferentiableWithinAt.comp
 
 variable
   (m : ℕ) {M : Type*}
@@ -155,170 +183,46 @@ variable
   [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
   [SmoothManifoldWithCorners (𝓡 m) M]
 
+variable (x : M)
+
 variable (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
 variable (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
 
-example (m : ℕ) {M : Type*}
+-- #check HasMFDerivAt.comp (φ_α x) (_ : HasMFDerivAt (𝓡 m) (𝓡 1) sorry sorry sorry)
+-- #check ((HasMFDerivAt.comp sorry sorry sorry) : HasMFDerivAt (𝓡 m) (𝓡 1) sorry sorry sorry)
+set_option maxHeartbeats 200000
+
+example
+  (m : ℕ) {M : Type*}
   [TopologicalSpace M]
   [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
   [SmoothManifoldWithCorners (𝓡 m) M]
+  (f : M → (EuclideanSpace ℝ (Fin 1)))
+  (hs : ContMDiff (𝓡 m) (𝓡 1) ⊤ f)
   (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
   (hΦ_Α : φ_α ∈ maximalAtlas (𝓡 m) M)
   (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
   (hΦ_Β : φ_β ∈ maximalAtlas (𝓡 m) M)
-  (x : M) (hx : x ∈  φ_α.source ∩ φ_β.source) :
-    ContMDiffWithinAt (𝓡 m) (𝓡 m) ⊤ (φ_α.symm.trans φ_β).toFun (φ_α.toFun '' (φ_α.source ∩ φ_β.source))
-    (φ_α x) := by
-    have h1 : ContMDiffOn (𝓡 m) (𝓡 m) ⊤ φ_α φ_α.source := contMDiffOn_of_mem_maximalAtlas hΦ_Α
+
+  (x : M) (hx : x ∈  φ_α.source ∩ φ_β.source) : true := by
+
+    let αβ : EuclideanSpace ℝ (Fin m) → (EuclideanSpace ℝ (Fin m)) := (φ_α.symm.trans φ_β)
+
+    let Dαβ : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] EuclideanSpace ℝ (Fin m)) :=
+      λ x => mfderiv (𝓡 m) (𝓡 m) αβ (φ_α.toFun x)
+
+    have hst : HasMFDerivAt (𝓡 m) (𝓡 m) (φ_α.symm.trans φ_β) (φ_α x) (Dαβ x) := sorry
+
+    let h : EuclideanSpace ℝ (Fin m) → (EuclideanSpace ℝ (Fin 1)) := f ∘ φ_β.invFun
+
+    let Dh : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] EuclideanSpace ℝ (Fin 1)) :=
+      λ x => mfderiv (𝓡 m) (𝓡 1) h (φ_β.toFun x)
+
+    have hsh : HasMFDerivAt (𝓡 m) (𝓡 1) h ((φ_α.symm.trans φ_β) (φ_α x)) (Dh x) := sorry
+
+    have bab : HasMFDerivAt (𝓡 m) (𝓡 1) (h ∘ ((φ_α.symm.trans φ_β))) (φ_α x) ((Dh x).comp (Dαβ x)) := sorry
+
+    have bab : HasMFDerivAt (𝓡 m) (𝓡 1) (h ∘ ((φ_α.symm.trans φ_β))) (φ_α x) ((Dh x).comp (Dαβ x)) := by
+      apply HasMFDerivAt.comp (φ_α x) hsh hst
+
     sorry
-
--- import Mathlib
-
-open scoped Manifold
-open SmoothManifoldWithCorners
-
-example (m : ℕ) {M : Type*}
-    [TopologicalSpace M] [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
-    [SmoothManifoldWithCorners (𝓡 m) M]
-    (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
-    (hΦ_Α : φ_α ∈ maximalAtlas (𝓡 m) M)
-    (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
-    (hΦ_Β : φ_β ∈ maximalAtlas (𝓡 m) M)
-    (x : M) (hx : x ∈  φ_α.source ∩ φ_β.source) :
-    ContMDiffAt (𝓡 m) (𝓡 m) ⊤ (φ_α.symm.trans φ_β) (φ_α x) := by
-  simp only [PartialHomeomorph.coe_trans]
-  apply ContMDiffAt.comp (I' := 𝓡 m)
-  · apply contMDiffAt_of_mem_maximalAtlas hΦ_Β
-    simpa [hx.1] using hx.2
-  · apply contMDiffAt_symm_of_mem_maximalAtlas hΦ_Α
-    exact PartialHomeomorph.map_source φ_α hx.1
-
-
-#check contMDiffOn_of_mem_maximalAtlas
-
-#check maximalAtlas (𝓡 m) M
-
-#check mfderivWithin (𝓡 m) (𝓡 m) (φ_α.symm.trans φ_β).toFun (φ_α.toFun '' (φ_α.source ∩ φ_β.source))
-
-#check ContMDiff (𝓡 m) (𝓡 1) ⊤
-
-example
-  (m : ℕ) {M : Type*}
-  [TopologicalSpace M]
-  [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
-  [SmoothManifoldWithCorners (𝓡 m) M]
-  (f : M → ℝ)
-  (smooth_f : ContMDiff (𝓡 m) 𝓘(ℝ, ℝ) ⊤ f)
-  (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
-  (hΦ_Α : φ_α ∈ atlas (EuclideanSpace ℝ (Fin m)) M)
-  (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
-  (hΦ_Β : φ_β ∈ atlas (EuclideanSpace ℝ (Fin m)) M)
-
-  (g : EuclideanSpace ℝ (Fin m) → ℝ := f ∘ φ_α.invFun)
-  (h : EuclideanSpace ℝ (Fin m) → ℝ := f ∘ φ_β.invFun)
-
-  (Dg : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] ℝ) :=
-    λ x => fderiv ℝ g (φ_α.toFun x))
-
-  (Dh : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] ℝ) :=
-    λ x => fderiv ℝ h (φ_β.toFun x))
-
-   (x : M) (hx : x ∈  φ_α.source ∩ φ_β.source)
-
-      : (∀ v, Dg x v = 0) <-> (∀ v, Dh x v = 0) := by
-
-  have bah : fderiv ℝ (h ∘ (φ_α.symm.trans φ_β).toFun) (φ_α x) =
-             (fderiv ℝ h ((φ_α.symm.trans φ_β).toFun (φ_α x))).comp (fderiv ℝ (φ_α.symm.trans φ_β).toFun (φ_α x)) := by
-
-
-    have smooth_h : ContMDiffAt (𝓡 m) 𝓘(ℝ, ℝ) ⊤ h ((φ_α.symm.trans φ_β).toFun (φ_α x)) := by
-      have bar : ContMDiffAt (𝓡 m) 𝓘(ℝ, ℝ) ⊤ f (φ_β.invFun (φ_β x)) := sorry
-      have baz : ContMDiffAt (𝓡 m) (𝓡 m) ⊤ φ_β.invFun (φ_β x) := sorry
-      have foo : ContMDiffAt (𝓡 m) 𝓘(ℝ, ℝ) ⊤ (f ∘ φ_β.invFun) (φ_β x) := ContMDiffAt.comp (φ_β x) bar baz
-      sorry
-
-    have hg : DifferentiableAt ℝ h ((φ_α.symm.trans φ_β).toFun (φ_α x)) := sorry
-    have hf : DifferentiableAt ℝ (φ_α.symm.trans φ_β).toFun (φ_α x) := sorry
-    exact fderiv_comp (φ_α x) hg hf
-
-  sorry
-
-def hbo : IsOpen myBall := Metric.isOpen_ball
-def heq : ∀ x ∈ myBall, id x = id x := by
-  intros x hx
-  exact rfl
-
-#check mfderivWithin_congr_of_eq_on_open
-  (id : EuclideanSpace ℝ (Fin 1) -> EuclideanSpace ℝ (Fin 1))
-  (id : EuclideanSpace ℝ (Fin 1) -> EuclideanSpace ℝ (Fin 1))
-  myBall hbo heq
-
-example :
- ∀ x ∈ myBall, mfderivWithin (𝓡 1) (𝓡 1) id myBall x = mfderivWithin (𝓡 1) (𝓡 1) id myBall x :=
-  mfderivWithin_congr_of_eq_on_open id id myBall hbo heq
-
-example
-  (m : ℕ) {M : Type*}
-  [TopologicalSpace M]
-  [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
-  [SmoothManifoldWithCorners (𝓡 m) M]
-  (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m))) :
-    IsOpen φ_α.source := φ_α.open_source
-
-example
-  (m : ℕ) {M : Type*}
-  [TopologicalSpace M]
-  [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
-  [SmoothManifoldWithCorners (𝓡 m) M]
-  (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m))) :
-    IsOpen (φ_α.toFun '' φ_α.source) := by
-      have h1 : IsOpen φ_α.target := φ_α.open_target
-      have h2 : φ_α.toFun '' φ_α.source = φ_α.target := φ_α.image_source_eq_target
-      have h3 : IsOpen (φ_α.toFun '' φ_α.source ) := h2 ▸ h1
-      exact h3
-
-example
-  (m : ℕ) {M : Type*}
-  [TopologicalSpace M]
-  [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
-  [SmoothManifoldWithCorners (𝓡 m) M]
-  (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
-  (s : Set M)
-  (ho : IsOpen s) (hs : s ⊆ φ_α.source):
-    IsOpen (φ_α '' s) := by
-      have h1 := φ_α.isOpen_image_iff_of_subset_source hs
-      rw [h1]
-      exact ho
-
-example
-  (m : ℕ) {M : Type*}
-  [TopologicalSpace M]
-  [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
-  [SmoothManifoldWithCorners (𝓡 m) M]
-  (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
-  (s : Set M)
-  (ho : IsOpen s) (hs : s ⊆ φ_α.source) :
-    IsOpen (φ_α.toFun '' s) := by
-    have h2 : φ_α.toFun = φ_α := φ_α.toFun_eq_coe
-    rw [h2]
-    have h1 := φ_α.isOpen_image_iff_of_subset_source hs
-    rw [h1]
-    exact ho
-
-example
-  (m : ℕ) {M : Type*}
-  [TopologicalSpace M]
-  [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
-  [SmoothManifoldWithCorners (𝓡 m) M]
-  (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m))) :
-    IsOpen (φ_α '' φ_α.source) := by
-      have h1 : IsOpen φ_α.source := φ_α.open_source
-      have hs : φ_α.source ⊆ φ_α.source := by rfl
-      have h2 := φ_α.isOpen_image_iff_of_subset_source hs
-      rw [h2]
-      exact h1
-
-#check ContinuousWithinAt
-#check continuousWithinAt_id
-#check ContinuousOn.isOpen_preimage
-#check PartialEquiv

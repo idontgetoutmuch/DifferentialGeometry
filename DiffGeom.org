@@ -1458,3 +1458,45 @@ Thus $D g_{x(a)} = 0$ if and only if $D h_{y(a)} = 0$
 So this is what I have
 
 
+* Log for [2024-12-14 Sat 08:12]
+
+HasMFDerivAt 𝓘(ℝ, EuclideanSpace ℝ (Fin m)) 𝓘(ℝ, EuclideanSpace ℝ (Fin 1)) (h ∘ ↑(φ_α.symm ≫ₕ φ_β)) (↑φ_α x)
+    ((Dh x).comp (Dαβ x))
+
+    have h41 : (φ_α.symm ≫ₕ φ_β) (φ_α x) = (φ_β x) := by
+      rw [PartialHomeomorph.trans_apply]
+      congr
+      exact PartialHomeomorph.left_inv φ_α (Set.mem_of_mem_inter_left hx)
+
+    have h47 : HasMFDerivAt (𝓡 m) (𝓡 m)  (φ_α.symm.trans φ_β) ((φ_α.symm ≫ₕ φ_β) (φ_α x)) (Dαβ x) := by
+      sorry
+
+    -- have baa : true := by
+    --   apply HasMFDerivAt.comp (φ_α x) hhAkag h31
+
+    have baa : HasMFDerivAt (𝓡 m) (𝓡 m) (↑(φ_α.symm ≫ₕ φ_β) ∘ ↑(φ_α.symm ≫ₕ φ_β)) (φ_α x) ((Dαβ x).comp (Dαβ x)) := by
+      apply HasMFDerivAt.comp (φ_α x) h47 h31
+
+    -- HasMFDerivAt 𝓘(ℝ, EuclideanSpace ℝ (Fin m)) 𝓘(ℝ, EuclideanSpace ℝ (Fin 1)) h (↑φ_β x) (Dh x)
+    -- HasMFDerivAt ?m.103379 ?m.103388 ?m.103401 (↑φ_α x) ?m.103432
+
+    have h53 : HasMFDerivAt 𝓘(ℝ, EuclideanSpace ℝ (Fin m)) 𝓘(ℝ, EuclideanSpace ℝ (Fin 1)) h (φ_β x) (Dh x) := by
+      sorry
+
+    have h59 : HasMFDerivAt 𝓘(ℝ, EuclideanSpace ℝ (Fin m)) 𝓘(ℝ, EuclideanSpace ℝ (Fin 1)) h (φ_α x) (Dh x) := by
+      sorry
+
+    have h61 : HasMFDerivAt (𝓡 m) (𝓡 1) h ((φ_α.symm ≫ₕ φ_β) (φ_α x)) (Dh x) := by
+      sorry
+
+    have baa : HasMFDerivAt 𝓘(ℝ, EuclideanSpace ℝ (Fin m)) 𝓘(ℝ, EuclideanSpace ℝ (Fin 1)) (h ∘ ↑(φ_α.symm ≫ₕ φ_β)) (φ_α x) ((Dh x).comp (Dαβ x)) := by
+      apply HasMFDerivAt.comp (φ_α x) h61 h31
+
+    -- have baa : HasMFDerivAt (𝓡 m) (𝓡 m) (h ∘ ((φ_α.symm.trans φ_β).toFun)) (φ_α x) ((Dh x).comp (Dαβ x)) := sorry
+    have baa : HasMFDerivAt (𝓡 m) (𝓡 1) (h ∘ ((φ_α.symm.trans φ_β).toFun)) (φ_α x) ((Dh x).comp (Dαβ x)) := by
+      apply HasMFDerivAt.comp (φ_α x) h61 h31
+
+    -- have h37 : HasMFDerivAt (𝓡 m) (𝓡 1) (h ∘ ((φ_α.symm.trans φ_β))) (φ_α x) ((Dh x).comp (Dαβ x)) := sorry -- HasMFDerivAt.comp (φ_α x) sorry sorry -- hhAkag h31
+    -- have h37 : HasMFDerivAt (𝓡 m) (𝓡 1) sorry sorry sorry := HasMFDerivAt.comp sorry sorry sorry
+    sorry
+
