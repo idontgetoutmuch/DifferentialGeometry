@@ -1500,3 +1500,18 @@ HasMFDerivAt 𝓘(ℝ, EuclideanSpace ℝ (Fin m)) 𝓘(ℝ, EuclideanSpace ℝ 
     -- have h37 : HasMFDerivAt (𝓡 m) (𝓡 1) sorry sorry sorry := HasMFDerivAt.comp sorry sorry sorry
     sorry
 
+
+tactic 'apply' failed, failed to unify
+  HasMFDerivAt 𝓘(ℝ, EuclideanSpace ℝ (Fin m)) 𝓘(ℝ, EuclideanSpace ℝ (Fin m)) (↑(φ_β.symm ≫ₕ φ_α) ∘ ↑(φ_α.symm ≫ₕ φ_β)) (↑φ_α x✝) ((Dβα x✝).comp (Dαβ x✝))
+with
+  HasMFDerivAt 𝓘(ℝ, EuclideanSpace ℝ (Fin m)) 𝓘(ℝ, EuclideanSpace ℝ (Fin m)) (↑(φ_β.symm ≫ₕ φ_α) ∘ ↑(φ_α.symm ≫ₕ φ_β)) (↑φ_α x) ((Dβα x).comp (Dαβ x))
+
+
+tactic 'apply' failed, failed to unify
+  HasMFDerivAt 𝓘(ℝ, EuclideanSpace ℝ (Fin m)) 𝓘(ℝ, EuclideanSpace ℝ (Fin m)) (↑(φ_β.symm ≫ₕ φ_α) ∘ ↑(φ_α.symm ≫ₕ φ_β)) (↑φ_α x)
+    (mfderiv 𝓘(ℝ, EuclideanSpace ℝ (Fin m)) 𝓘(ℝ, EuclideanSpace ℝ (Fin m)) (↑(φ_β.symm ≫ₕ φ_α) ∘ ↑(φ_α.symm ≫ₕ φ_β))
+      (↑φ_α x))
+with
+  HasMFDerivAt 𝓘(ℝ, EuclideanSpace ℝ (Fin m)) 𝓘(ℝ, EuclideanSpace ℝ (Fin m)) (↑(φ_β.symm ≫ₕ φ_α) ∘ ↑(φ_α.symm ≫ₕ φ_β)) (↑φ_α x)
+    (mfderivWithin 𝓘(ℝ, EuclideanSpace ℝ (Fin m)) 𝓘(ℝ, EuclideanSpace ℝ (Fin m)) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm)
+      (↑φ_α.toPartialEquiv '' (φ_α.source ∩ φ_β.source)) (↑φ_α x))

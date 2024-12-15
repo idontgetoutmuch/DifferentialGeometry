@@ -7,6 +7,25 @@ open Manifold
 
 open SmoothManifoldWithCorners
 
+theorem mfderivWithin_congr_of_eq_on_open
+  {m n : ℕ} {M N : Type*}
+  [TopologicalSpace M]
+  [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
+  [SmoothManifoldWithCorners (𝓡 m) M]
+  [TopologicalSpace N]
+  [ChartedSpace (EuclideanSpace ℝ (Fin n)) N]
+  [SmoothManifoldWithCorners (𝓡 n) N]
+  (f g : M → N) (s : Set M)
+  (ho : IsOpen s)
+  (he : ∀ x ∈ s, f x = g x) :
+  ∀ x ∈ s, mfderivWithin (𝓡 m) (𝓡 n) f s x = mfderivWithin (𝓡 m) (𝓡 n) g s x := by
+    intros x hy
+    have hx : f x = g x := he x hy
+    have h1 : UniqueMDiffWithinAt (𝓡 m) s x := IsOpen.uniqueMDiffWithinAt ho hy
+    have h2 : mfderivWithin (𝓡 m) (𝓡 n) f s x = mfderivWithin (𝓡 m) (𝓡 n) g s x :=
+    mfderivWithin_congr h1 he hx
+    exact h2
+
 theorem h1
   (m : ℕ) {M : Type*}
   [TopologicalSpace M]
@@ -89,10 +108,56 @@ example
   have baa : HasMFDerivAt (𝓡 m) (𝓡 m) (↑(φ_β.symm ≫ₕ φ_α) ∘ ↑(φ_α.symm ≫ₕ φ_β)) (φ_α x) ((Dβα x).comp (Dαβ x)) := by
     apply HasMFDerivAt.comp (φ_α x) h61 h3
 
-  have h_inv1 : ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) (φ_α x) = (φ_α x) := by
+  have h_inv1 : ∀ x ∈ φ_α.source ∩ φ_β.source,
+  ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) (φ_α x) = (φ_α x) := by
+    intro x hx
     calc ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) (φ_α x) =
         (φ_α (φ_β.symm (φ_β (φ_α.symm (φ_α x))))) := by rfl
     _ = (φ_α (φ_β.symm (φ_β x))) := by rw [φ_α.left_inv hx.1]
     _ = (φ_α x) := by rw [φ_β.left_inv hx.2]
+
+  have h_inv2 : ∀ x ∈ ↑φ_α.toPartialEquiv '' (φ_α.source ∩ φ_β.source),
+    ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) x = id x := by
+    intro x hx
+    obtain ⟨x₀, hx₀, hfx₀⟩ := (Set.mem_image ↑φ_α.toPartialEquiv (φ_α.source ∩ φ_β.source) x).mp hx
+    have h := h_inv1 x₀ hx₀
+    rw [←hfx₀]
+    exact h
+
+  have h2o : IsOpen (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) := by
+    have ho : IsOpen (φ_α.source ∩ φ_β.source) := by
+      have ho1 : IsOpen φ_α.source := φ_α.open_source
+      have ho2 : IsOpen φ_β.source := φ_β.open_source
+      exact IsOpen.and ho1 ho2
+    have hs : φ_α.source ∩ φ_β.source ⊆  φ_α.source := inf_le_left
+    have h2 : φ_α.toFun = φ_α := φ_α.toFun_eq_coe
+    rw [h2]
+    have h1 := φ_α.isOpen_image_iff_of_subset_source hs
+    rw [h1]
+    exact ho
+
+  have h6 : ∀ x ∈ φ_α.toFun '' (φ_α.source ∩ φ_β.source),
+    mfderivWithin (𝓡 m) (𝓡 m) ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) x =
+    mfderivWithin (𝓡 m) (𝓡 m) id (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) x :=
+      mfderivWithin_congr_of_eq_on_open ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) id (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) h2o h_inv2
+
+  let EuclideanSpace_id : EuclideanSpace ℝ (Fin m) →ₗ[ℝ] EuclideanSpace ℝ (Fin m) :=
+    LinearMap.id
+
+  have h7 : φ_α x ∈ ↑φ_α.toPartialEquiv '' (φ_α.source ∩ φ_β.source) := by
+      exact ⟨x, hx, rfl⟩
+
+  have h8 : mfderivWithin (𝓡 m) (𝓡 m) ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) (φ_α x) =
+              mfderivWithin (𝓡 m) (𝓡 m) id (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) (φ_α x) := by
+              apply h6 (φ_α x) h7
+
+  have ha : MDifferentiableAt (𝓡 m) (𝓡 m) (↑(φ_β.symm ≫ₕ φ_α) ∘ ↑(φ_α.symm ≫ₕ φ_β)) (φ_α x) := by
+    sorry
+
+  have h9 : true := by
+    have h1 : HasMFDerivAt (𝓡 m) (𝓡 m) (↑(φ_β.symm ≫ₕ φ_α) ∘ ↑(φ_α.symm ≫ₕ φ_β)) (φ_α x)
+              (mfderiv (𝓡 m) (𝓡 m) ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) (φ_α x)) := by
+                apply MDifferentiableAt.hasMFDerivAt ha
+    sorry
 
   exact baa
