@@ -1515,3 +1515,54 @@ with
   HasMFDerivAt 𝓘(ℝ, EuclideanSpace ℝ (Fin m)) 𝓘(ℝ, EuclideanSpace ℝ (Fin m)) (↑(φ_β.symm ≫ₕ φ_α) ∘ ↑(φ_α.symm ≫ₕ φ_β)) (↑φ_α x)
     (mfderivWithin 𝓘(ℝ, EuclideanSpace ℝ (Fin m)) 𝓘(ℝ, EuclideanSpace ℝ (Fin m)) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm)
       (↑φ_α.toPartialEquiv '' (φ_α.source ∩ φ_β.source)) (↑φ_α x))
+
+* Log for [2024-12-16 Mon 10:59]
+
+  have hb : mfderiv (𝓡 m) (𝓡 m) ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) (φ_α x) =
+              mfderivWithin (𝓡 m) (𝓡 m) id (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) (φ_α x) := by
+              sorry
+
+have hc : mfderiv (𝓡 m) (𝓡 m) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) =
+            mfderiv (𝓡 m) (𝓡 m) id (φ_α x) := by
+              have h1 : mfderivWithin (𝓡 m) (𝓡 m) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) (φ_α x) =
+                        mfderiv (𝓡 m) (𝓡 m) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) = by
+                          apply MDifferentiable.mfderivWithin sorry sorry
+                          sorry
+              sorry
+
+
+
+
+
+
+
+  have ha : MDifferentiableWithinAt (𝓡 m) (𝓡 m) (↑(φ_β.symm ≫ₕ φ_α) ∘ ↑(φ_α.symm ≫ₕ φ_β)) (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) (φ_α x) := by
+    apply sorry
+
+  have he : HasMFDerivWithinAt (𝓡 m) (𝓡 m) (↑(φ_β.symm ≫ₕ φ_α) ∘ ↑(φ_α.symm ≫ₕ φ_β)) (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) (φ_α x)
+              (mfderivWithin (𝓡 m) (𝓡 m) ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) (φ_α x)) := by
+                apply MDifferentiableWithinAt.hasMFDerivWithinAt ha
+
+  have ha : MDifferentiableAt (𝓡 m) (𝓡 m) (↑(φ_β.symm ≫ₕ φ_α) ∘ ↑(φ_α.symm ≫ₕ φ_β)) (φ_α x) := by
+    apply sorry
+
+  have he : HasMFDerivAt (𝓡 m) (𝓡 m) (↑(φ_β.symm ≫ₕ φ_α) ∘ ↑(φ_α.symm ≫ₕ φ_β)) (φ_α x)
+              (mfderiv (𝓡 m) (𝓡 m) ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) (φ_α x)) := by
+                apply MDifferentiableAt.hasMFDerivAt ha
+
+  -- have hc : mfderiv (𝓡 m) (𝓡 m) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) =
+  --           mfderiv (𝓡 m) (𝓡 m) id (φ_α x) := by
+  --             sorry
+
+  have hd : HasMFDerivAt
+            (𝓡 m) (𝓡 m) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x)
+            (mfderiv (𝓡 m) (𝓡 m) id (φ_α x)) := by
+            rw [<-hc]
+            exact he
+
+  have h9 : true := by
+    have h1 : HasMFDerivAt (𝓡 m) (𝓡 m) (↑(φ_β.symm ≫ₕ φ_α) ∘ ↑(φ_α.symm ≫ₕ φ_β)) (φ_α x)
+              (mfderiv (𝓡 m) (𝓡 m) ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) (φ_α x)) := by
+                apply MDifferentiableAt.hasMFDerivAt ha
+    sorry
+	      
