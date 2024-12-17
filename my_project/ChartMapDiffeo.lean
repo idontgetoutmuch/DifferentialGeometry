@@ -96,21 +96,15 @@ example
 
   let s := (φ_α.toFun '' (φ_α.source ∩ φ_β.source))
 
-  have hz : MDifferentiableAt (𝓡 m) (𝓡 m) (φ_α.symm.trans φ_β) (φ_α x) := by
-    exact ContMDiffAt.mdifferentiableAt (contMDiffAt_chart_transition m φ_α hΦ_Α φ_β hΦ_Β x hx) le_top
-
-  have h3 : HasMFDerivAt (𝓡 m) (𝓡 m)  (φ_α.symm.trans φ_β) (φ_α x) (Dαβ x) := by
+  have h1 : HasMFDerivAt (𝓡 m) (𝓡 m)  (φ_α.symm.trans φ_β) (φ_α x) (Dαβ x) := by
     apply MDifferentiableAt.hasMFDerivAt (ContMDiffAt.mdifferentiableAt (contMDiffAt_chart_transition m φ_α hΦ_Α φ_β hΦ_Β x hx) le_top)
 
   have hy : x ∈ φ_β.source ∩ φ_α.source := by
      rw [Set.inter_comm]
      assumption
 
-  have h4 : MDifferentiableAt (𝓡 m) (𝓡 m) (φ_β.symm.trans φ_α) (φ_β x) := by
-   exact ContMDiffAt.mdifferentiableAt (contMDiffAt_chart_transition m φ_β hΦ_Β φ_α hΦ_Α x hy) le_top
-
-  have h5 : HasMFDerivAt (𝓡 m) (𝓡 m)  (φ_β.symm.trans φ_α) (φ_β x) (Dβα x) :=
-    MDifferentiableAt.hasMFDerivAt h4
+  have h2 : HasMFDerivAt (𝓡 m) (𝓡 m)  (φ_β.symm.trans φ_α) (φ_β x) (Dβα x) :=
+    MDifferentiableAt.hasMFDerivAt ( ContMDiffAt.mdifferentiableAt (contMDiffAt_chart_transition m φ_β hΦ_Β φ_α hΦ_Α x hy) le_top)
 
   have h41 : (φ_α.symm ≫ₕ φ_β) (φ_α x) = (φ_β x) := by
     rw [PartialHomeomorph.trans_apply]
@@ -119,10 +113,10 @@ example
 
   have h61 : HasMFDerivAt (𝓡 m) (𝓡 m) (φ_β.symm.trans φ_α) ((φ_α.symm ≫ₕ φ_β) (φ_α x)) (Dβα x) := by
     rw [h41]
-    exact h5
+    exact h2
 
   have baa : HasMFDerivAt (𝓡 m) (𝓡 m) (↑(φ_β.symm ≫ₕ φ_α) ∘ ↑(φ_α.symm ≫ₕ φ_β)) (φ_α x) ((Dβα x).comp (Dαβ x)) := by
-    apply HasMFDerivAt.comp (φ_α x) h61 h3
+    apply HasMFDerivAt.comp (φ_α x) h61 h1
 
   have h_inv1 : ∀ x ∈ φ_α.source ∩ φ_β.source,
   ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) (φ_α x) = (φ_α x) := by
@@ -145,7 +139,7 @@ example
     mfderivWithin (𝓡 m) (𝓡 m) id s x :=
       mfderivWithin_congr_of_eq_on_open ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) id s (h2o m φ_α φ_β) h_inv2
 
-  have h7 : φ_α x ∈ ↑φ_α.toPartialEquiv '' (φ_α.source ∩ φ_β.source) := by
+  have h7 : φ_α x ∈ s := by
       exact ⟨x, hx, rfl⟩
 
   have h8 : mfderivWithin (𝓡 m) (𝓡 m) ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) s (φ_α x) =
