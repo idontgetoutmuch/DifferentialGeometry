@@ -54,6 +54,25 @@ theorem h1
       exact h7
     exact h8
 
+theorem h2o
+  (m : ℕ) {M : Type*}
+  [TopologicalSpace M]
+  [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
+  [SmoothManifoldWithCorners (𝓡 m) M]
+  (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+  (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m))) :
+   IsOpen (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) := by
+    have ho : IsOpen (φ_α.source ∩ φ_β.source) := by
+      have ho1 : IsOpen φ_α.source := φ_α.open_source
+      have ho2 : IsOpen φ_β.source := φ_β.open_source
+      exact IsOpen.and ho1 ho2
+    have hs : φ_α.source ∩ φ_β.source ⊆  φ_α.source := inf_le_left
+    have h2 : φ_α.toFun = φ_α := φ_α.toFun_eq_coe
+    rw [h2]
+    have h1 := φ_α.isOpen_image_iff_of_subset_source hs
+    rw [h1]
+    exact ho
+
 example
   (m : ℕ) {M : Type*}
   [TopologicalSpace M]
@@ -75,11 +94,11 @@ example
   let Dβα : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] EuclideanSpace ℝ (Fin m)) :=
     λ x => mfderiv (𝓡 m) (𝓡 m) ((φ_β.symm.trans φ_α).toFun) (φ_β.toFun x)
 
-  have h2 : MDifferentiableAt (𝓡 m) (𝓡 m) (φ_α.symm.trans φ_β) (φ_α x) :=
-   ContMDiffAt.mdifferentiableAt (h1 m φ_α hΦ_Α φ_β hΦ_Β x hx)  le_top
+  have hz : MDifferentiableAt (𝓡 m) (𝓡 m) (φ_α.symm.trans φ_β) (φ_α x) := by
+    exact ContMDiffAt.mdifferentiableAt (h1 m φ_α hΦ_Α φ_β hΦ_Β x hx) le_top
 
-  have h3 : HasMFDerivAt (𝓡 m) (𝓡 m)  (φ_α.symm.trans φ_β) (φ_α x) (Dαβ x) :=
-    MDifferentiableAt.hasMFDerivAt h2
+  have h3 : HasMFDerivAt (𝓡 m) (𝓡 m)  (φ_α.symm.trans φ_β) (φ_α x) (Dαβ x) := by
+    apply MDifferentiableAt.hasMFDerivAt hz
 
   have h4 : MDifferentiableAt (𝓡 m) (𝓡 m) (φ_β.symm.trans φ_α) (φ_β x) := by
    have h41 : x ∈ φ_β.source ∩ φ_α.source := by
@@ -118,22 +137,10 @@ example
     rw [←hfx₀]
     exact h
 
-  have h2o : IsOpen (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) := by
-    have ho : IsOpen (φ_α.source ∩ φ_β.source) := by
-      have ho1 : IsOpen φ_α.source := φ_α.open_source
-      have ho2 : IsOpen φ_β.source := φ_β.open_source
-      exact IsOpen.and ho1 ho2
-    have hs : φ_α.source ∩ φ_β.source ⊆  φ_α.source := inf_le_left
-    have h2 : φ_α.toFun = φ_α := φ_α.toFun_eq_coe
-    rw [h2]
-    have h1 := φ_α.isOpen_image_iff_of_subset_source hs
-    rw [h1]
-    exact ho
-
   have h6 : ∀ x ∈ φ_α.toFun '' (φ_α.source ∩ φ_β.source),
     mfderivWithin (𝓡 m) (𝓡 m) ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) x =
     mfderivWithin (𝓡 m) (𝓡 m) id (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) x :=
-      mfderivWithin_congr_of_eq_on_open ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) id (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) h2o h_inv2
+      mfderivWithin_congr_of_eq_on_open ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) id (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) (h2o m φ_α φ_β) h_inv2
 
   have h7 : φ_α x ∈ ↑φ_α.toPartialEquiv '' (φ_α.source ∩ φ_β.source) := by
       exact ⟨x, hx, rfl⟩
@@ -149,10 +156,10 @@ example
             mfderiv (𝓡 m) (𝓡 m) id (φ_α x) := by
             have h1 : mfderivWithin (𝓡 m) (𝓡 m) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) (φ_α x) =
                       mfderiv (𝓡 m) (𝓡 m) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) := by
-                      apply MDifferentiable.mfderivWithin ha (IsOpen.uniqueMDiffWithinAt h2o h7)
+                      apply MDifferentiable.mfderivWithin ha (IsOpen.uniqueMDiffWithinAt (h2o m φ_α φ_β) h7)
             have h2 : mfderivWithin (𝓡 m) (𝓡 m) id (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) (φ_α x) =
                       mfderiv (𝓡 m) (𝓡 m) id (φ_α x) := by
-                      apply MDifferentiable.mfderivWithin mdifferentiableAt_id (IsOpen.uniqueMDiffWithinAt h2o h7)
+                      apply MDifferentiable.mfderivWithin mdifferentiableAt_id (IsOpen.uniqueMDiffWithinAt (h2o m φ_α φ_β) h7)
             have h3 : mfderivWithin (𝓡 m) (𝓡 m) ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) (φ_α x) =
                       mfderivWithin (𝓡 m) (𝓡 m) id (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) (φ_α x) := by
                 apply h8
