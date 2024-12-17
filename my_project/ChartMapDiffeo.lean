@@ -26,7 +26,7 @@ theorem mfderivWithin_congr_of_eq_on_open
     mfderivWithin_congr h1 he hx
     exact h2
 
-theorem h1
+theorem contMDiffAt_chart_transition
   (m : ℕ) {M : Type*}
   [TopologicalSpace M]
   [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
@@ -94,17 +94,20 @@ example
   let Dβα : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] EuclideanSpace ℝ (Fin m)) :=
     λ x => mfderiv (𝓡 m) (𝓡 m) ((φ_β.symm.trans φ_α).toFun) (φ_β.toFun x)
 
+  let s := (φ_α.toFun '' (φ_α.source ∩ φ_β.source))
+
   have hz : MDifferentiableAt (𝓡 m) (𝓡 m) (φ_α.symm.trans φ_β) (φ_α x) := by
-    exact ContMDiffAt.mdifferentiableAt (h1 m φ_α hΦ_Α φ_β hΦ_Β x hx) le_top
+    exact ContMDiffAt.mdifferentiableAt (contMDiffAt_chart_transition m φ_α hΦ_Α φ_β hΦ_Β x hx) le_top
 
   have h3 : HasMFDerivAt (𝓡 m) (𝓡 m)  (φ_α.symm.trans φ_β) (φ_α x) (Dαβ x) := by
-    apply MDifferentiableAt.hasMFDerivAt hz
+    apply MDifferentiableAt.hasMFDerivAt (ContMDiffAt.mdifferentiableAt (contMDiffAt_chart_transition m φ_α hΦ_Α φ_β hΦ_Β x hx) le_top)
 
-  have h4 : MDifferentiableAt (𝓡 m) (𝓡 m) (φ_β.symm.trans φ_α) (φ_β x) := by
-   have h41 : x ∈ φ_β.source ∩ φ_α.source := by
+  have hy : x ∈ φ_β.source ∩ φ_α.source := by
      rw [Set.inter_comm]
      assumption
-   exact ContMDiffAt.mdifferentiableAt (h1 m φ_β hΦ_Β φ_α hΦ_Α x h41) le_top
+
+  have h4 : MDifferentiableAt (𝓡 m) (𝓡 m) (φ_β.symm.trans φ_α) (φ_β x) := by
+   exact ContMDiffAt.mdifferentiableAt (contMDiffAt_chart_transition m φ_β hΦ_Β φ_α hΦ_Α x hy) le_top
 
   have h5 : HasMFDerivAt (𝓡 m) (𝓡 m)  (φ_β.symm.trans φ_α) (φ_β x) (Dβα x) :=
     MDifferentiableAt.hasMFDerivAt h4
@@ -137,16 +140,16 @@ example
     rw [←hfx₀]
     exact h
 
-  have h6 : ∀ x ∈ φ_α.toFun '' (φ_α.source ∩ φ_β.source),
-    mfderivWithin (𝓡 m) (𝓡 m) ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) x =
-    mfderivWithin (𝓡 m) (𝓡 m) id (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) x :=
-      mfderivWithin_congr_of_eq_on_open ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) id (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) (h2o m φ_α φ_β) h_inv2
+  have h6 : ∀ x ∈ s,
+    mfderivWithin (𝓡 m) (𝓡 m) ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) s x =
+    mfderivWithin (𝓡 m) (𝓡 m) id s x :=
+      mfderivWithin_congr_of_eq_on_open ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) id s (h2o m φ_α φ_β) h_inv2
 
   have h7 : φ_α x ∈ ↑φ_α.toPartialEquiv '' (φ_α.source ∩ φ_β.source) := by
       exact ⟨x, hx, rfl⟩
 
-  have h8 : mfderivWithin (𝓡 m) (𝓡 m) ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) (φ_α x) =
-              mfderivWithin (𝓡 m) (𝓡 m) id (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) (φ_α x) := by
+  have h8 : mfderivWithin (𝓡 m) (𝓡 m) ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) s (φ_α x) =
+              mfderivWithin (𝓡 m) (𝓡 m) id s (φ_α x) := by
               apply h6 (φ_α x) h7
 
   have ha : MDifferentiableAt 𝓘(ℝ, EuclideanSpace ℝ (Fin m)) 𝓘(ℝ, EuclideanSpace ℝ (Fin m)) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) := by
@@ -154,20 +157,20 @@ example
 
   have hc : mfderiv (𝓡 m) (𝓡 m) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) =
             mfderiv (𝓡 m) (𝓡 m) id (φ_α x) := by
-            have h1 : mfderivWithin (𝓡 m) (𝓡 m) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) (φ_α x) =
+            have h1 : mfderivWithin (𝓡 m) (𝓡 m) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) s (φ_α x) =
                       mfderiv (𝓡 m) (𝓡 m) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) := by
                       apply MDifferentiable.mfderivWithin ha (IsOpen.uniqueMDiffWithinAt (h2o m φ_α φ_β) h7)
-            have h2 : mfderivWithin (𝓡 m) (𝓡 m) id (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) (φ_α x) =
+            have h2 : mfderivWithin (𝓡 m) (𝓡 m) id s (φ_α x) =
                       mfderiv (𝓡 m) (𝓡 m) id (φ_α x) := by
                       apply MDifferentiable.mfderivWithin mdifferentiableAt_id (IsOpen.uniqueMDiffWithinAt (h2o m φ_α φ_β) h7)
-            have h3 : mfderivWithin (𝓡 m) (𝓡 m) ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) (φ_α x) =
-                      mfderivWithin (𝓡 m) (𝓡 m) id (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) (φ_α x) := by
+            have h3 : mfderivWithin (𝓡 m) (𝓡 m) ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) s (φ_α x) =
+                      mfderivWithin (𝓡 m) (𝓡 m) id s (φ_α x) := by
                 apply h8
             calc
                 mfderiv (𝓡 m) (𝓡 m) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) =
-                mfderivWithin (𝓡 m) (𝓡 m) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) (φ_α x) := by
+                mfderivWithin (𝓡 m) (𝓡 m) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) s (φ_α x) := by
                   apply h1.symm
-                _ = mfderivWithin (𝓡 m) (𝓡 m) id (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) (φ_α x) := by
+                _ = mfderivWithin (𝓡 m) (𝓡 m) id s (φ_α x) := by
                   apply h3
                 _ = mfderiv (𝓡 m) (𝓡 m) id (φ_α x) := by
                   apply h2
