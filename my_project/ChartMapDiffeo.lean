@@ -20,11 +20,7 @@ theorem mfderivWithin_congr_of_eq_on_open
   (he : ∀ x ∈ s, f x = g x) :
   ∀ x ∈ s, mfderivWithin (𝓡 m) (𝓡 n) f s x = mfderivWithin (𝓡 m) (𝓡 n) g s x := by
     intros x hy
-    have hx : f x = g x := he x hy
-    have h1 : UniqueMDiffWithinAt (𝓡 m) s x := IsOpen.uniqueMDiffWithinAt ho hy
-    have h2 : mfderivWithin (𝓡 m) (𝓡 n) f s x = mfderivWithin (𝓡 m) (𝓡 n) g s x :=
-    mfderivWithin_congr h1 he hx
-    exact h2
+    exact mfderivWithin_congr (IsOpen.uniqueMDiffWithinAt ho hy) he (he x hy)
 
 theorem contMDiffAt_chart_transition
   (m : ℕ) {M : Type*}
@@ -73,6 +69,17 @@ theorem h2o
     rw [h1]
     exact ho
 
+noncomputable def Dab
+  (m : ℕ)
+  {M : Type*}
+  [TopologicalSpace M]
+  [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
+  [SmoothManifoldWithCorners (𝓡 m) M]
+  (φ_α φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+  (x : M) :
+  (EuclideanSpace ℝ (Fin m)) →L[ℝ] (EuclideanSpace ℝ (Fin m)) :=
+  mfderiv (𝓡 m) (𝓡 m) (φ_α.symm.trans φ_β).toFun (φ_α.toFun x)
+
 theorem inverse_transition_of_transition
   (m : ℕ) {M : Type*}
   [TopologicalSpace M]
@@ -85,20 +92,10 @@ theorem inverse_transition_of_transition
 
   (x : M) (hx : x ∈  φ_α.source ∩ φ_β.source) :
 
-  let Dαβ : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] EuclideanSpace ℝ (Fin m)) :=
-    λ x => mfderiv (𝓡 m) (𝓡 m) ((φ_α.symm.trans φ_β).toFun) (φ_α.toFun x)
+  .id _ _ = (Dab m φ_β φ_α x) ∘L (Dab m φ_α φ_β x) := by
 
-  let Dβα : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] EuclideanSpace ℝ (Fin m)) :=
-    λ x => mfderiv (𝓡 m) (𝓡 m) ((φ_β.symm.trans φ_α).toFun) (φ_β.toFun x)
-
-  .id _ _ = (Dβα x) ∘L (Dαβ x) := by
-
-  let Dαβ : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] EuclideanSpace ℝ (Fin m)) :=
-    λ x => mfderiv (𝓡 m) (𝓡 m) ((φ_α.symm.trans φ_β).toFun) (φ_α.toFun x)
-
-  let Dβα : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] EuclideanSpace ℝ (Fin m)) :=
-    λ x => mfderiv (𝓡 m) (𝓡 m) ((φ_β.symm.trans φ_α).toFun) (φ_β.toFun x)
-
+  let Dαβ := Dab m φ_α φ_β
+  let Dβα := Dab m φ_β φ_α
   let s := (φ_α.toFun '' (φ_α.source ∩ φ_β.source))
 
   have h1 : HasMFDerivAt (𝓡 m) (𝓡 m)  (φ_α.symm.trans φ_β) (φ_α x) (Dαβ x) := by
@@ -194,3 +191,26 @@ theorem inverse_transition_of_transition
             exact hd
 
   apply hasMFDerivAt_unique hg baa
+
+example
+  (m : ℕ) {M : Type*}
+  [TopologicalSpace M]
+  [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
+  [SmoothManifoldWithCorners (𝓡 m) M]
+  (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+  (hΦ_Α : φ_α ∈ maximalAtlas (𝓡 m) M)
+  (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+  (hΦ_Β : φ_β ∈ maximalAtlas (𝓡 m) M)
+
+  (x : M) (hx : x ∈  φ_α.source ∩ φ_β.source) : true := by
+
+  have h1 : .id _ _ = (Dab m φ_β φ_α x) ∘L (Dab m φ_α φ_β x) := by
+    exact inverse_transition_of_transition m φ_α hΦ_Α φ_β hΦ_Β x hx
+
+  have h2 : .id _ _ = (Dab m φ_α φ_β x) ∘L (Dab m φ_β φ_α x) := by
+    have hy : x ∈ φ_β.source ∩ φ_α.source := by
+      rw [Set.inter_comm]
+      assumption
+    exact inverse_transition_of_transition m φ_β hΦ_Β φ_α hΦ_Α x hy
+
+  sorry
