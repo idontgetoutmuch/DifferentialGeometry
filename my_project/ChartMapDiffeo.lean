@@ -73,7 +73,7 @@ theorem h2o
     rw [h1]
     exact ho
 
-example
+theorem inverse_transition_of_transition
   (m : ℕ) {M : Type*}
   [TopologicalSpace M]
   [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
@@ -85,8 +85,13 @@ example
 
   (x : M) (hx : x ∈  φ_α.source ∩ φ_β.source) :
 
-  HasMFDerivAt (𝓡 m) (𝓡 m) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x)
-            (ContinuousLinearMap.id ℝ (TangentSpace (𝓡 m) (φ_α x))) := by
+  let Dαβ : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] EuclideanSpace ℝ (Fin m)) :=
+    λ x => mfderiv (𝓡 m) (𝓡 m) ((φ_α.symm.trans φ_β).toFun) (φ_α.toFun x)
+
+  let Dβα : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] EuclideanSpace ℝ (Fin m)) :=
+    λ x => mfderiv (𝓡 m) (𝓡 m) ((φ_β.symm.trans φ_α).toFun) (φ_β.toFun x)
+
+  .id _ _ = (Dβα x) ∘L (Dαβ x) := by
 
   let Dαβ : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] EuclideanSpace ℝ (Fin m)) :=
     λ x => mfderiv (𝓡 m) (𝓡 m) ((φ_α.symm.trans φ_β).toFun) (φ_α.toFun x)
@@ -126,7 +131,7 @@ example
     _ = (φ_α (φ_β.symm (φ_β x))) := by rw [φ_α.left_inv hx.1]
     _ = (φ_α x) := by rw [φ_β.left_inv hx.2]
 
-  have h_inv2 : ∀ x ∈ ↑φ_α.toPartialEquiv '' (φ_α.source ∩ φ_β.source),
+  have h_inv2 : ∀ x ∈ s,
     ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) x = id x := by
     intro x hx
     obtain ⟨x₀, hx₀, hfx₀⟩ := (Set.mem_image ↑φ_α.toPartialEquiv (φ_α.source ∩ φ_β.source) x).mp hx
@@ -146,7 +151,7 @@ example
               mfderivWithin (𝓡 m) (𝓡 m) id s (φ_α x) := by
               apply h6 (φ_α x) h7
 
-  have ha : MDifferentiableAt 𝓘(ℝ, EuclideanSpace ℝ (Fin m)) 𝓘(ℝ, EuclideanSpace ℝ (Fin m)) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) := by
+  have ha : MDifferentiableAt (𝓡 m) (𝓡 m) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) := by
      apply HasMFDerivAt.mdifferentiableAt baa
 
   have hc : mfderiv (𝓡 m) (𝓡 m) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) =
@@ -188,4 +193,4 @@ example
             rw [<-hf]
             exact hd
 
-  exact hg
+  apply hasMFDerivAt_unique hg baa

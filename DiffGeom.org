@@ -1565,4 +1565,83 @@ have hc : mfderiv (𝓡 m) (𝓡 m) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β �
               (mfderiv (𝓡 m) (𝓡 m) ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) (φ_α x)) := by
                 apply MDifferentiableAt.hasMFDerivAt ha
     sorry
-	      
+
+* Log for [2024-12-17 Tue 16:16]
+
+
+I have
+
+```lean4
+  let Dαβ : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] EuclideanSpace ℝ (Fin m)) :=
+    λ x => mfderiv (𝓡 m) (𝓡 m) ((φ_α.symm.trans φ_β).toFun) (φ_α.toFun x)
+
+  let Dβα : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] EuclideanSpace ℝ (Fin m)) :=
+    λ x => mfderiv (𝓡 m) (𝓡 m) ((φ_β.symm.trans φ_α).toFun) (φ_β.toFun x)
+```
+
+and
+
+```lean4
+  have h1 :
+    ContinuousLinearMap.id ℝ (TangentSpace (𝓡 m) (φ_α x)) = (Dβα x).comp (Dαβ x) := by
+      sorry
+```
+
+but I'd really like to write what I would on paper. Maybe this is possible in the category of continuous linear maps?
+
+
+```lean4
+  have h1 :
+    id = (Dβα x) ∘ (Dαβ x) := by
+      sorry
+```
+
+** The Example
+
+example
+  (m : ℕ) {M : Type*}
+  [TopologicalSpace M]
+  [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
+  [SmoothManifoldWithCorners (𝓡 m) M]
+  (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+  (hΦ_Α : φ_α ∈ maximalAtlas (𝓡 m) M)
+  (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+  (hΦ_Β : φ_β ∈ maximalAtlas (𝓡 m) M)
+
+  (x : M) (hx : x ∈  φ_α.source ∩ φ_β.source) :
+
+  let Dαβ : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] EuclideanSpace ℝ (Fin m)) :=
+    λ x => mfderiv (𝓡 m) (𝓡 m) ((φ_α.symm.trans φ_β).toFun) (φ_α.toFun x)
+
+  let Dβα : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] EuclideanSpace ℝ (Fin m)) :=
+    λ x => mfderiv (𝓡 m) (𝓡 m) ((φ_β.symm.trans φ_α).toFun) (φ_β.toFun x)
+
+  ContinuousLinearMap.id ℝ (TangentSpace (𝓡 m) (φ_α x)) = (Dβα x)  ∘L (Dαβ x) := by
+
+  let Dαβ : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] EuclideanSpace ℝ (Fin m)) :=
+    λ x => mfderiv (𝓡 m) (𝓡 m) ((φ_α.symm.trans φ_β).toFun) (φ_α.toFun x)
+
+  let Dβα : M -> (EuclideanSpace ℝ (Fin m) →L[ℝ] EuclideanSpace ℝ (Fin m)) :=
+    λ x => mfderiv (𝓡 m) (𝓡 m) ((φ_β.symm.trans φ_α).toFun) (φ_β.toFun x)
+
+  let MyId : TangentSpace (𝓡 m) (φ_α x) →L[ℝ] TangentSpace (𝓡 m) (φ_α x) :=
+    ContinuousLinearMap.id ℝ (TangentSpace (𝓡 m) (φ_α x))
+
+  have linear_map_equality :
+    MyId = (Dβα x)  ∘L (Dαβ x) := by
+     apply sorry
+
+  exact linear_map_equality
+
+variable
+  (m : ℕ) {M : Type*}
+  [TopologicalSpace M]
+  [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
+  [SmoothManifoldWithCorners (𝓡 m) M]
+
+variable (x : M)
+
+#check ContinuousLinearMap.id ℝ (TangentSpace (𝓡 m) x)
+
+** Other
+
