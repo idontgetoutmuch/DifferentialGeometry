@@ -192,6 +192,8 @@ theorem inverse_transition_of_transition
 
   apply hasMFDerivAt_unique hg baa
 
+open ContinuousLinearMap
+
 example
   (m : ℕ) {M : Type*}
   [TopologicalSpace M]
@@ -210,6 +212,8 @@ example
 
   intro h
 
+  have h0 : mfderiv (𝓡 m) (𝓡 1) (g ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) = 0 := by
+    exact h
   have h1 : mfderiv (𝓡 m) (𝓡 1) (g ∘ (φ_β ∘ ↑φ_α.symm)) (φ_α x) =
             (mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x))) ∘L  (Dab m φ_α φ_β x) := by
      apply mfderiv_comp (φ_α x) hg hαβ
@@ -220,7 +224,7 @@ example
             0 ∘L (Dab m φ_β φ_α x) := by
     rw [h2]
   have h4 : ((mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x))) ∘L  (Dab m φ_α φ_β x)) ∘L (Dab m φ_β φ_α x) =
-            ((mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x)))) ∘L  ((Dab m φ_α φ_β x)) ∘L (Dab m φ_β φ_α x) := by
+            ((mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x)))) ∘L  ((Dab m φ_α φ_β x) ∘L (Dab m φ_β φ_α x)) := by
     rfl
   have h5 : ((mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x)))) ∘L  ((Dab m φ_α φ_β x)) ∘L (Dab m φ_β φ_α x) =
              ((mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x)))) ∘L  (.id _ _) := by
@@ -231,4 +235,33 @@ example
        apply inverse_transition_of_transition m φ_β hΦ_Β φ_α hΦ_Α x hy
      rw [<-h1]
      rfl
-  sorry
+  have h6 : ((mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x)))) ∘L  (.id _ _) =
+            ((mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x)))) := by
+    exact ContinuousLinearMap.comp_id _
+
+  have ha : 0 = mfderiv (𝓡 m) (𝓡 1) (g ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) := by
+    exact h0.symm
+  have hb : mfderiv (𝓡 m) (𝓡 1) (g ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) =
+            (mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x))) ∘L  (Dab m φ_α φ_β x) := by
+    exact h1
+  have hc : (mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x))) ∘L  (Dab m φ_α φ_β x) = 0 := by
+    rw [←hb]
+    exact h0
+  have hd : ((mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x))) ∘L  (Dab m φ_α φ_β x)) ∘L (Dab m φ_β φ_α x) =
+            0 ∘L (Dab m φ_β φ_α x) := by
+    exact h3
+  have he : ((mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x))) ∘L (Dab m φ_α φ_β x)) ∘L (Dab m φ_β φ_α x) =
+            0 := by
+    rw [hd]
+    rw [ContinuousLinearMap.zero_comp]
+  have hf : ((mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x))) ∘L ((Dab m φ_α φ_β x)) ∘L (Dab m φ_β φ_α x)) =
+            0 := by
+    rw [<-h4]
+    exact he
+  have hg : ((mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x)))) ∘L  (.id _ _) = 0 := by
+    rw [<-h5]
+    exact hf
+  have hh : ((mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x)))) = 0 := by
+    rw [<-h6]
+    exact hg
+  exact hh
