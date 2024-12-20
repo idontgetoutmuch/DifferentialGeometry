@@ -1645,3 +1645,43 @@ variable (x : M)
 
 ** Other
 
+* Log for [2024-12-19 Thu 15:20]
+
+  have h3 : mfderiv (𝓡 m) (𝓡 1) (g ∘ (φ_β ∘ ↑φ_α.symm)) (φ_α x) = sorry := by
+    (mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) x)).comp (Dab m φ_α φ_β x)
+
+ -- let s := (φ_α.toFun '' (φ_α.source ∩ φ_β.source))
+
+  -- have h1 : .id _ _ = (Dab m φ_β φ_α x) ∘L (Dab m φ_α φ_β x) := by
+  --   exact inverse_transition_of_transition m φ_α hΦ_Α φ_β hΦ_Β x hx
+
+  -- have h2 : .id _ _ = (Dab m φ_α φ_β x) ∘L (Dab m φ_β φ_α x) := by
+  --   have hy : x ∈ φ_β.source ∩ φ_α.source := by
+  --     rw [Set.inter_comm]
+  --     assumption
+  --   exact inverse_transition_of_transition m φ_β hΦ_Β φ_α hΦ_Α x hy
+
+  -- have h3 : mfderiv (𝓡 m) (𝓡 1) (g ∘ (φ_β ∘ ↑φ_α.symm)) (φ_α x) = sorry := by
+  --   have h0 : TangentSpace (𝓡 m) (φ_β x) →L[ℝ] TangentSpace (𝓡 1) (g (φ_β x)) :=
+  --    mfderiv (𝓡 m) (𝓡 1) g (φ_β x)
+  --   have h2 : EuclideanSpace ℝ (Fin m) →L[ℝ] EuclideanSpace ℝ (Fin m) := Dab m φ_α φ_β x
+  --   have h1 :  EuclideanSpace ℝ (Fin m) →L[ℝ] TangentSpace (𝓡 1) (g ((↑φ_β ∘ ↑φ_α.symm) (φ_α x))) :=
+  --    (mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x))).comp (Dab m φ_α φ_β x)
+  --   calc 0 = mfderiv (𝓡 m) (𝓡 1) (g ∘ (φ_β ∘ ↑φ_α.symm)) (φ_α x)
+  --        _ = (mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x))).comp (Dab m φ_α φ_β x) := sorry
+  --   sorry
+
+  -- have h3 : mfderiv (𝓡 m) (𝓡 1) (g ∘ (φ_β ∘ ↑φ_α.symm)) (φ_α x) = sorry := by
+  -- -- mfderiv (𝓡 m) (𝓡 1) g (φ_β.toFun x)
+  --   sorry
+  -- sorry
+
+* Log for [2024-12-20 Fri 11:25]
+
+
+  have h5 : f ∘L  ((Dab m φ_α φ_β x)) ∘L (Dab m φ_β φ_α x) =
+             f ∘L  (.id _ _) := by
+     have h1 : (.id _ _) = (Dab m φ_α φ_β x) ∘L (Dab m φ_β φ_α x) := by
+       sorry -- I have a proof for this
+     rw [<-h1]
+     sorry

@@ -201,16 +201,34 @@ example
   (hΦ_Α : φ_α ∈ maximalAtlas (𝓡 m) M)
   (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
   (hΦ_Β : φ_β ∈ maximalAtlas (𝓡 m) M)
+  (g : EuclideanSpace ℝ (Fin m) -> EuclideanSpace ℝ (Fin 1))
+  (x : M) (hx : x ∈  φ_α.source ∩ φ_β.source)
+  (hαβ : MDifferentiableAt (𝓡 m) (𝓡 m) (φ_β ∘ ↑φ_α.symm) (φ_α x))
+  (hg : MDifferentiableAt (𝓡 m) (𝓡 1) g (((φ_β  ∘ ↑φ_α.symm) (φ_α x)))) :
+    mfderiv (𝓡 m) (𝓡 1) (g ∘ φ_β ∘ ↑φ_α.symm) (φ_α x) = 0 ->
+    mfderiv (𝓡 m) (𝓡 1) g  ((φ_β ∘ ↑φ_α.symm) (φ_α x)) = 0 := by
 
-  (x : M) (hx : x ∈  φ_α.source ∩ φ_β.source) : true := by
+  intro h
 
-  have h1 : .id _ _ = (Dab m φ_β φ_α x) ∘L (Dab m φ_α φ_β x) := by
-    exact inverse_transition_of_transition m φ_α hΦ_Α φ_β hΦ_Β x hx
-
-  have h2 : .id _ _ = (Dab m φ_α φ_β x) ∘L (Dab m φ_β φ_α x) := by
-    have hy : x ∈ φ_β.source ∩ φ_α.source := by
-      rw [Set.inter_comm]
-      assumption
-    exact inverse_transition_of_transition m φ_β hΦ_Β φ_α hΦ_Α x hy
-
+  have h1 : mfderiv (𝓡 m) (𝓡 1) (g ∘ (φ_β ∘ ↑φ_α.symm)) (φ_α x) =
+            (mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x))) ∘L  (Dab m φ_α φ_β x) := by
+     apply mfderiv_comp (φ_α x) hg hαβ
+  have h2 : (mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x))) ∘L  (Dab m φ_α φ_β x) = 0 := by
+    rw [<-h1]
+    exact h
+  have h3 : ((mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x))) ∘L  (Dab m φ_α φ_β x)) ∘L (Dab m φ_β φ_α x) =
+            0 ∘L (Dab m φ_β φ_α x) := by
+    rw [h2]
+  have h4 : ((mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x))) ∘L  (Dab m φ_α φ_β x)) ∘L (Dab m φ_β φ_α x) =
+            ((mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x)))) ∘L  ((Dab m φ_α φ_β x)) ∘L (Dab m φ_β φ_α x) := by
+    rfl
+  have h5 : ((mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x)))) ∘L  ((Dab m φ_α φ_β x)) ∘L (Dab m φ_β φ_α x) =
+             ((mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x)))) ∘L  (.id _ _) := by
+     have h1 : (.id _ _) = (Dab m φ_α φ_β x) ∘L (Dab m φ_β φ_α x) := by
+       have hy : x ∈ φ_β.source ∩ φ_α.source := by
+        rw [Set.inter_comm]
+        assumption
+       apply inverse_transition_of_transition m φ_β hΦ_Β φ_α hΦ_Α x hy
+     rw [<-h1]
+     rfl
   sorry
