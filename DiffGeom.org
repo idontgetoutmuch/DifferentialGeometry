@@ -1702,3 +1702,24 @@ variable (x : M)
 
   have h6 : ((mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x)))) ∘L  (.id _ _) =
             ((mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x)))) := by
+
+* Log for [2024-12-21 Sat 18:27]
+
+    have hz :  mfderiv (𝓡 m) (𝓡 1) ((f ∘ φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) = 0 →
+               mfderiv (𝓡 m) (𝓡 1) (f ∘ φ_β.symm) (φ_β x) = 0 := by
+     intro hx
+     have hz1 : mfderiv (𝓡 m) (𝓡 1) ((f ∘ φ_β.symm) ∘ φ_β ∘ φ_α.symm) (φ_α x) =
+                mfderiv (𝓡 m) (𝓡 1) (((f ∘ φ_β.symm) ∘ φ_β) ∘ φ_α.symm) (φ_α x) := by
+       rfl
+     let k := (f ∘ φ_β.symm) ∘ φ_β
+     let a := φ_α x
+     have h2y : (k ∘ φ_α.symm) a = 
+     have hz2 : mfderiv (𝓡 m) (𝓡 1) (k ∘ φ_α.symm) a =
+                mfderiv (𝓡 m) (𝓡 1) k (φ_α.symm a) := by
+                simp only [Function.comp_apply]
+     sorry
+
+         have h7 : ∀ x ∈ (φ_α.source ∩ φ_β.source),
+      mfderiv (𝓡 m) (𝓡 1) (f ∘ φ_β.symm) ((↑φ_β ∘ ↑φ_α.symm) (φ_α x)) =
+      mfderiv (𝓡 m) (𝓡 1) (f ∘ ↑φ_β.symm) (φ_β x) := by
+      sorry

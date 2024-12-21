@@ -130,10 +130,10 @@ example
       rw [h1]
       exact ho
 
-    have h2 : ∀ x ∈ φ_α.toFun '' (φ_α.source ∩ φ_β.source),
-      mfderivWithin (𝓡 m) (𝓡 1) g (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) x =
-      mfderivWithin (𝓡 m) (𝓡 1) (h ∘ (φ_α.symm.trans φ_β).toFun) (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) x :=
-       mfderivWithin_congr_of_eq_on_open g (h ∘ (φ_α.symm.trans φ_β).toFun) (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) h2o g1
+    -- have h2 : ∀ x ∈ φ_α.toFun '' (φ_α.source ∩ φ_β.source),
+    --   mfderivWithin (𝓡 m) (𝓡 1) g (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) x =
+    --   mfderivWithin (𝓡 m) (𝓡 1) (h ∘ (φ_α.symm.trans φ_β).toFun) (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) x :=
+    --    mfderivWithin_congr_of_eq_on_open g (h ∘ (φ_α.symm.trans φ_β).toFun) (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) h2o g1
 
     let s := φ_α.toFun '' (φ_α.source ∩ φ_β.source)
 
