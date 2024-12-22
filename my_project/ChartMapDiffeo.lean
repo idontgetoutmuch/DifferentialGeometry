@@ -266,6 +266,21 @@ theorem foo
     exact hg
   exact hh
 
+theorem bar {α β : Type _}
+  [TopologicalSpace α]
+  {f g : α → β}
+  {t : Set α}
+  {y : α}
+  (ht : IsOpen t)
+  (hy : y ∈ t)
+  (h : ∀ x ∈ t, f x = g x) :
+  f =ᶠ[nhds y] g := by
+  have h1 : t ∈ nhds y := IsOpen.mem_nhds ht hy
+  exact Filter.Eventually.mono h1 h
+
+theorem baz {α β : Type*} (f : α → β) (s : Set α) (x : α) (hx : x ∈ s) :
+ f x ∈ Set.image f s := ⟨x, hx, rfl⟩
+
 example
   (m : ℕ) {M : Type*}
   [TopologicalSpace M]
@@ -360,15 +375,23 @@ example
       rw [<-hx_eq]
       exact h_eq
 
-    have h6 : ∀ x ∈ s,
-      mfderivWithin (𝓡 m) (𝓡 1) ((f ∘ φ_β.symm) ∘ (φ_β ∘ φ_α.symm)) s x =
-      mfderivWithin (𝓡 m) (𝓡 1) (f ∘ φ_α.symm) s x :=
-        mfderivWithin_congr_of_eq_on_open ((f ∘ φ_β.symm) ∘ (φ_β ∘ φ_α.symm)) (f ∘ φ_α.symm) s (h2o m φ_α φ_β) h6p
+    -- have h6 : ∀ x ∈ s,
+    --   mfderivWithin (𝓡 m) (𝓡 1) ((f ∘ φ_β.symm) ∘ (φ_β ∘ φ_α.symm)) s x =
+    --   mfderivWithin (𝓡 m) (𝓡 1) (f ∘ φ_α.symm) s x :=
+    --     mfderivWithin_congr_of_eq_on_open ((f ∘ φ_β.symm) ∘ (φ_β ∘ φ_α.symm)) (f ∘ φ_α.symm) s (h2o m φ_α φ_β) h6p
 
-    have h6b : ∀ x ∈ φ_α.source ∩ φ_β.source,
-    mfderivWithin (𝓡 m) (𝓡 1) ((f ∘ ↑φ_β.symm) ∘ (↑φ_β ∘ ↑φ_α.symm) ∘ ↑φ_α) (φ_α.source ∩ φ_β.source) x =
-    mfderivWithin (𝓡 m) (𝓡 1) (f ∘ ↑φ_α.symm ∘ ↑φ_α) (φ_α.source ∩ φ_β.source) x :=
-        mfderivWithin_congr_of_eq_on_open ((f ∘ φ_β.symm) ∘ (φ_β ∘ φ_α.symm) ∘ φ_α) (f ∘ φ_α.symm ∘ φ_α)  (φ_α.source ∩ φ_β.source) sorry sorry
+    have deduce_h6c_transformed : ∀ x ∈ φ_α.source ∩ φ_β.source,
+    mfderiv (𝓡 m) (𝓡 1) ((f ∘ φ_β.symm) ∘ (φ_β ∘ φ_α.symm)) (φ_α x) =
+    mfderiv (𝓡 m) (𝓡 1) (f ∘ φ_α.symm) (φ_α x) := by
+      intro x hx
+
+      have h0 : φ_α x ∈ Set.image φ_α (φ_α.source ∩ φ_β.source) := ⟨x, hx, rfl⟩
+
+      have h1 : (f ∘ φ_β.symm) ∘ φ_β ∘ φ_α.symm =ᶠ[nhds (φ_α x)] f ∘ φ_α.symm := by
+        exact bar (h2o m φ_α φ_β) h0 h6p
+      have h2 : mfderiv (𝓡 m) (𝓡 1) ((f ∘ φ_β.symm) ∘ (φ_β ∘ φ_α.symm)) (φ_α x) =
+                mfderiv (𝓡 m) (𝓡 1) (f ∘ φ_α.symm) (φ_α x) := Filter.EventuallyEq.mfderiv_eq h1
+      exact h2
 
     have h2 : mfderiv (𝓡 m) (𝓡 1) (f ∘ ↑φ_α.symm) (φ_α x) = 0 →
               mfderiv (𝓡 m) (𝓡 1) (f ∘ φ_β.symm) (φ_β x) = 0 := by
@@ -379,3 +402,9 @@ example
           sorry
       sorry
     sorry
+
+example {α β : Type _} [TopologicalSpace α] {f g : α → β} {t : Set α} {y : α}
+  (ht : IsOpen t) (hy : y ∈ t) (h : ∀ x ∈ t, f x = g x) :
+  f =ᶠ[nhds y] g := by
+  have h1 : t ∈ nhds y := IsOpen.mem_nhds ht hy
+  exact Filter.Eventually.mono h1 h

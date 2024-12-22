@@ -1723,3 +1723,17 @@ variable (x : M)
       mfderiv (𝓡 m) (𝓡 1) (f ∘ φ_β.symm) ((↑φ_β ∘ ↑φ_α.symm) (φ_α x)) =
       mfderiv (𝓡 m) (𝓡 1) (f ∘ ↑φ_β.symm) (φ_β x) := by
       sorry
+
+
+  ((f ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) ∘ ↑φ_α
+
+      -- have h6b : ∀ x ∈ φ_α.source ∩ φ_β.source,
+    -- mfderivWithin (𝓡 m) (𝓡 1) ((f ∘ ↑φ_β.symm) ∘ (↑φ_β ∘ ↑φ_α.symm) ∘ ↑φ_α) (φ_α.source ∩ φ_β.source) x =
+    -- mfderivWithin (𝓡 m) (𝓡 1) (f ∘ ↑φ_α.symm ∘ ↑φ_α) (φ_α.source ∩ φ_β.source) x :=
+    --     mfderivWithin_congr_of_eq_on_open ((f ∘ φ_β.symm) ∘ (φ_β ∘ φ_α.symm) ∘ φ_α) (f ∘ φ_α.symm ∘ φ_α)  (φ_α.source ∩ φ_β.source) sorry sorry
+
+    -- have h6c : ∀ x ∈ φ_α.source ∩ φ_β.source,
+    -- mfderiv (𝓡 m) (𝓡 1) (((f ∘ ↑φ_β.symm) ∘ (↑φ_β ∘ ↑φ_α.symm)) ∘ ↑φ_α) x =
+    -- mfderiv (𝓡 m) (𝓡 1) (f ∘ ↑φ_α.symm ∘ ↑φ_α) x := by
+    --   sorry
+
