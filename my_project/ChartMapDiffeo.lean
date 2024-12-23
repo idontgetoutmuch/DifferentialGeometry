@@ -278,9 +278,6 @@ theorem bar {α β : Type _}
   have h1 : t ∈ nhds y := IsOpen.mem_nhds ht hy
   exact Filter.Eventually.mono h1 h
 
-theorem baz {α β : Type*} (f : α → β) (s : Set α) (x : α) (hx : x ∈ s) :
- f x ∈ Set.image f s := ⟨x, hx, rfl⟩
-
 example
   (m : ℕ) {M : Type*}
   [TopologicalSpace M]
@@ -294,7 +291,7 @@ example
   (hΦ_Β : φ_β ∈ maximalAtlas (𝓡 m) M)
 
   (x : M) (hx : x ∈  φ_α.source ∩ φ_β.source) :
-    mfderiv (𝓡 m) (𝓡 1) (f ∘ φ_α.invFun) (φ_α.toFun x) = 0 ↔
+    mfderiv (𝓡 m) (𝓡 1) (f ∘ φ_α.invFun) (φ_α.toFun x) = 0 →
     mfderiv (𝓡 m) (𝓡 1) (f ∘ φ_β.invFun) (φ_β.toFun x) = 0 := by
     have h0 : ContMDiffAt (𝓡 m) (𝓡 m) ⊤ (φ_α.symm.trans φ_β) (φ_α x) := by
       exact contMDiffAt_chart_transition m φ_α hΦ_Α  φ_β hΦ_Β x hx
@@ -375,11 +372,6 @@ example
       rw [<-hx_eq]
       exact h_eq
 
-    -- have h6 : ∀ x ∈ s,
-    --   mfderivWithin (𝓡 m) (𝓡 1) ((f ∘ φ_β.symm) ∘ (φ_β ∘ φ_α.symm)) s x =
-    --   mfderivWithin (𝓡 m) (𝓡 1) (f ∘ φ_α.symm) s x :=
-    --     mfderivWithin_congr_of_eq_on_open ((f ∘ φ_β.symm) ∘ (φ_β ∘ φ_α.symm)) (f ∘ φ_α.symm) s (h2o m φ_α φ_β) h6p
-
     have deduce_h6c_transformed : ∀ x ∈ φ_α.source ∩ φ_β.source,
     mfderiv (𝓡 m) (𝓡 1) ((f ∘ φ_β.symm) ∘ (φ_β ∘ φ_α.symm)) (φ_α x) =
     mfderiv (𝓡 m) (𝓡 1) (f ∘ φ_α.symm) (φ_α x) := by
@@ -393,18 +385,11 @@ example
                 mfderiv (𝓡 m) (𝓡 1) (f ∘ φ_α.symm) (φ_α x) := Filter.EventuallyEq.mfderiv_eq h1
       exact h2
 
-    have h2 : mfderiv (𝓡 m) (𝓡 1) (f ∘ ↑φ_α.symm) (φ_α x) = 0 →
-              mfderiv (𝓡 m) (𝓡 1) (f ∘ φ_β.symm) (φ_β x) = 0 := by
-      intro h_deriv_eq_zero
-      have h_eq_at_point :
-        mfderiv (𝓡 m) (𝓡 1) ((f ∘ φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) =
-        mfderiv (𝓡 m) (𝓡 1) (f ∘ ↑φ_α.symm) (φ_α x) := by
-          sorry
-      sorry
-    sorry
+    have h11 : mfderiv (𝓡 m) (𝓡 1) (f ∘ ↑φ_α.symm) (φ_α x) = 0 →
+               mfderiv (𝓡 m) (𝓡 1) (f ∘ φ_β.symm) (φ_β x) = 0 := by
+      intro h_eq_zero
+      have h_rewrite := deduce_h6c_transformed x hx
+      rw [<-h_rewrite] at h_eq_zero
+      exact h2 h_eq_zero
 
-example {α β : Type _} [TopologicalSpace α] {f g : α → β} {t : Set α} {y : α}
-  (ht : IsOpen t) (hy : y ∈ t) (h : ∀ x ∈ t, f x = g x) :
-  f =ᶠ[nhds y] g := by
-  have h1 : t ∈ nhds y := IsOpen.mem_nhds ht hy
-  exact Filter.Eventually.mono h1 h
+    exact h11

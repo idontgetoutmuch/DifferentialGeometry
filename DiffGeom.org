@@ -1737,3 +1737,15 @@ variable (x : M)
     -- mfderiv (𝓡 m) (𝓡 1) (f ∘ ↑φ_α.symm ∘ ↑φ_α) x := by
     --   sorry
 
+* Log for [2024-12-23 Mon 11:12]
+
+
+example {α β : Type _} [TopologicalSpace α] {f g : α → β} {t : Set α} {y : α}
+  (ht : IsOpen t) (hy : y ∈ t) (h : ∀ x ∈ t, f x = g x) :
+  f =ᶠ[nhds y] g := by
+  have h1 : t ∈ nhds y := IsOpen.mem_nhds
+
+  theorem baz {α β : Type*} (f : α → β) (s : Set α) (x : α) (hx : x ∈ s) :
+ f x ∈ Set.image f s := ⟨x, hx, rfl⟩
+
+
