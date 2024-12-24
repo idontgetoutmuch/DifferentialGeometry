@@ -1,7 +1,9 @@
-import Mathlib
-import Mathlib.Topology.ContinuousOn
-import Mathlib.Geometry.Manifold.ChartedSpace
-import Mathlib.Geometry.Manifold.SmoothManifoldWithCorners
+import Mathlib.Geometry.Manifold.MFDeriv.Defs
+import Mathlib.Geometry.Manifold.Instances.Real
+import Mathlib.Analysis.InnerProductSpace.PiL2
+import Mathlib.Geometry.Manifold.AnalyticManifold
+import Mathlib.Geometry.Manifold.ContMDiff.Atlas
+import Mathlib.Geometry.Manifold.MFDeriv.SpecificFunctions
 
 open Manifold
 
