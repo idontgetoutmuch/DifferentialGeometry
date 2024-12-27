@@ -21,8 +21,8 @@ theorem mfderivWithin_congr_of_eq_on_open
   (ho : IsOpen s)
   (he : ∀ x ∈ s, f x = g x) :
   ∀ x ∈ s, mfderivWithin (𝓡 m) (𝓡 n) f s x = mfderivWithin (𝓡 m) (𝓡 n) g s x := by
-    intros x hy
-    exact mfderivWithin_congr (IsOpen.uniqueMDiffWithinAt ho hy) he (he x hy)
+    intro z hz
+    exact mfderivWithin_congr (IsOpen.uniqueMDiffWithinAt ho hz) he (he z hz)
 
 theorem contMDiffAt_chart_transition
   (m : ℕ) {M : Type*}
@@ -52,7 +52,7 @@ theorem contMDiffAt_chart_transition
       exact h7
     exact h8
 
-theorem h2o
+theorem open_image_of_inter_sources
   (m : ℕ) {M : Type*}
   [TopologicalSpace M]
   [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
@@ -141,7 +141,7 @@ theorem inverse_transition_of_transition
   have h6 : ∀ x ∈ s,
     mfderivWithin (𝓡 m) (𝓡 m) ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) s x =
     mfderivWithin (𝓡 m) (𝓡 m) id s x :=
-      mfderivWithin_congr_of_eq_on_open ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) id s (h2o m φ_α φ_β) h_inv2
+      mfderivWithin_congr_of_eq_on_open ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) id s (open_image_of_inter_sources m φ_α φ_β) h_inv2
 
   have h7 : φ_α x ∈ s := by
       exact ⟨x, hx, rfl⟩
@@ -157,10 +157,10 @@ theorem inverse_transition_of_transition
             mfderiv (𝓡 m) (𝓡 m) id (φ_α x) := by
             have h1 : mfderivWithin (𝓡 m) (𝓡 m) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) s (φ_α x) =
                       mfderiv (𝓡 m) (𝓡 m) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) := by
-                      apply MDifferentiable.mfderivWithin ha (IsOpen.uniqueMDiffWithinAt (h2o m φ_α φ_β) h7)
+                      apply MDifferentiable.mfderivWithin ha (IsOpen.uniqueMDiffWithinAt (open_image_of_inter_sources m φ_α φ_β) h7)
             have h2 : mfderivWithin (𝓡 m) (𝓡 m) id s (φ_α x) =
                       mfderiv (𝓡 m) (𝓡 m) id (φ_α x) := by
-                      apply MDifferentiable.mfderivWithin mdifferentiableAt_id (IsOpen.uniqueMDiffWithinAt (h2o m φ_α φ_β) h7)
+                      apply MDifferentiable.mfderivWithin mdifferentiableAt_id (IsOpen.uniqueMDiffWithinAt (open_image_of_inter_sources m φ_α φ_β) h7)
             have h3 : mfderivWithin (𝓡 m) (𝓡 m) ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) s (φ_α x) =
                       mfderivWithin (𝓡 m) (𝓡 m) id s (φ_α x) := by
                 apply h8
@@ -382,7 +382,7 @@ example
       have h0 : φ_α x ∈ Set.image φ_α (φ_α.source ∩ φ_β.source) := ⟨x, hx, rfl⟩
 
       have h1 : (f ∘ φ_β.symm) ∘ φ_β ∘ φ_α.symm =ᶠ[nhds (φ_α x)] f ∘ φ_α.symm := by
-        exact bar (h2o m φ_α φ_β) h0 h6p
+        exact bar (open_image_of_inter_sources m φ_α φ_β) h0 h6p
       have h2 : mfderiv (𝓡 m) (𝓡 1) ((f ∘ φ_β.symm) ∘ (φ_β ∘ φ_α.symm)) (φ_α x) =
                 mfderiv (𝓡 m) (𝓡 1) (f ∘ φ_α.symm) (φ_α x) := Filter.EventuallyEq.mfderiv_eq h1
       exact h2
