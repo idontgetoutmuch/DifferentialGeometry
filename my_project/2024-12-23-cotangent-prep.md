@@ -55,3 +55,21 @@ theorem mfderivWithin_congr_of_eq_on_open
     exact mfderivWithin_congr (IsOpen.uniqueMDiffWithinAt ho hy) he (he x hy)
 ```
 
+This is the same as writing a term but the tactics above seem to be preferred.
+
+```lean4
+theorem mfderivWithin_congr_of_eq_on_open_as_term
+  {m n : ℕ} {M N : Type*}
+  [TopologicalSpace M]
+  [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
+  [SmoothManifoldWithCorners (𝓡 m) M]
+  [TopologicalSpace N]
+  [ChartedSpace (EuclideanSpace ℝ (Fin n)) N]
+  [SmoothManifoldWithCorners (𝓡 n) N]
+  (f g : M → N) (s : Set M)
+  (ho : IsOpen s)
+  (he : ∀ x ∈ s, f x = g x) :
+  ∀ x ∈ s, mfderivWithin (𝓡 m) (𝓡 n) f s x = mfderivWithin (𝓡 m) (𝓡 n) g s x :=
+  λ z hz =>
+    mfderivWithin_congr (IsOpen.uniqueMDiffWithinAt ho hz) he (he z hz)
+```

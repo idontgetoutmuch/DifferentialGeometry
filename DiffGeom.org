@@ -1786,3 +1786,56 @@ example {α β : Type _} [TopologicalSpace α] {f g : α → β} {t : Set α} {y
 </body>
 </html>
 
+  ContMDiffAt 𝓘(?m.17705, ?m.17707)          𝓘(?m.17705, ?m.17710)          ?m.17713 ?m.17714              ?m.17715 → ContDiffAt ?m.17705 ↑?m.17713 ?m.17714               ?m.17715
+  ContMDiffAt 𝓘(ℝ, EuclideanSpace ℝ (Fin m)) 𝓘(ℝ, EuclideanSpace ℝ (Fin m)) ⊤        (↑(φ_α.symm ≫ₕ φ_β)) (↑φ_α x) → ContDiffAt ℝ        ⊤         (↑(φ_α.symm ≫ₕ φ_β)) (↑φ_α x)
+
+* Log for [2024-12-28 Sat 11:36]
+
+theorem contMDiffAt_finsum0 {x₀ : M} {g : ι → M → F}
+    (hφ : ∀ i, x₀ ∈ tsupport (f i) → ContMDiffAt I 𝓘(ℝ, F) n (g i) x₀) :
+    ContMDiffAt I 𝓘(ℝ, F) n (fun x ↦ ∑ᶠ i, f i x • g i x) x₀ := by
+  refine _root_.contMDiffAt_finsum (f.locallyFinite.smul_left _) fun i ↦ ?_
+  by_cases hx : x₀ ∈ tsupport (f i)
+  · exact ContMDiffAt.smul ((f i).contMDiff.of_le le_top).contMDiffAt (hφ i hx)
+  · exact contMDiffAt_of_not_mem (compl_subset_compl.mpr
+      (tsupport_smul_subset_left (f i) (g i)) hx) n
+
+
+
+
+open Function Filter Module Set
+open scoped Topology Manifold
+
+variable [NormedAddCommGroup E] [NormedSpace ℝ E]
+  [NormedAddCommGroup F] [NormedSpace ℝ F]
+  [TopologicalSpace H] (I : ModelWithCorners ℝ E H) [TopologicalSpace M]
+  [ChartedSpace H M]
+
+variable {s : Set M} (f : SmoothPartitionOfUnity ι I M s) {n : ℕ∞}
+
+theorem contMDiffAt_finsum0 {x₀ : M} {g : ι → M → F}
+    (hφ : ∀ i, x₀ ∈ tsupport (f i) → ContMDiffAt I 𝓘(ℝ, F) n (g i) x₀) :
+    ContMDiffAt I 𝓘(ℝ, F) n (fun x ↦ ∑ᶠ i, f i x • g i x) x₀ := by
+  sorry
+
+theorem contDiffAt_finsum0 {s : Set E} (f : SmoothPartitionOfUnity ι 𝓘(ℝ, E) E s) {x₀ : E}
+    {g : ι → E → F} (hφ : ∀ i, x₀ ∈ tsupport (f i) → ContDiffAt ℝ n (g i) x₀) :
+    ContDiffAt ℝ n (fun x ↦ ∑ᶠ i, f i x • g i x) x₀ := by
+  simp only [← contMDiffAt_iff_contDiffAt] at *
+  exact f.contMDiffAt_finsum hφ
+
+
+#check fderivWithin
+#check IsOpen.uniqueDiffWithinAt sorry
+#check IsOpen.uniqueMDiffWithinAt sorry
+#check fderivWithin_congr
+#check mfderivWithin_congr
+
+def f : EuclideanSpace ℝ (Fin 1) -> EuclideanSpace ℝ (Fin 1) := λ x => x
+def g : EuclideanSpace ℝ (Fin 1) → EuclideanSpace ℝ (Fin 1) := λ x => -x
+def s : Set (EuclideanSpace ℝ (Fin 1)) := {λ _ : Fin 1 => (0 : ℝ)}
+
+example : (∀ x ∈ s, f x = g x) → ∀ x ∈ s, fderivWithin ℝ f s x = fderivWithin ℝ g s x  := by
+  intro h_eq
+  apply fderivWithin_congr_of_eq_on_open f g {0} h_eq
+

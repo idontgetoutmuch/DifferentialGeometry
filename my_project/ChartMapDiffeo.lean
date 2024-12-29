@@ -4,6 +4,8 @@ import Mathlib.Analysis.InnerProductSpace.PiL2
 import Mathlib.Geometry.Manifold.AnalyticManifold
 import Mathlib.Geometry.Manifold.ContMDiff.Atlas
 import Mathlib.Geometry.Manifold.MFDeriv.SpecificFunctions
+import Mathlib.Geometry.Manifold.ContMDiff.NormedSpace
+import Mathlib
 
 open Manifold
 
@@ -23,6 +25,14 @@ theorem mfderivWithin_congr_of_eq_on_open
   ∀ x ∈ s, mfderivWithin (𝓡 m) (𝓡 n) f s x = mfderivWithin (𝓡 m) (𝓡 n) g s x := by
     intro z hz
     exact mfderivWithin_congr (IsOpen.uniqueMDiffWithinAt ho hz) he (he z hz)
+
+theorem fderivWithin_congr_of_eq_on_open
+  {m n : ℕ}
+  (f g : EuclideanSpace ℝ (Fin m) → EuclideanSpace ℝ (Fin n)) (s : Set (EuclideanSpace ℝ (Fin m)))
+  (he : ∀ x ∈ s, f x = g x) :
+  ∀ x ∈ s, fderivWithin ℝ f s x = fderivWithin ℝ g s x := by
+    intro z hz
+    exact fderivWithin_congr he (he z hz)
 
 theorem contMDiffAt_chart_transition
   (m : ℕ) {M : Type*}
@@ -51,6 +61,21 @@ theorem contMDiffAt_chart_transition
       rw [h1]
       exact h7
     exact h8
+
+theorem contDiffAt_chart_transition
+  (m : ℕ) {M : Type*}
+  [TopologicalSpace M]
+  [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
+  [SmoothManifoldWithCorners (𝓡 m) M]
+  (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+  (hΦ_Α : φ_α ∈ maximalAtlas (𝓡 m) M)
+  (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+  (hΦ_Β : φ_β ∈ maximalAtlas (𝓡 m) M)
+  (x : M) (hx : x ∈ φ_α.source ∩ φ_β.source) :
+    ContDiffAt ℝ (⊤ : ENat) (φ_α.symm.trans φ_β) (φ_α x) := by
+    have h_contMDiff : ContMDiffAt (𝓡 m) (𝓡 m) ⊤ (φ_α.symm.trans φ_β) (φ_α x) :=
+     contMDiffAt_chart_transition m φ_α hΦ_Α φ_β hΦ_Β x hx
+    exact contMDiffAt_iff_contDiffAt.mp h_contMDiff
 
 theorem open_image_of_inter_sources
   (m : ℕ) {M : Type*}
