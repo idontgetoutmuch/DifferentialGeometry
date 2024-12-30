@@ -26,11 +26,11 @@ with a smooth inverse. By the chain rule for calculus we have
 \(\frac{\partial y_j}{\partial x_i}(x)\) has full rank so we can conclude that
 
 \[
-D(f\phi_\alpha^{-1}) = 0 \iff D(f\phi_\beta) = 0
+D(f\phi_\alpha^{-1}) = 0 \iff D(f\phi_\beta^{-1}) = 0
 \]
 
 This post captures my experiences using Lean to formalise this. The
-user of Lean is not just faced with learning Lean the language but
+user of Lean is not just faced with learning Lean the language and
 also its proof system via so-called tactics but also learning how the
 Mathlib authors decided to define manifolds and other necessary
 mathematical structures. The design decisions of the latter are
@@ -61,6 +61,15 @@ maps are smooth and have a smooth inverse.
  3. Adding =.symm= as a suffix gives the inverse of the homeomorphism
     and =.trans= allows a partial homeomorphism to composed with
     another taking into account the sources and targets.
+ 4. =h2= and =h3= state that $\phi_\beta$ and the inverse of
+    $\phi_\alpha$ are smooth.
+ 5. After a bit of manipulation, we can apply the chain rule to deduce
+    =h6= that the transition map is smooth.
+ 6. And finally a bit more manipulation proves the theorem.
+
+The only tactic used is =rw= which re-writes terms if it finds a
+match. The rest of the proof is finding existing theorems. I found
+[[https://www.moogle.ai/][moogle]] very useful for this.
 
 #+begin_src lean4
 import Mathlib.Geometry.Manifold.MFDeriv.Defs
@@ -69,6 +78,7 @@ import Mathlib.Analysis.InnerProductSpace.PiL2
 import Mathlib.Geometry.Manifold.AnalyticManifold
 import Mathlib.Geometry.Manifold.ContMDiff.Atlas
 import Mathlib.Geometry.Manifold.MFDeriv.SpecificFunctions
+import Mathlib
 
 open Manifold
 
@@ -95,12 +105,12 @@ theorem contMDiffAt_chart_transition
     have h5 : ContMDiffAt (𝓡 m) (𝓡 m) ⊤ φ_β (φ_α.symm (φ_α x)) := by
       rw [h4]
       exact h2
-    have h7 : ContMDiffAt (𝓡 m) (𝓡 m) ⊤ (φ_β ∘ φ_α.symm) (φ_α x) :=
+    have h6 : ContMDiffAt (𝓡 m) (𝓡 m) ⊤ (φ_β ∘ φ_α.symm) (φ_α x) :=
       ContMDiffAt.comp (I' := 𝓡 m) (φ_α x) h5 h3
-    have h8 : ContMDiffAt (𝓡 m) (𝓡 m) ⊤ (φ_α.symm.trans φ_β) (φ_α x) := by
+    have h7 : ContMDiffAt (𝓡 m) (𝓡 m) ⊤ (φ_α.symm.trans φ_β) (φ_α x) := by
       rw [h1]
-      exact h7
-    exact h8
+      exact h6
+    exact h7
 #+end_src
 
 We want the transition maps be smooth as functions on $\mathbb{R}^n$:
