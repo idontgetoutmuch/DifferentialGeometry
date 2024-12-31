@@ -318,29 +318,45 @@ example
   (hΦ_Β : φ_β ∈ maximalAtlas (𝓡 m) M)
 
   (x : M) (hx : x ∈  φ_α.source ∩ φ_β.source) :
+    fderiv ℝ (f ∘ φ_α.invFun) (φ_α.toFun x) = 0 →
+    fderiv ℝ (f ∘ φ_β.invFun) (φ_β.toFun x) = 0 := by
+
+    have h0 : ContDiffAt ℝ (⊤ : ENat) (φ_α.symm.trans φ_β) (φ_α x) := by
+      exact contDiffAt_chart_transition m φ_α hΦ_Α  φ_β hΦ_Β x hx
+
+    sorry
+
+example
+  (m : ℕ) {M : Type*}
+  [TopologicalSpace M]
+  [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
+  [SmoothManifoldWithCorners (𝓡 m) M]
+  (f : M → (EuclideanSpace ℝ (Fin 1)))
+  (hs : ContMDiff (𝓡 m) (𝓡 1) ⊤ f)
+  (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+  (hΦ_Α : φ_α ∈ maximalAtlas (𝓡 m) M)
+  (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+  (hΦ_Β : φ_β ∈ maximalAtlas (𝓡 m) M)
+
+  (x : M) (hx : x ∈  φ_α.source ∩ φ_β.source) :
     mfderiv (𝓡 m) (𝓡 1) (f ∘ φ_α.invFun) (φ_α.toFun x) = 0 →
     mfderiv (𝓡 m) (𝓡 1) (f ∘ φ_β.invFun) (φ_β.toFun x) = 0 := by
+
     have h0 : ContMDiffAt (𝓡 m) (𝓡 m) ⊤ (φ_α.symm.trans φ_β) (φ_α x) := by
       exact contMDiffAt_chart_transition m φ_α hΦ_Α  φ_β hΦ_Β x hx
 
-    have ha : MDifferentiableAt (𝓡 m) (𝓡 m) (φ_α.symm.trans φ_β) (φ_α x) := by
+    have h1 : MDifferentiableAt (𝓡 m) (𝓡 m) (φ_α.symm.trans φ_β) (φ_α x) := by
       exact ContMDiffAt.mdifferentiableAt h0 le_top
 
     let g : EuclideanSpace ℝ (Fin m) → (EuclideanSpace ℝ (Fin 1)) := f ∘ φ_α.invFun
     let h : EuclideanSpace ℝ (Fin m) → (EuclideanSpace ℝ (Fin 1)) := f ∘ φ_β.invFun
 
-    have h17 : ContMDiffAt (𝓡 m) (𝓡 1) ⊤ g (φ_α x) := by
-      have h1 : ContMDiffAt (𝓡 m) (𝓡 m) ⊤ φ_α.symm (φ_α x) :=
-        contMDiffAt_symm_of_mem_maximalAtlas hΦ_Α (φ_α.map_source hx.1)
-      exact ContMDiffAt.comp (I' := 𝓡 m) (φ_α x) (ContMDiff.contMDiffAt hs) h1
-
-    have h17b : ContMDiffAt (𝓡 m) (𝓡 1) ⊤ h (φ_β x) := by
+    have h2 : ContMDiffAt (𝓡 m) (𝓡 1) ⊤ h (φ_β x) := by
       have h1 : ContMDiffAt (𝓡 m) (𝓡 m) ⊤ φ_β.symm (φ_β x) :=
         contMDiffAt_symm_of_mem_maximalAtlas hΦ_Β (φ_β.map_source hx.2)
       exact ContMDiffAt.comp (I' := 𝓡 m) (φ_β x) (ContMDiff.contMDiffAt hs) h1
 
-    have h18 : MDifferentiableAt (𝓡 m) (𝓡 1) g (φ_α x) := ContMDiffAt.mdifferentiableAt h17 le_top
-    have h18b : MDifferentiableAt (𝓡 m) (𝓡 1) h (φ_β x) := ContMDiffAt.mdifferentiableAt h17b le_top
+    have h3 : MDifferentiableAt (𝓡 m) (𝓡 1) h (φ_β x) := ContMDiffAt.mdifferentiableAt h2 le_top
 
     have h_equiv : ((↑φ_β ∘ ↑φ_α.symm) (φ_α x)) = (φ_β x) := by
       calc ((↑φ_β ∘ ↑φ_α.symm) (φ_α x)) =
@@ -348,12 +364,12 @@ example
            _ = φ_β x := by rw [φ_α.left_inv hx.1]
 
     have h_new : MDifferentiableAt (𝓡 m) (𝓡 1) (f ∘ φ_β.symm) ((↑φ_β ∘ ↑φ_α.symm) (φ_α x)) := by
-      rw [<-h_equiv] at h18b
-      exact h18b
+      rw [<-h_equiv] at h3
+      exact h3
 
-    have h1 : mfderiv (𝓡 m) (𝓡 1) ((f ∘ φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) = 0 →
+    have h111 : mfderiv (𝓡 m) (𝓡 1) ((f ∘ φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) = 0 →
               mfderiv (𝓡 m) (𝓡 1) (f ∘ φ_β.symm) ((↑φ_β ∘ ↑φ_α.symm) (φ_α x)) = 0 := by
-      exact foo m φ_α hΦ_Α φ_β hΦ_Β (f ∘ φ_β.symm) x hx ha h_new
+      exact foo m φ_α hΦ_Α φ_β hΦ_Β (f ∘ φ_β.symm) x hx h1 h_new
 
     have h1z : (φ_β ∘ φ_α.symm) (φ_α x) = φ_β (φ_α.symm (φ_α x)) := by
       rw [Function.comp_apply]
@@ -364,16 +380,16 @@ example
       (φ_β ∘ φ_α.symm) (φ_α x) = φ_β (φ_α.symm (φ_α x)) := by exact h1z
       _ = φ_β x := by exact h1y
 
-    have h2 : mfderiv (𝓡 m) (𝓡 1) ((f ∘ φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) = 0 →
+    have h222 : mfderiv (𝓡 m) (𝓡 1) ((f ∘ φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) = 0 →
               mfderiv (𝓡 m) (𝓡 1) (f ∘ φ_β.symm) (φ_β x) = 0 := by
       intro h
-      have h1_rewritten := h1 h
+      have h1_rewritten := h111 h
       rw [h1x] at h1_rewritten
       exact h1_rewritten
 
     let s := φ_α.toFun '' (φ_α.source ∩ φ_β.source)
 
-    have h3 : ∀ x ∈ φ_α.source ∩ φ_β.source,
+    have h333 : ∀ x ∈ φ_α.source ∩ φ_β.source,
                 ((f ∘ φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) = (f ∘ ↑φ_α.symm) (φ_α x) := by
       intro x hx
       have h3a : ((f ∘ φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) = (f ∘ ↑φ_α.symm) (φ_α x) := by
@@ -395,7 +411,7 @@ example
       intro x hx
       simp only [Set.mem_image] at hx
       obtain ⟨y, hy_mem, hx_eq⟩ := hx
-      have h_eq := h3 y hy_mem
+      have h_eq := h333 y hy_mem
       rw [<-hx_eq]
       exact h_eq
 
@@ -417,6 +433,6 @@ example
       intro h_eq_zero
       have h_rewrite := deduce_h6c_transformed x hx
       rw [<-h_rewrite] at h_eq_zero
-      exact h2 h_eq_zero
+      exact h222 h_eq_zero
 
     exact h11
