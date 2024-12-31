@@ -352,9 +352,9 @@ example
     let h : EuclideanSpace ℝ (Fin m) → (EuclideanSpace ℝ (Fin 1)) := f ∘ φ_β.invFun
 
     have h2 : ContMDiffAt (𝓡 m) (𝓡 1) ⊤ h (φ_β x) := by
-      have h1 : ContMDiffAt (𝓡 m) (𝓡 m) ⊤ φ_β.symm (φ_β x) :=
+      have h21 : ContMDiffAt (𝓡 m) (𝓡 m) ⊤ φ_β.symm (φ_β x) :=
         contMDiffAt_symm_of_mem_maximalAtlas hΦ_Β (φ_β.map_source hx.2)
-      exact ContMDiffAt.comp (I' := 𝓡 m) (φ_β x) (ContMDiff.contMDiffAt hs) h1
+      exact ContMDiffAt.comp (I' := 𝓡 m) (φ_β x) (ContMDiff.contMDiffAt hs) h21
 
     have h3 : MDifferentiableAt (𝓡 m) (𝓡 1) h (φ_β x) := ContMDiffAt.mdifferentiableAt h2 le_top
 
@@ -371,20 +371,11 @@ example
               mfderiv (𝓡 m) (𝓡 1) (f ∘ φ_β.symm) ((↑φ_β ∘ ↑φ_α.symm) (φ_α x)) = 0 := by
       exact foo m φ_α hΦ_Α φ_β hΦ_Β (f ∘ φ_β.symm) x hx h1 h_new
 
-    have h1z : (φ_β ∘ φ_α.symm) (φ_α x) = φ_β (φ_α.symm (φ_α x)) := by
-      rw [Function.comp_apply]
-    have h1y : φ_β (φ_α.symm (φ_α x)) = φ_β x := by
-      rw [φ_α.left_inv hx.1]
-    have h1x : (φ_β ∘ φ_α.symm) (φ_α x) = φ_β x := by
-     calc
-      (φ_β ∘ φ_α.symm) (φ_α x) = φ_β (φ_α.symm (φ_α x)) := by exact h1z
-      _ = φ_β x := by exact h1y
-
     have h222 : mfderiv (𝓡 m) (𝓡 1) ((f ∘ φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) = 0 →
               mfderiv (𝓡 m) (𝓡 1) (f ∘ φ_β.symm) (φ_β x) = 0 := by
       intro h
       have h1_rewritten := h111 h
-      rw [h1x] at h1_rewritten
+      rw [h_equiv] at h1_rewritten
       exact h1_rewritten
 
     let s := φ_α.toFun '' (φ_α.source ∩ φ_β.source)
