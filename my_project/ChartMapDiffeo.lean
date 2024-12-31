@@ -221,7 +221,7 @@ theorem inverse_transition_of_transition
 
 open ContinuousLinearMap
 
-theorem foo
+theorem zero_mderiv_change_of_coords
   (m : ℕ) {M : Type*}
   [TopologicalSpace M]
   [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
@@ -370,25 +370,25 @@ example
 
     have h3 : MDifferentiableAt (𝓡 m) (𝓡 1) h (φ_β x) := ContMDiffAt.mdifferentiableAt h2 le_top
 
-    have h_new : MDifferentiableAt (𝓡 m) (𝓡 1) (f ∘ φ_β.symm) ((↑φ_β ∘ ↑φ_α.symm) (φ_α x)) := by
+    have h4 : MDifferentiableAt (𝓡 m) (𝓡 1) h ((↑φ_β ∘ ↑φ_α.symm) (φ_α x)) := by
       rw [<-h_equiv m φ_α φ_β x hx] at h3
       exact h3
 
-    have h111 : mfderiv (𝓡 m) (𝓡 1) ((f ∘ φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) = 0 →
-              mfderiv (𝓡 m) (𝓡 1) (f ∘ φ_β.symm) ((↑φ_β ∘ ↑φ_α.symm) (φ_α x)) = 0 := by
-      exact foo m φ_α hΦ_Α φ_β hΦ_Β (f ∘ φ_β.symm) x hx h1 h_new
+    have h5 : mfderiv (𝓡 m) (𝓡 1) (h ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) = 0 →
+              mfderiv (𝓡 m) (𝓡 1) h ((↑φ_β ∘ ↑φ_α.symm) (φ_α x)) = 0 := by
+      exact zero_mderiv_change_of_coords m φ_α hΦ_Α φ_β hΦ_Β h x hx h1 h4
 
-    have h222 : mfderiv (𝓡 m) (𝓡 1) ((f ∘ φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) = 0 →
-              mfderiv (𝓡 m) (𝓡 1) (f ∘ φ_β.symm) (φ_β x) = 0 := by
+    have h6 : mfderiv (𝓡 m) (𝓡 1) (h ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) = 0 →
+              mfderiv (𝓡 m) (𝓡 1) h (φ_β x) = 0 := by
       intro h
-      have h1_rewritten := h111 h
+      have h1_rewritten := h5 h
       rw [h_equiv m φ_α φ_β x hx] at h1_rewritten
       exact h1_rewritten
 
     have h333 : ∀ x ∈ φ_α.source ∩ φ_β.source,
-                ((f ∘ φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) = (f ∘ ↑φ_α.symm) (φ_α x) := by
+                (h ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) = g (φ_α x) := by
       intro x hx
-      have h3a : ((f ∘ φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) = (f ∘ ↑φ_α.symm) (φ_α x) := by
+      have h3a : (h ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) = g (φ_α x) := by
         calc
           ((f ∘ φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) = f (φ_β.symm (φ_β (φ_α.symm (φ_α x)))) := by
             rw [Function.comp_apply, Function.comp_apply, Function.comp_apply]
@@ -403,7 +403,7 @@ example
       exact h3a
 
     have h6p : ∀ x ∈ φ_α.toFun '' (φ_α.source ∩ φ_β.source),
-              ((f ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) x = (f ∘ ↑φ_α.symm) x := by
+              ((f ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) x = g x := by
       intro x hx
       simp only [Set.mem_image] at hx
       obtain ⟨y, hy_mem, hx_eq⟩ := hx
@@ -412,15 +412,15 @@ example
       exact h_eq
 
     have deduce_h6c_transformed : ∀ x ∈ φ_α.source ∩ φ_β.source,
-    mfderiv (𝓡 m) (𝓡 1) ((f ∘ φ_β.symm) ∘ (φ_β ∘ φ_α.symm)) (φ_α x) =
+    mfderiv (𝓡 m) (𝓡 1) (h ∘ (φ_β ∘ φ_α.symm)) (φ_α x) =
     mfderiv (𝓡 m) (𝓡 1) (f ∘ φ_α.symm) (φ_α x) := by
       intro x hx
 
       have h0 : φ_α x ∈ Set.image φ_α (φ_α.source ∩ φ_β.source) := ⟨x, hx, rfl⟩
 
-      have h1 : (f ∘ φ_β.symm) ∘ φ_β ∘ φ_α.symm =ᶠ[nhds (φ_α x)] f ∘ φ_α.symm := by
+      have h1 : h ∘ φ_β ∘ φ_α.symm =ᶠ[nhds (φ_α x)] f ∘ φ_α.symm := by
         exact bar (open_image_of_inter_sources m φ_α φ_β) h0 h6p
-      have h2 : mfderiv (𝓡 m) (𝓡 1) ((f ∘ φ_β.symm) ∘ (φ_β ∘ φ_α.symm)) (φ_α x) =
+      have h2 : mfderiv (𝓡 m) (𝓡 1) (h ∘ (φ_β ∘ φ_α.symm)) (φ_α x) =
                 mfderiv (𝓡 m) (𝓡 1) (f ∘ φ_α.symm) (φ_α x) := Filter.EventuallyEq.mfderiv_eq h1
       exact h2
 
@@ -429,6 +429,6 @@ example
       intro h_eq_zero
       have h_rewrite := deduce_h6c_transformed x hx
       rw [<-h_rewrite] at h_eq_zero
-      exact h222 h_eq_zero
+      exact h6 h_eq_zero
 
     exact h11
