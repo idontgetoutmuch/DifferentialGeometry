@@ -326,6 +326,18 @@ example
 
     sorry
 
+theorem h_equiv (m : ℕ) {M : Type*}
+  [TopologicalSpace M]
+  [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
+  [SmoothManifoldWithCorners (𝓡 m) M]
+  (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+  (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+  (x : M) (hx : x ∈  φ_α.source ∩ φ_β.source) :
+    ((↑φ_β ∘ ↑φ_α.symm) (φ_α x)) = (φ_β x) := by
+      calc ((↑φ_β ∘ ↑φ_α.symm) (φ_α x)) =
+               φ_β (φ_α.symm (φ_α x)) := by rfl
+           _ = φ_β x := by rw [φ_α.left_inv hx.1]
+
 example
   (m : ℕ) {M : Type*}
   [TopologicalSpace M]
@@ -358,13 +370,8 @@ example
 
     have h3 : MDifferentiableAt (𝓡 m) (𝓡 1) h (φ_β x) := ContMDiffAt.mdifferentiableAt h2 le_top
 
-    have h_equiv : ((↑φ_β ∘ ↑φ_α.symm) (φ_α x)) = (φ_β x) := by
-      calc ((↑φ_β ∘ ↑φ_α.symm) (φ_α x)) =
-           φ_β (φ_α.symm (φ_α x)) := by rfl
-           _ = φ_β x := by rw [φ_α.left_inv hx.1]
-
     have h_new : MDifferentiableAt (𝓡 m) (𝓡 1) (f ∘ φ_β.symm) ((↑φ_β ∘ ↑φ_α.symm) (φ_α x)) := by
-      rw [<-h_equiv] at h3
+      rw [<-h_equiv m φ_α φ_β x hx] at h3
       exact h3
 
     have h111 : mfderiv (𝓡 m) (𝓡 1) ((f ∘ φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) = 0 →
@@ -375,10 +382,8 @@ example
               mfderiv (𝓡 m) (𝓡 1) (f ∘ φ_β.symm) (φ_β x) = 0 := by
       intro h
       have h1_rewritten := h111 h
-      rw [h_equiv] at h1_rewritten
+      rw [h_equiv m φ_α φ_β x hx] at h1_rewritten
       exact h1_rewritten
-
-    let s := φ_α.toFun '' (φ_α.source ∩ φ_β.source)
 
     have h333 : ∀ x ∈ φ_α.source ∩ φ_β.source,
                 ((f ∘ φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) = (f ∘ ↑φ_α.symm) (φ_α x) := by
