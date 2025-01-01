@@ -239,9 +239,6 @@ theorem zero_mderiv_change_of_coords
 
   intro h
 
-  have h0 : mfderiv (𝓡 m) (𝓡 1) (g ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) = 0 := by
-    exact h
-
   have h1 : mfderiv (𝓡 m) (𝓡 1) (g ∘ (φ_β ∘ ↑φ_α.symm)) (φ_α x) =
             (mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x))) ∘L  (Dab m φ_α φ_β x) := by
      apply mfderiv_comp (φ_α x) hg hαβ
@@ -249,10 +246,6 @@ theorem zero_mderiv_change_of_coords
   have h2 : (mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x))) ∘L  (Dab m φ_α φ_β x) = 0 := by
     rw [<-h1]
     exact h
-
-  have h3 : ((mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x))) ∘L  (Dab m φ_α φ_β x)) ∘L (Dab m φ_β φ_α x) =
-            0 ∘L (Dab m φ_β φ_α x) := by
-    rw [h2]
 
   have h5 : ((mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x)))) ∘L  ((Dab m φ_α φ_β x)) ∘L (Dab m φ_β φ_α x) =
              ((mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x)))) ∘L  (.id _ _) := by
@@ -268,13 +261,9 @@ theorem zero_mderiv_change_of_coords
             ((mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x)))) := by
     exact ContinuousLinearMap.comp_id _
 
-  have hc : (mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x))) ∘L  (Dab m φ_α φ_β x) = 0 := by
-    rw [←h1]
-    exact h0
-
   have he : ((mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x))) ∘L (Dab m φ_α φ_β x)) ∘L (Dab m φ_β φ_α x) =
             0 := by
-    rw [h3]
+    rw [h2]
     rw [ContinuousLinearMap.zero_comp]
 
   have hg : ((mfderiv (𝓡 m) (𝓡 1) g ((φ_β  ∘ ↑φ_α.symm) (φ_α x)))) ∘L  (.id _ _) = 0 := by
