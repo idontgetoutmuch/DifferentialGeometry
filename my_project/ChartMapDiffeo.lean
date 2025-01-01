@@ -105,7 +105,36 @@ noncomputable def Dab
   (φ_α φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
   (x : M) :
   (EuclideanSpace ℝ (Fin m)) →L[ℝ] (EuclideanSpace ℝ (Fin m)) :=
-  mfderiv (𝓡 m) (𝓡 m) (φ_α.symm.trans φ_β).toFun (φ_α.toFun x)
+  mfderiv (𝓡 m) (𝓡 m) (φ_α.symm ≫ₕ φ_β) (φ_α x)
+
+theorem h_equiv (m : ℕ) {M : Type*}
+  [TopologicalSpace M]
+  [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
+  [SmoothManifoldWithCorners (𝓡 m) M]
+  (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+  (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+  (x : M) (hx : x ∈  φ_α.source ∩ φ_β.source) :
+    ((↑φ_β ∘ ↑φ_α.symm) (φ_α x)) = (φ_β x) := by
+      calc ((↑φ_β ∘ ↑φ_α.symm) (φ_α x)) =
+               φ_β (φ_α.symm (φ_α x)) := by rfl
+           _ = φ_β x := by rw [φ_α.left_inv hx.1]
+
+theorem inverse_of_chart_transition
+  (m : ℕ) {M : Type*}
+  [TopologicalSpace M]
+  [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
+  [SmoothManifoldWithCorners (𝓡 m) M]
+  (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+  (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
+  (x : M) (hx : x ∈  φ_α.source ∩ φ_β.source) :
+  ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) (φ_α x) = (φ_α x) := by
+    have hy : x ∈ φ_β.source ∩ φ_α.source := by
+      rw [Set.inter_comm]
+      assumption
+
+    rw [Function.comp_apply]
+    rw [h_equiv m φ_α φ_β x hx]
+    rw [h_equiv m φ_β φ_α x hy]
 
 theorem inverse_transition_of_transition
   (m : ℕ) {M : Type*}
@@ -123,101 +152,86 @@ theorem inverse_transition_of_transition
 
   let Dαβ := Dab m φ_α φ_β
   let Dβα := Dab m φ_β φ_α
-  let s := (φ_α.toFun '' (φ_α.source ∩ φ_β.source))
+  let s := φ_α.toFun '' (φ_α.source ∩ φ_β.source)
 
-  have h1 : HasMFDerivAt (𝓡 m) (𝓡 m)  (φ_α.symm.trans φ_β) (φ_α x) (Dαβ x) := by
+  have h1 : HasMFDerivAt (𝓡 m) (𝓡 m)  (φ_α.symm ≫ₕ φ_β) (φ_α x) (Dαβ x) := by
     apply MDifferentiableAt.hasMFDerivAt (ContMDiffAt.mdifferentiableAt (contMDiffAt_chart_transition m φ_α hΦ_Α φ_β hΦ_Β x hx) le_top)
 
-  have hy : x ∈ φ_β.source ∩ φ_α.source := by
-     rw [Set.inter_comm]
-     assumption
+  have h2 : HasMFDerivAt (𝓡 m) (𝓡 m)  (φ_β.symm ≫ₕ φ_α) (φ_β x) (Dβα x) := by
+    have hy : x ∈ φ_β.source ∩ φ_α.source := by
+       rw [Set.inter_comm]
+       assumption
+    exact MDifferentiableAt.hasMFDerivAt (ContMDiffAt.mdifferentiableAt (contMDiffAt_chart_transition m φ_β hΦ_Β φ_α hΦ_Α x hy) le_top)
 
-  have h2 : HasMFDerivAt (𝓡 m) (𝓡 m)  (φ_β.symm.trans φ_α) (φ_β x) (Dβα x) :=
-    MDifferentiableAt.hasMFDerivAt ( ContMDiffAt.mdifferentiableAt (contMDiffAt_chart_transition m φ_β hΦ_Β φ_α hΦ_Α x hy) le_top)
-
-  have h41 : (φ_α.symm ≫ₕ φ_β) (φ_α x) = (φ_β x) := by
-    rw [PartialHomeomorph.trans_apply]
-    congr
-    exact PartialHomeomorph.left_inv φ_α (Set.mem_of_mem_inter_left hx)
-
-  have h61 : HasMFDerivAt (𝓡 m) (𝓡 m) (φ_β.symm.trans φ_α) ((φ_α.symm ≫ₕ φ_β) (φ_α x)) (Dβα x) := by
-    rw [h41]
+  have h2_rw : HasMFDerivAt (𝓡 m) (𝓡 m) (φ_β.symm ≫ₕ φ_α) ((φ_α.symm ≫ₕ φ_β) (φ_α x)) (Dβα x) := by
+    have h2_rwa : (φ_α.symm ≫ₕ φ_β) (φ_α x) = (φ_β x) := h_equiv m φ_α φ_β x hx
+    rw [h2_rwa]
     exact h2
-
-  have baa : HasMFDerivAt (𝓡 m) (𝓡 m) (↑(φ_β.symm ≫ₕ φ_α) ∘ ↑(φ_α.symm ≫ₕ φ_β)) (φ_α x) ((Dβα x).comp (Dαβ x)) := by
-    apply HasMFDerivAt.comp (φ_α x) h61 h1
 
   have h_inv1 : ∀ x ∈ φ_α.source ∩ φ_β.source,
   ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) (φ_α x) = (φ_α x) := by
-    intro x hx
-    calc ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) (φ_α x) =
-        (φ_α (φ_β.symm (φ_β (φ_α.symm (φ_α x))))) := by rfl
-    _ = (φ_α (φ_β.symm (φ_β x))) := by rw [φ_α.left_inv hx.1]
-    _ = (φ_α x) := by rw [φ_β.left_inv hx.2]
+   exact inverse_of_chart_transition m φ_α φ_β
 
   have h_inv2 : ∀ x ∈ s,
     ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) x = id x := by
     intro x hx
-    obtain ⟨x₀, hx₀, hfx₀⟩ := (Set.mem_image ↑φ_α.toPartialEquiv (φ_α.source ∩ φ_β.source) x).mp hx
-    have h := h_inv1 x₀ hx₀
-    rw [←hfx₀]
+    obtain ⟨y, hy, hfy⟩ := (Set.mem_image ↑φ_α.toPartialEquiv (φ_α.source ∩ φ_β.source) x).mp hx
+    have h := h_inv1 y hy
+    rw [←hfy]
     exact h
 
-  have h6 : ∀ x ∈ s,
+  have h3 : ∀ x ∈ s,
     mfderivWithin (𝓡 m) (𝓡 m) ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) s x =
     mfderivWithin (𝓡 m) (𝓡 m) id s x :=
       mfderivWithin_congr_of_eq_on_open ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) id s (open_image_of_inter_sources m φ_α φ_β) h_inv2
 
-  have h7 : φ_α x ∈ s := by
+  have h4 : φ_α x ∈ s := by
       exact ⟨x, hx, rfl⟩
 
-  have h8 : mfderivWithin (𝓡 m) (𝓡 m) ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) s (φ_α x) =
+  have h5 : mfderivWithin (𝓡 m) (𝓡 m) ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) s (φ_α x) =
               mfderivWithin (𝓡 m) (𝓡 m) id s (φ_α x) := by
-              apply h6 (φ_α x) h7
+              apply h3 (φ_α x) h4
 
-  have ha : MDifferentiableAt (𝓡 m) (𝓡 m) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) := by
-     apply HasMFDerivAt.mdifferentiableAt baa
+  have h6 : HasMFDerivAt (𝓡 m) (𝓡 m) ((φ_β.symm ≫ₕ φ_α) ∘ (φ_α.symm ≫ₕ φ_β)) (φ_α x) ((Dβα x).comp (Dαβ x)) := by
+    apply HasMFDerivAt.comp (φ_α x) h2_rw h1
 
-  have hc : mfderiv (𝓡 m) (𝓡 m) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) =
+  have h7 : MDifferentiableAt (𝓡 m) (𝓡 m) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) := by
+     apply HasMFDerivAt.mdifferentiableAt h6
+
+  have h8 : mfderiv (𝓡 m) (𝓡 m) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) =
             mfderiv (𝓡 m) (𝓡 m) id (φ_α x) := by
             have h1 : mfderivWithin (𝓡 m) (𝓡 m) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) s (φ_α x) =
                       mfderiv (𝓡 m) (𝓡 m) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) := by
-                      apply MDifferentiable.mfderivWithin ha (IsOpen.uniqueMDiffWithinAt (open_image_of_inter_sources m φ_α φ_β) h7)
+                      apply MDifferentiable.mfderivWithin h7 (IsOpen.uniqueMDiffWithinAt (open_image_of_inter_sources m φ_α φ_β) h4)
             have h2 : mfderivWithin (𝓡 m) (𝓡 m) id s (φ_α x) =
                       mfderiv (𝓡 m) (𝓡 m) id (φ_α x) := by
-                      apply MDifferentiable.mfderivWithin mdifferentiableAt_id (IsOpen.uniqueMDiffWithinAt (open_image_of_inter_sources m φ_α φ_β) h7)
-            have h3 : mfderivWithin (𝓡 m) (𝓡 m) ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) s (φ_α x) =
-                      mfderivWithin (𝓡 m) (𝓡 m) id s (φ_α x) := by
-                apply h8
+                      apply MDifferentiable.mfderivWithin mdifferentiableAt_id (IsOpen.uniqueMDiffWithinAt (open_image_of_inter_sources m φ_α φ_β) h4)
             calc
                 mfderiv (𝓡 m) (𝓡 m) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x) =
                 mfderivWithin (𝓡 m) (𝓡 m) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) s (φ_α x) := by
                   apply h1.symm
                 _ = mfderivWithin (𝓡 m) (𝓡 m) id s (φ_α x) := by
-                  apply h3
+                  apply h5
                 _ = mfderiv (𝓡 m) (𝓡 m) id (φ_α x) := by
                   apply h2
 
-  have he : HasMFDerivAt (𝓡 m) (𝓡 m) (↑(φ_β.symm ≫ₕ φ_α) ∘ ↑(φ_α.symm ≫ₕ φ_β)) (φ_α x)
+  have h9 : HasMFDerivAt (𝓡 m) (𝓡 m) (↑(φ_β.symm ≫ₕ φ_α) ∘ ↑(φ_α.symm ≫ₕ φ_β)) (φ_α x)
               (mfderiv (𝓡 m) (𝓡 m) ((φ_α ∘ φ_β.symm)  ∘ (φ_β ∘ φ_α.symm)) (φ_α x)) := by
-                apply MDifferentiableAt.hasMFDerivAt ha
+                apply MDifferentiableAt.hasMFDerivAt h7
 
-  have hd : HasMFDerivAt
+  have ha : HasMFDerivAt
             (𝓡 m) (𝓡 m) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x)
             (mfderiv (𝓡 m) (𝓡 m) id (φ_α x)) := by
-            rw [<-hc]
-            exact he
+            rw [<-h8]
+            exact h9
 
-  have hf : mfderiv (𝓡 m) (𝓡 m) id (φ_α x) = ContinuousLinearMap.id ℝ (TangentSpace (𝓡 m) (φ_α x)) := by
-   apply mfderiv_id
-
-  have hg : HasMFDerivAt
+  have hb : HasMFDerivAt
             (𝓡 m) (𝓡 m) ((↑φ_α ∘ ↑φ_β.symm) ∘ ↑φ_β ∘ ↑φ_α.symm) (φ_α x)
             (ContinuousLinearMap.id ℝ (TangentSpace (𝓡 m) (φ_α x))) := by
-            rw [<-hf]
-            exact hd
+            rw [<-mfderiv_id]
+            exact ha
 
-  apply hasMFDerivAt_unique hg baa
+  apply hasMFDerivAt_unique hb h6
 
 open ContinuousLinearMap
 
@@ -308,18 +322,6 @@ example
       exact contDiffAt_chart_transition m φ_α hΦ_Α  φ_β hΦ_Β x hx
 
     sorry
-
-theorem h_equiv (m : ℕ) {M : Type*}
-  [TopologicalSpace M]
-  [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
-  [SmoothManifoldWithCorners (𝓡 m) M]
-  (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
-  (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
-  (x : M) (hx : x ∈  φ_α.source ∩ φ_β.source) :
-    ((↑φ_β ∘ ↑φ_α.symm) (φ_α x)) = (φ_β x) := by
-      calc ((↑φ_β ∘ ↑φ_α.symm) (φ_α x)) =
-               φ_β (φ_α.symm (φ_α x)) := by rfl
-           _ = φ_β x := by rw [φ_α.left_inv hx.1]
 
 example
   (m : ℕ) {M : Type*}
