@@ -136,6 +136,25 @@ theorem inverse_of_chart_transition
     rw [h_equiv m φ_α φ_β x hx]
     rw [h_equiv m φ_β φ_α x hy]
 
+variable
+(m : ℕ) {M : Type*}
+[TopologicalSpace M]
+
+ #check λ (a : (PartialHomeomorph M (EuclideanSpace ℝ (Fin m))))
+          (b : (PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))) =>
+  a.symm ≫ₕ b
+
+example
+(m : ℕ)
+(f : PartialHomeomorph (EuclideanSpace ℝ (Fin m)) (EuclideanSpace ℝ (Fin m)))
+(hf : f.symm ≫ₕ f = PartialHomeomorph.ofSet f.source f.open_source)
+(hg : f ≫ₕ f.symm = PartialHomeomorph.ofSet f.target f.open_target)
+(x : EuclideanSpace ℝ (Fin m)) (hx : x ∈ f.source) :
+ .id _ _  = mfderiv (𝓡 m) (𝓡 m) f.symm (f x) ∘L mfderiv (𝓡 m) (𝓡 m) f x := by
+  have h1 : HasMFDerivAt (𝓡 m) (𝓡 m) f x (mfderiv (𝓡 m) (𝓡 m) f x) := sorry
+  have h2 : HasMFDerivAt (𝓡 m) (𝓡 m) f.symm x (mfderiv (𝓡 m) (𝓡 m) f.symm x) := sorry
+  sorry
+
 theorem inverse_transition_of_transition
   (m : ℕ) {M : Type*}
   [TopologicalSpace M]
