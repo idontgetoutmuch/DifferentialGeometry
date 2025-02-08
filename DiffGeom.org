@@ -2065,3 +2065,337 @@ theorem inverse_transition_of_transition
 
   apply hasMFDerivAt_unique hb h6
 ```
+
+* Log for [2025-01-09 Thu 11:09]
+
+
+  E                 →L[ℝ] E [⋀^Fin n]→L[ℝ] F
+  E →SL[?m.74665] E →L[ℝ] E [⋀^Fin n]→L[ℝ] F
+
+* Log for [2025-01-11 Sat 11:44]
+
+structure PrincipalBundle (B G : Type*) [TopologicalSpace B] [TopologicalSpace G] 
+  [Group G] [TopologicalGroup G] (P : Type*) [TopologicalSpace P] [FiberBundle G P] 
+  (π : P → B) :=
+  (action : P → G → P)  -- Free and transitive action of G on each fiber
+  (identity : ∀ p : P, action p e = p)  -- Identity element of G acts trivially
+  (associativity : ∀ p : P, ∀ g₁ g₂ : G, action (action p g₁) g₂ = action p (g₁ * g₂))  -- Group action is associative
+  (free : ∀ p : P, ∀ g : G, action p g = p → g = e)  -- Free action: only identity fixes a point
+  (transitive : ∀ b : B, ∀ p₁ p₂ : P, π p₁ = π p₂ → ∃ g : G, action p₁ g = p₂)  -- Transitive action on fibers
+
+structure PrincipalBundle (B G : Type*) [TopologicalSpace B] [TopologicalSpace G] [Group G] [TopologicalGroup G]
+  (E : B → Type*) [∀ b, TopologicalSpace (E b)] [TopologicalSpace (Bundle.TotalSpace G E)] [FiberBundle G E] where
+  action : ∀ b, G → E b → E b -- Free and transitive action of G on each fiber
+  free : ∀ b (x : E b), Function.Injective (action b · x) -- Free action
+  transitive : ∀ b (x₁ x₂ : E b), ∃ g : G, action b g x₁ = x₂
+  -- equivariant :
+  --   ∀ b g x, Bundle.TotalSpace.proj ⟨b, action b g x⟩ = Bundle.TotalSpace.proj ⟨b, x⟩
+
+structure PrincipalBundle (B G : Type*) [TopologicalSpace B] [TopologicalSpace G] [Group G] [TopologicalGroup G]
+  (E : B → Type*) [∀ b, TopologicalSpace (E b)] [TopologicalSpace (Bundle.TotalSpace G E)] [FiberBundle G E] where
+  action : ∀ b, G → E b → E b -- Free and transitive action of G on each fiber
+  equivariant :
+    ∀ b g x, Bundle.TotalSpace.proj (⟨b, action b g x⟩) = Bundle.TotalSpace.proj (⟨b, x⟩) -- Action respects projection
+  free : ∀ b (x : E b), Function.Injective (action b · x) -- Free action
+
+structure PrincipalBundle (B G : Type*) [TopologicalSpace B] [TopologicalSpace G] [Group G] [TopologicalGroup G]
+  (E : B → Type*) [∀ b, TopologicalSpace (E b)] [TopologicalSpace (Bundle.TotalSpace G E)] [FiberBundle G E] where
+  action : ∀ b, G → E b → E b -- Free and transitive action of G on each fiber
+  equivariant :
+    ∀ b g x, Bundle.TotalSpace.proj (⟨b, action b g x⟩) = Bundle.TotalSpace.proj (⟨b, x⟩) -- Action respects projection
+  free : ∀ b (x : E b), Function.Injective (action b · x) -- Free action
+
+structure PrincipalBundle (B G : Type*) [TopologicalSpace B] [TopologicalSpace G] [Group G] [TopologicalGroup G]
+  (E : B → Type*) [∀ b, TopologicalSpace (E b)] [TopologicalSpace (Bundle.TotalSpace G E)] [FiberBundle G E] where
+  action : ∀ b, G → E b → E b -- Free and transitive action of G on each fiber
+  equivariant :
+    ∀ b g x, Bundle.TotalSpace.proj (⟨b, action b g x⟩) = Bundle.TotalSpace.proj (⟨b, x⟩) -- Action respects projection
+  free : ∀ b (x : E b), Function.Injective (action b · x) -- Free action
+
+
+structure PrincipalBundle (B G : Type*) [TopologicalSpace B] [TopologicalSpace G] [Group G] [TopologicalGroup G]
+  (E : B → Type*) [∀ b, TopologicalSpace (E b)] [TopologicalSpace (Bundle.TotalSpace G E)] [FiberBundle G E] where
+  action : ∀ b, G → E b → E b -- Free and transitive action of G on each fiber
+  equivariant :
+    ∀ b g x, Bundle.TotalSpace.proj ⟨b, action b g x⟩ = Bundle.TotalSpace.proj ⟨b, x⟩ -- Action respects projection
+  free : ∀ b (x : E b), Function.Injective (action b · x) -- Free action
+
+
+structure PrincipalBundle (B G : Type*) [TopologicalSpace B] [TopologicalSpace G] [Group G] [TopologicalGroup G]
+  (E : B → Type*) [∀ b, TopologicalSpace (E b)] [TopologicalSpace (Bundle.TotalSpace G E)] [FiberBundle G E] where
+  action : ∀ b, G → E b → E b -- Free and transitive action of G on each fiber
+  equivariant :
+    ∀ b g x, Bundle.TotalSpace.proj ⟨b, action b g x⟩ = Bundle.TotalSpace.proj  ⟨b, x⟩ -- Action respects projection
+  free : ∀ b (x : E b), Function.Injective (action b · x) -- Free action
+  proper : ∀ b, ProperSpace (E b) -- Proper action ensures good quotient properties
+
+* Log for [2025-01-12 Sun 10:35]
+
+variable {B G E : Type*} {E : B → Type*}[TopologicalSpace B] [TopologicalSpace G] [Group G]
+  [TopologicalGroup G] [TopologicalSpace (Bundle.TotalSpace G E)]
+  [(b : B) → TopologicalSpace (E b)] [FiberBundle G E]
+
+
+structure PrincipalBundle (B G : Type*) [TopologicalSpace B] [TopologicalSpace G] [Group G] [TopologicalGroup G]
+  (E : B → Type*) [∀ b, TopologicalSpace (E b)] [TopologicalSpace (Bundle.TotalSpace G E)] [FiberBundle G E] where
+  action : ∀ b, G → E b → E b
+  identity : ∀ b x, action b (1 :G) x = x
+  associativity : ∀ b g₁ g₂ x, action b (g₁ * g₂) x = action b g₁ (action b g₂ x)
+
+notation:50 g " ⊲[" b "] " x => PrincipalBundle.action b g x
+
+#check ∀ b x, PrincipalBundle.action b (1 :G) x = x
+#check ∀ b x, (1 ⊲[b] x) = x
+#check ∀ b g₁ g₂ x, PrincipalBundle.action b (g₁ * g₂) x = PrincipalBundle.action b g₁ (PrincipalBundle.action b g₂ x)
+#check ∀ b g₁ g₂ x, PrincipalBundle.action b (g₁ * g₂) x = (g₁ ⊲[b] g₂ ⊲[b] x)
+#check ∀ b g₁ g₂ x, ((g₁ * g₂) ⊲[b] x) = (g₁ ⊲[b] g₂ ⊲[b] x)
+
+-- example : ∀ b x, PrincipalBundle.action b (1 : G) x = x := sorry
+-- example : ∀ b x, (1 ⊲[b] x) = x := sorry
+
+\begin{aligned}
+&\text {Let } \triangleright: G \times M \rightarrow M \text { be an action on } M \text {. Define a relation on } M\\
+&p \sim q: \Leftrightarrow \exists g \in G: q=g \triangleright p
+\end{aligned}
+
+     have h6a : orbitRel G P p p → ∃ g : G, g • p = p := by
+      intro h
+      exact ⟨1, one_smul _ p⟩
+
+    have h8 : ∃ g : G, g • p = p := Exists.intro 1 h2
+
+    have h9
+
+    have h6 : orbitRel G P p p ↔ ∃ g : G, g • p = p := by
+
+      apply h5
+
+          have h2b :  p = g⁻¹ • q := by
+            calc p = (1 : G) • p := by sorry
+            _ = (g⁻¹ * g) • p := by sorry
+            _ = g⁻¹ • (g • p) := by sorry
+            _ = g⁻¹ • q := by sorry
+	    
+example {G B : Type*} {E : B → Type*} (k n : ℕ)
+[TopologicalSpace B]
+[ChartedSpace (EuclideanSpace ℝ (Fin n)) B]
+[TopologicalSpace G]
+[ChartedSpace (EuclideanSpace ℝ (Fin k)) G]
+[Group G]
+[MulAction G P]
+[TopologicalGroup G]
+[TopologicalSpace (TotalSpace G E)]
+[(b : B) → TopologicalSpace (E b)]
+[LieGroup (𝓡 k) G]
+[FiberBundle G E] (g g': G) (p q r : P) :
+  true := by
+    -- Just things we know to be true for an action
+    have h1 : g • (g' • p) = (g * g') • p := by apply (mul_smul g g' p).symm
+    have h2 : (1 : G) • p = p := by apply one_smul
+
+* Log for [2025-01-15 Wed 11:43]
+
+lemma fg_inv : f ∘ g = id :=
+  funext (λ x => by
+    have h_fg3 : f (g x) 0 = x 0 := by simp [g, f]
+    have h_fg4 : f (g x) 1 = x 1 := by simp [g, f]
+    ext i
+    match i with
+      | Fin.mk 0 _ => exact h_fg3
+      | Fin.mk 1 _ => exact h_fg4
+    )
+
+lemma gf_inv : g ∘ f = id :=
+  funext (λ x => by
+    have h_gf1 : g (f x) = x := by simp [f,g]
+    exact h_gf1)
+
+
+def Circle.smuk (x : Circle) (z : Fin 2 → ℝ) : Fin 2 → ℝ :=
+  λ i =>  let u := Complex.mk (z 0) (z 1)
+         let v := u * x
+         if i = 0 then v.re else v.im
+
+* Log for [2025-01-17 Fri 18:13]
+
+  -- have h1 : h • ξ ∈ orbit Circle ξ := mem_orbit _ _
+  -- have h2 : ξ ∈ orbit Circle ξ := mem_orbit_self _
+
+
+* Log for [2025-01-20 Mon 15:16]
+
+ave h13 : h * 1 = h * ((g x ) / (g x)) := by rw [<-h10]
+  have h14 : h * ((g x ) / (g x)) = g x / (g x) := h9e
+  have h15 : (g x) / (g x) = 1 := h11
+  have h16 : h * 1 = g x / (g x) := by
+    calc h * 1 = h * ((g x ) / (g x)) := h13
+         _  = g x / (g x) := h14
+  have h9a : ((g x) / (g x)) * h = (g x) * (h / (g x)) := by
+    rw [mul_comm_div]
+
+  have h9c : h * ((g x) / (g x)) = (h / (g x)) * (g x) := by
+    rw [mul_comm_div]
+  have h9b : h * ((g x) * (g x)⁻¹) = (g x) * (g x)⁻¹ := by rw [h9]
+
+  have h7 : h * (g x) / (g x) = h * (g x) * (g x)⁻¹ := by rw [div_eq_mul_inv]
+  have h8a : h * ((g x) * (g x)⁻¹) = h := by rw [DivisionSemiring.mul_inv_cancel (g x) h5, mul_one]
+  have h8 : h * ((g x) * (g x)⁻¹) = (g x) * (g x)⁻¹ := by rw [<-mul_assoc, h6]
+  have h9 : g x * (g x)⁻¹ = 1 := by rw [DivisionSemiring.mul_inv_cancel (g x) h5]
+  have h11 : h * (g x * (g x)⁻¹) = h * 1 := by rw [h8a, mul_one]
+  have h12 : h * 1 = 1 := by
+    calc h * 1 = h * (g x * (g x)⁻¹) := by rw [<-h11]
+         _ = h := by rw [h8a]
+
+  sorry
+
+* Log for [2025-01-22 Wed 07:40]
+
+\psi_{i j}=\phi_j \circ \phi_i^{-1}:\left(U_i \cap U_j\right) \times F \rightarrow\left(U_i \cap U_j\right) \times F
+
+g_{i j}: U_i \cap U_j \rightarrow G \text {, that is, } \psi_{i j}(x, f)=\left(x, g_{i j}(x) \cdot f\right)
+
+* Log for [2025-01-27 Mon 15:28]
+
+Suppose we have two local trivialisations $$\phi_i : \pi^{-1}(U_i)
+\longrightarrow U_i \times F$$ and $$\phi_j : \pi^{-1}(U_j)
+\longrightarrow U_i \times F$$ then $$p \mapsto (\pi(p),f_i(p))$$ for
+some $$f_i : \pi^{-1}(x) \longrightarrow F$$ and correspondingly for
+$$j$$.
+
+We have for a fibre $$\pi^{-1}(x)$$, $$f_j \circ f_i^{-1} : F
+\longrightarrow F$$ and we suppose that this homeomorphism (or diffeo)
+is the left action of an element $$g_{ij}(x)$$, that is, $$f_i(p) =
+g_{ij}(x) \triangleright f_j(x)$$ then the bundle is a $$G$$-bundle.
+
+* Log for [2025-01-29 Wed 11:54]
+
+theorem ber : ∀ (i j : ↑(atlas (EuclideanSpace ℝ (Fin 1)) Circle)),
+              ∀ x ∈ (fun x => univ) i ∩ (fun x => univ) j,
+              ∃ (g : (⊥ : Subgroup Circle)), ∀ (v : ℝ),
+              GBundleCore.coordChange (self : GBundleCore (⊥ : Subgroup Circle)  (↑(atlas (EuclideanSpace ℝ (Fin 1)) Circle)) Circle ℝ)
+                                      i j x v = @HSMul.hSMul (⊥ : Subgroup Circle) ℝ ℝ hsMul g v
+              := by
+    sorry
+
+theorem bir :  GBundleCore.coordChange (self : GBundleCore (⊥ : Subgroup Circle)  (↑(atlas (EuclideanSpace ℝ (Fin 1)) Circle)) Circle ℝ) =
+              (fun x x x => ⇑(ContinuousLinearMap.id ℝ ℝ)) := by sorry
+
+noncomputable
+def foo : GBundleCore (⊥ : Subgroup Circle) (atlas (EuclideanSpace ℝ (Fin 1)) Circle) Circle ℝ :=
+  { baseSet := λ _ => univ
+    isOpen_baseSet := λ _ => isOpen_univ
+    indexAt := λ i => sorry
+    mem_baseSet_at := λ x => mem_univ x
+    coordChange := λ _ _ _ => ContinuousLinearMap.id ℝ ℝ
+    coordChange_self := λ _ _ _ _ => rfl
+    continuousOn_coordChange := sorry
+    coordChange_comp := λ _ _ _ _ _ _ => rfl
+    coordChange_structure_group := by
+      have h1 : GBundleCore.coordChange (foo : GBundleCore (⊥ : Subgroup Circle)  (↑(atlas (EuclideanSpace ℝ (Fin 1)) Circle)) Circle ℝ) =
+              (fun x x x => ⇑(ContinuousLinearMap.id ℝ ℝ)) := by sorry
+      -- have h2 :  ∀ (i j : ↑(atlas (EuclideanSpace ℝ (Fin 1)) Circle)),
+      --   ∀ x ∈ (fun x => univ) i ∩ (fun x => univ) j,
+      --   ∃ g, ∀ (v : ℝ), (fun x x x => ⇑(ContinuousLinearMap.id ℝ ℝ)) i j x v = g • v := by sorry
+      have ber : ∀ (i j : ↑(atlas (EuclideanSpace ℝ (Fin 1)) Circle)),
+              ∀ x ∈ (fun x => univ) i ∩ (fun x => univ) j,
+              ∃ (g : (⊥ : Subgroup Circle)), ∀ (v : ℝ),
+              GBundleCore.coordChange (self : GBundleCore (⊥ : Subgroup Circle)  (↑(atlas (EuclideanSpace ℝ (Fin 1)) Circle)) Circle ℝ)
+                                      i j x v = @HSMul.hSMul (⊥ : Subgroup Circle) ℝ ℝ hsMul g v
+              := by sorry
+      exact bar foo
+    }
+
+* Log for [2025-02-05 Wed 19:53]
+
+https://people.ucsc.edu/~rmont/classes/ManifoldsII/Solutions/209hw2.pdf
+
+* Log for [2025-02-06 Thu 17:24]
+
+nstance : HSMul (orthogonalGroup (Fin 1) ℝ) ℝ ℝ where
+  hSMul := fun g r => g.1 0 0 * r
+
+instance : MulAction (orthogonalGroup (Fin 1) ℝ) ℝ where
+  smul := fun g x => (g.1 0 0) * x
+  one_smul := fun x => by
+    have h1 : (1 : orthogonalGroup (Fin 1) ℝ) • x = (1 : orthogonalGroup (Fin 1) ℝ).1 0 0 * x := by
+      rfl
+    have h2 : (1 : orthogonalGroup (Fin 1) ℝ).1 0 0 * x = x := by simp
+    have h3 : (1 : orthogonalGroup (Fin 1) ℝ) • x = x := by rw [h1, h2]
+    exact h3
+  mul_smul := fun g h x => by
+    have h2 : g • (h • x) = g • (h • x) := rfl
+    have h3 : g • (h • x) = (g.1 0 0) * (h • x) := by rfl
+    have h4 : (g.1 0 0) * (h • x) = (g.1 0 0) * ((h.1 0 0) * x) := by rfl
+    have h5 : (g.1 0 0) * ((h.1 0 0) * x) = ((g.1 0 0) * (h.1 0 0)) * x := by simp only [mul_assoc]
+    have h6 : ((g.1 0 0) * (h.1 0 0)) * x = (g * h).1 0 0 * x := by
+      simp only [Matrix.mul_apply, Matrix.one_apply, Matrix.coe_one, Matrix.coe_zero]
+      exact rfl
+
+    rw [h3, h4, h5, h6]
+  -- mul_smul := fun g h x => by
+  --  have h2 : g • (h • x) = g • (h • x) := rfl
+  --  have h3 : g • (h • x) = (g.1 0 0) * (h • x) := by rfl
+  --  have h4 : (g.1 0 0) * (h • x) = (g.1 0 0) * ((h.1 0 0) * x) := by rfl
+  --  have h5 : (g.1 0 0) * ((h.1 0 0) * x) = ((g.1 0 0) * (h.1 0 0)) * x := by sorry
+  --  have h6 : ((g.1 0 0) * (h.1 0 0)) * x = (g * h).1 0 0 := by sorry
+  --  sorry
+
+noncomputable
+instance : MulAction (GeneralLinearGroup  ℝ (Fin n -> ℝ)) (Fin n -> ℝ)  where
+  smul := λ g x => g.toLinearEquiv x
+  one_smul := λ x => by
+    have h1 :  (1 : GeneralLinearGroup ℝ (Fin n → ℝ)) • x = x := by rfl
+    exact h1
+  mul_smul := λ f g x => by
+    have h1 : (f * g) • x = (f * g).toLinearEquiv x := by rfl
+    have h2: (f * g).toLinearEquiv x = f.toLinearEquiv (g.toLinearEquiv x) := by rfl
+    have h3 : f.toLinearEquiv (g.toLinearEquiv x) = f.toLinearEquiv (g • x) := rfl
+    have h4 : f.toLinearEquiv (g • x) = f • (g • x) := rfl
+    rw [h1, h2, h3, h4]
+
+* Log for [2025-02-07 Fri 10:49]
+
+    -- have h1 :  (1 : GeneralLinearGroup ℝ (Fin n → ℝ)) • x = x := by rfl
+    -- have h2 : UnitaryGroup.toGL (1 : unitaryGroup (Fin n) ℝ) = (1 : GeneralLinearGroup ℝ (Fin n → ℝ)) := by simp
+    -- have h3 : (UnitaryGroup.toGL (1 : unitaryGroup (Fin n) ℝ)) • x = x := by rfl
+
+ mul_smul := λ f g x => by
+    have h1 : ((UnitaryGroup.toGL g) * (UnitaryGroup.toGL f)) • x = (UnitaryGroup.toGL g) • (UnitaryGroup.toGL f) • x := by rfl
+    have h1 : (UnitaryGroup.toGL (f * g)).toLinearEquiv x = (UnitaryGroup.toGL f * UnitaryGroup.toGL g).toLinearEquiv x := by
+      -- Use the group homomorphism property of toGL
+      apply Subtype.ext
+      simp
+    rw [h1]
+
+
+instance : MulAction (orthogonalGroup (Fin n) ℝ) (Fin n -> ℝ) where
+  smul := λ g x => (UnitaryGroup.toGL g).toLinearEquiv x
+  one_smul := λ x => by
+    have h1 : (1 : GeneralLinearGroup ℝ (Fin n → ℝ)) • x = x := by rfl
+    exact sorry
+  mul_smul := λ f g x => by
+    have h1 : (UnitaryGroup.toGL (f * g)).toLinearEquiv x = (UnitaryGroup.toGL f * UnitaryGroup.toGL g).toLinearEquiv x := by rfl
+    rw [h1]
+
+ let foo := λ r => by
+  have h4 : exp (r * I) ∈ Submonoid.unitSphere ℂ ↔ Complex.abs (exp r)= 1 := mem_circle_iff_abs
+  have h3 : Circle.exp.toFun r ∈ Circle := rfl
+  have h1 : abs (exp (r * I)) = 1 := abs_exp_ofReal_mul_I r
+  have h1 : abs (cexp (↑r * I)) = 1 := Complex.abs_exp_ofReal_mul_I r
+
+  have h2 : 1 ∈ Submonoid.unitSphere ℂ := sorry
+  exact (sorry : exp (r * I) ∈ Submonoid.unitSphere ℂ)
+
+
+* Log for [2025-02-08 Sat 13:00]
+
+theorem bar (r : ℝ) : exp (r * I) ∈ Submonoid.unitSphere ℂ := by
+  have h1 : abs (exp (r * I)) = 1 := abs_exp_ofReal_mul_I r
+  have h2 : exp (r * I) ∈ Metric.sphere 0 1 ↔ ‖exp (r * I)‖ = 1 := mem_sphere_zero_iff_norm
+  have h3 : ‖exp (r * I)‖ = abs (exp (r * I)) := rfl
+  have h4 : Metric.sphere (0 : ℂ) 1 = Submonoid.unitSphere ℂ := by rfl
+  have h5 : ‖exp (r * I)‖ = 1 := by
+    rw [h3, h1]
+  have h6 : exp (r * I) ∈ Metric.sphere 0 1 := h2.2 h5
+  have h7 : exp (r * I) ∈ Submonoid.unitSphere ℂ := h6
+  exact h7
