@@ -2399,3 +2399,22 @@ theorem bar (r : ℝ) : exp (r * I) ∈ Submonoid.unitSphere ℂ := by
   have h6 : exp (r * I) ∈ Metric.sphere 0 1 := h2.2 h5
   have h7 : exp (r * I) ∈ Submonoid.unitSphere ℂ := h6
   exact h7
+
+* Log for [2025-02-09 Sun 12:00]
+
+theorem baz (r : ℝ) (hr : r ∈ Ioo 0 (2 * Real.pi)) :
+  ⟨exp (r * I), exp_mem_unitSphere r⟩ ∈ {z : S1 | arg z.val ∈ Ioo 0 (2 * Real.pi)} := by
+    let z : S1 := ⟨exp (r * I), exp_mem_unitSphere r⟩
+    have hx : 0 < r := hr.1
+    have hy : r < 2 * Real.pi := hr.2
+    have bik : arg (exp (r * I)) = toIocMod (mul_pos two_pos Real.pi_pos) (-2 * Real.pi) r
+    have h_val : z.val = exp (r * I) := rfl
+    have h_prp : exp (r * I) ∈ Submonoid.unitSphere ℂ := z.property
+    have h_arg : arg z.val = arg (exp (r * I)) := rfl
+    have h_abs : abs z.val = abs (exp (r * I)) := rfl
+    have bik : arg (exp (r * I)) = toIocMod (mul_pos two_pos Real.pi_pos) (-2 * Real.pi) r
+    have h_arg_eq_r : arg (exp (r * I)) = r := sorry
+    have ha : 0 < arg (exp (r * I)) := sorry
+    have hb : arg (exp (r * I)) < 2 * Real.pi := sorry
+    exact ⟨ha, hb⟩
+

@@ -56,28 +56,12 @@ instance : MulAction (orthogonalGroup (Fin n) ℝ) (Fin n -> ℝ) where
     show (f * g).1.mulVec x = f.1.mulVec (g.1.mulVec x)
     simp [Matrix.mulVec_mulVec]
 
-#check atlas (EuclideanSpace ℝ (Fin 1)) Circle
-#check chartAt (EuclideanSpace ℝ (Fin 1)) (1 : Circle)
-#check (chartAt (EuclideanSpace ℝ (Fin 1)) (1 : Circle)).source
-#check PartialHomeomorph
-#print chartAt
-#check Subtype
-#synth TopologicalSpace ℂ
-#check Iic
-#check Ioo (0 : ℝ) (0 : ℝ)
-#check Circle.exp.toFun
-#check Circle.exp.toFun 1
-#check ((Circle.exp.toFun 1) : Circle)
-#check λ r => Complex.exp (r * Complex.I) ∈ Submonoid.unitSphere ℂ
-#check ((Circle.exp.toFun 1) : Circle) ∈ Circle <-> mem_circle_iff_abs
-
-
 open Complex
 
 def S1 : Type := Submonoid.unitSphere ℂ
 deriving TopologicalSpace
 
-theorem bar (r : ℝ) : exp (r * I) ∈ Submonoid.unitSphere ℂ := by
+theorem exp_mem_unitSphere (r : ℝ) : exp (r * I) ∈ Submonoid.unitSphere ℂ := by
   have h1 : abs (exp (r * I)) = 1 := abs_exp_ofReal_mul_I r
   have h2 : exp (r * I) ∈ Metric.sphere 0 1 ↔ ‖exp (r * I)‖ = 1 := mem_sphere_zero_iff_norm
   have h3 : ‖exp (r * I)‖ = abs (exp (r * I)) := rfl
@@ -87,25 +71,95 @@ theorem bar (r : ℝ) : exp (r * I) ∈ Submonoid.unitSphere ℂ := by
   have h7 : exp (r * I) ∈ Submonoid.unitSphere ℂ := h6
   exact h7
 
+variables (z : S1)
+
+#check z.1
+#check z.2
+
+#check ((λ r => ⟨exp (r * Complex.I), exp_mem_unitSphere r⟩) : ℝ → ↥(Submonoid.unitSphere ℂ))
+#check Complex.arg_exp_mul_I
+#check toIocMod (mul_pos two_pos Real.pi_pos) (-Real.pi) (Real.pi / 4) = (Real.pi / 4)
+#check toIocMod (mul_pos two_pos Real.pi_pos) (-Real.pi) (Real.pi / 4) = (Real.pi / 4)
+#check toIocMod_eq_self
+
+
+theorem arg_exp_of_range (r : ℝ) (hr : -Real.pi < r ∧ r < Real.pi) :
+  arg (exp (r * I)) = r := by
+  have h_in_range : r ∈ Ioo (-Real.pi) Real.pi := hr
+  have h_in_range : r ∈ Ioc (-Real.pi) Real.pi := by
+    exact Ioo_subset_Ioc_self h_in_range
+  have bik : arg (exp (r * I)) = toIocMod (mul_pos two_pos Real.pi_pos) (-Real.pi) r := Complex.arg_exp_mul_I r
+  have bil : toIocMod (mul_pos two_pos Real.pi_pos) (-Real.pi) r = r ↔ r ∈ Ioc (-Real.pi) ((-Real.pi) + (2 * Real.pi)) :=
+    toIocMod_eq_self (mul_pos two_pos Real.pi_pos)
+  have h_eq : -Real.pi + 2 * Real.pi = Real.pi := by ring
+  have bin : toIocMod (mul_pos two_pos Real.pi_pos) (-Real.pi) r = r ↔ r ∈ Ioc (-Real.pi) Real.pi := by
+    rwa [h_eq] at bil
+  have bim : toIocMod (mul_pos two_pos Real.pi_pos) (-Real.pi) r = r := bin.mpr h_in_range
+  have crk : arg (exp (r * I)) = r := by rw [bik, bim]
+  exact crk
+
+noncomputable
 def chart_at_S1_excluding_1 : PartialHomeomorph S1 ℝ :=
 {
   toFun := λ z => arg z.val,
-  invFun := λ r => ⟨exp (r * Complex.I), bar r⟩,
-  source := Ioo (0 : S1) (2 * pi),
-  target := Ioi 0,
-  continuousOn_toFun := continuous_arg,
-  continuousOn_invFun := continuous_exp,
+  invFun := λ r => ⟨exp (r * Complex.I), exp_mem_unitSphere r⟩,
+  source := {z : S1 | arg z.val ∈ Ioo 0 (2 * Real.pi)},
+  target := Ioo 0 (2 * Real.pi),
+  map_source' := λ z hz => hz,
+  map_target' := λ r hr => ⟨sorry, sorry⟩,
+                 -- λ r hr => ⟨exp (r * Complex.I), by simp; exact hr⟩,
+  -- left_inv' : ∀ ⦃x⦄, x ∈ source → invFun (toFun x) = x
+  -- left_inv' := λ z hz => Subtype.ext (by rw [baz z hz]),
+  left_inv' := λ z hz => sorry
+  right_inv' := λ r hr => sorry, -- by simp [hr],
+  open_source := sorry, -- Needs proof that {z : S1 | arg z.val ∈ Ioo 0 (2 * π)} is open
+  open_target := isOpen_Ioo,
+  continuousOn_toFun := sorry, -- Needs proof that `arg` is continuous on `source`
+  continuousOn_invFun := sorry  -- Needs proof that `exp` is continuous on `target`
 }
 
--- Second chart for S^1 excluding -1, mapping argument (π, 2π)
+noncomputable
 def chart_at_S1_excluding_minus_1 : PartialHomeomorph S1 ℝ :=
 {
-  to_fun := λ z, complex.arg z,  -- The coordinate map is the argument of the complex number
-  inv_fun := λ x, exp (x * complex.I),  -- The inverse map is the exponential of the angle
-  source := set.Ioo π (2 * π),  -- This is (π, 2π) excluding -1
-  target := Ioi 0,  -- The target is ℝ (open ray starting at 0)
-  continuous_to_fun := continuous_arg,  -- Argument is continuous
-  continuous_inv_fun := continuous_exp,  -- Exponential is continuous
+  toFun := λ z => arg z.val,
+  invFun := λ r => ⟨exp (r * Complex.I), exp_mem_unitSphere r⟩,
+  source := {z : S1 | arg z.val ∈ Ioo (-Real.pi) (Real.pi)},
+  target := Ioo (-Real.pi) (Real.pi),
+  map_source' := λ z hz => hz,
+  map_target' := λ r hr => by
+    have h1 : (exp (r * I)).arg = r := arg_exp_of_range r hr
+    have h2a : (-Real.pi) < r := hr.1
+    have h2b : r < Real.pi := hr.2
+    have h3a : (-Real.pi) < (exp (r * I)).arg := by
+      rw [h1]
+      exact h2a
+    have h3b : (exp (r * I)).arg < (Real.pi) := by
+      rw [h1]
+      exact h2b
+    exact ⟨(h3a : (-Real.pi) < (exp (r * I)).arg), (h3b : (exp (r * I)).arg < (Real.pi))⟩,
+  left_inv' := λ z hz => by
+    have h0 : (Complex.abs z.val) * exp ((z.val).arg * I) = z.val := by exact abs_mul_exp_arg_mul_I z.val
+    have h4 : z.val ∈ Submonoid.unitSphere ℂ := by exact z.prop
+    have h5 : z.val ∈ Metric.sphere 0 1 ↔ ‖z.val‖ = 1 := mem_sphere_zero_iff_norm
+    have h7 : z.val ∈ Metric.sphere 0 1 := h4
+    have h6 : ‖z.val‖ = 1 := by rwa [h5] at h7
+    have h8 : ‖z.val‖ * exp ((z.val).arg * I) = z.val := by exact abs_mul_exp_arg_mul_I z.val
+    have h9 : z.val = exp ((z.val).arg * I) := by
+      calc z.val = ‖z.val‖ * exp ((z.val).arg * I) := by rw [h8]
+                _ = (1 : ℝ) *  exp ((z.val).arg * I) := by rw [h6]
+                _ = (1 : ℂ) * exp ((z.val).arg * I) := by norm_cast
+                _ = exp ((z.val).arg * I) := by rw [one_mul]
+    have h3 : (fun r => ⟨exp (r * I), by exact exp_mem_unitSphere r⟩) (z.val).arg = z := by
+      apply Subtype.ext
+      exact h9.symm
+    exact h3
+  right_inv' := λ r hr => by
+   have h1 : arg (exp (r * I)) = r := arg_exp_of_range r hr
+   exact h1
+  open_source := sorry,
+  open_target := isOpen_Ioo,
+  continuousOn_toFun := sorry,
+  continuousOn_invFun := sorry
 }
 
 noncomputable
