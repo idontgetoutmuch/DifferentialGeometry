@@ -2418,3 +2418,171 @@ theorem baz (r : ℝ) (hr : r ∈ Ioo 0 (2 * Real.pi)) :
     have hb : arg (exp (r * I)) < 2 * Real.pi := sorry
     exact ⟨ha, hb⟩
 
+
+* Log for [2025-02-11 Tue 18:16]
+
+noncomputable
+def chart_at_S1_excluding_minus_1 : PartialHomeomorph S1 ℝ :=
+{
+  toFun := λ z => arg z.val,
+  invFun := λ r => ⟨exp (r * Complex.I), exp_mem_unitSphere r⟩,
+  source := {z : S1 | arg z.val ∈ Ioo (-Real.pi) (Real.pi)},
+  target := Ioo (-Real.pi) (Real.pi),
+  map_source' := λ z hz => hz,
+  map_target' := λ r hr => by
+    have h1 : (exp (r * I)).arg = r := arg_exp_of_range r hr
+    have h2a : (-Real.pi) < r := hr.1
+    have h2b : r < Real.pi := hr.2
+    have h3a : (-Real.pi) < (exp (r * I)).arg := by
+      rw [h1]
+      exact h2a
+    have h3b : (exp (r * I)).arg < (Real.pi) := by
+      rw [h1]
+      exact h2b
+    exact ⟨(h3a : (-Real.pi) < (exp (r * I)).arg), (h3b : (exp (r * I)).arg < (Real.pi))⟩,
+  left_inv' := λ z hz => by
+    have h0 : (Complex.abs z.val) * exp ((z.val).arg * I) = z.val := by exact abs_mul_exp_arg_mul_I z.val
+    have h4 : z.val ∈ Submonoid.unitSphere ℂ := by exact z.prop
+    have h5 : z.val ∈ Metric.sphere 0 1 ↔ ‖z.val‖ = 1 := mem_sphere_zero_iff_norm
+    have h7 : z.val ∈ Metric.sphere 0 1 := h4
+    have h6 : ‖z.val‖ = 1 := by rwa [h5] at h7
+    have h8 : ‖z.val‖ * exp ((z.val).arg * I) = z.val := by exact abs_mul_exp_arg_mul_I z.val
+    have h9 : z.val = exp ((z.val).arg * I) := by
+      calc z.val = ‖z.val‖ * exp ((z.val).arg * I) := by rw [h8]
+                _ = (1 : ℝ) *  exp ((z.val).arg * I) := by rw [h6]
+                _ = (1 : ℂ) * exp ((z.val).arg * I) := by norm_cast
+                _ = exp ((z.val).arg * I) := by rw [one_mul]
+    have h3 : (fun r => ⟨exp (r * I), by exact exp_mem_unitSphere r⟩) (z.val).arg = z := by
+      apply Subtype.ext
+      exact h9.symm
+    exact h3
+  right_inv' := λ r hr => by
+   have h1 : arg (exp (r * I)) = r := arg_exp_of_range r hr
+   exact h1
+  open_source := by
+    -- have h1 : ContinuousOn sorry z := by exact sorry
+    -- have h2 : true := by exact ContinuousAt_arg sorry
+    exact sorry,
+
+  open_target := isOpen_Ioo,
+  continuousOn_toFun  := (sorry : (ContinuousOn (λ z => arg z.val)) {z : S1 | arg z.val ∈ Ioo (-Real.pi) (Real.pi)}),
+  continuousOn_invFun := sorry
+}
+
+
+$$
+V=S^1 \backslash\{-1\}=\mathbb{R} / \mathbb{Z} \backslash\left\{\frac{1}{2}\right\}, \phi_2: \pi^{-1}(V) \rightarrow V \times \mathbb{R} \text { by }(x, y) \mapsto \begin{cases}(x, y) & 0 \leq x<\frac{1}{2} \\ (x-1,-y) & \frac{1}{2}<x \leq 1\end{cases}
+$$
+
+Fair point.
+
+Let $$\sim$$ be the equivalence relation on $$[0,1] \times \mathbb{R}$$ defined by $$(0, y) \sim(1, -y)$$ and the Mobius strip be as usual be $$M=[0,1] \times \mathbb{R} /\sim$$.
+Let $$\pi(x, y) = x$$ be the projection map $$\pi : M \rightarrow \mathbb{S}^1$$.
+
+We can define a local trivialization $$\phi_V$$ on $$\pi^{-1}(V)=\pi^{-1}(S^1 \backslash\{\pi\})$$:
+
+$$
+\phi_V: \pi^{-1}(V) \rightarrow V \times \mathbb{R} \text { by }(x, y) \mapsto \begin{cases}(x, y) & 0 \leq x<\frac{1}{2} \\ (x-1,-y) & \frac{1}{2}<x \leq 1\end{cases}
+$$
+
+We only need check that this map is well defined on $$[(0,y)]$$ as all other equivalence classes are just a single element. For $$(0,y), (1, -) \in [(0,y)]$$:
+
+$$$
+\phi_V(0,y) = (0,y) = \phi_V(1, -y)
+$$
+
+To expreess that this is a G-bundle in Lean, we previously invented:
+
+```Lean4
+structure GBundleCore (ι : Type*) (B : Type*) [TopologicalSpace B] (F : Type*)
+    [TopologicalSpace F] (G : Type*) [Group G] [MulAction G F] where
+  baseSet : ι → Set B
+  isOpen_baseSet : ∀ i, IsOpen (baseSet i)
+  indexAt : B → ι
+  mem_baseSet_at : ∀ x, x ∈ baseSet (indexAt x)
+  coordChange : ι → ι → B → F → F
+  coordChange_self : ∀ i, ∀ x ∈ baseSet i, ∀ v, coordChange i i x v = v
+  continuousOn_coordChange : ∀ i j,
+    ContinuousOn (fun p : B × F => coordChange i j p.1 p.2) ((baseSet i ∩ baseSet j) ×ˢ univ)
+  coordChange_comp : ∀ i j k, ∀ x ∈ baseSet i ∩ baseSet j ∩ baseSet k, ∀ v,
+    (coordChange j k x) (coordChange i j x v) = coordChange i k x v
+  coordChange_structure_group : ∀ i j, ∀ x ∈ baseSet i ∩ baseSet j, ∃ g : G, ∀ v : F, coordChange i j x v = g • v
+```
+
+In particular we `indexAt` which gives a chart at a point in the base space of the bundle. Thus I started creating an atlas for the circle with two charts (as has been suggested). This proved trickier than anticipated and I was showing what I had so far for just one of the (two) charts.
+
+theorem t3 : ∀ (y : ℝ), {x : Circle | x ≠ (Circle.exp y : Circle)} =
+                             (chartAt (EuclideanSpace ℝ (Fin 1)) (Circle.exp y : Circle)).source := by
+  intro y
+  let v : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 :=
+    ⟨![Real.cos y, Real.sin y], by
+      simp [Metric.sphere, EuclideanSpace.norm_eq, Fin.sum_univ_succ, Real.cos_sq_add_sin_sq]⟩
+  have h0 : (stereographic' 1 v).source = {v}ᶜ := stereographic'_source v
+  have h1 : (chartAt (EuclideanSpace ℝ (Fin 1)) v).source = (stereographic' 1 (-v)).source := rfl
+  have h2 : (chartAt (EuclideanSpace ℝ (Fin 1)) v).source = {v}ᶜ := sorry
+
+  have ha : x ∈ {v}ᶜ ↔ x ≠ v := Set.mem_compl_singleton_iff
+  have hv_notin : v ∉ (stereographic' 1 v).source := by
+    rw [stereographic'_source]
+    exact ha.mpr (ne.refl v)
+
+  have h0 : (stereographic' 1 v).source = {v}ᶜ := stereographic'_source v
+  have ha : v ∈ {(-v)}ᶜ ↔ v ≠ (-v) := Set.mem_compl_singleton_iff
+
+  have hv_notin : v ∉ (stereographic' 1 v).source := by
+    rw [stereographic'_source]
+    exact Set.not_mem_compl_singleton v
+    -- exact (sorry : v ∉ {v}ᶜ)
+  sorry
+
+-- have ha : ∀ x, x ∈ (stereographic' 1 v).source <-> x ≠ v := sorry
+-- have h2 : {x | x ≠ v}ᶜ = {v} := Set.compl_ne_eq_singleton v
+-- have h1 : {v}ᶜ = {x | x ∉ {v}} := Set.compl_def {v}
+
+
+  have hf : ‖(((z.val.re) : ℝ), ((z.val.im) : ℝ))‖ = 1 := sorry
+  -- have he : b ∈ Metric.sphere 0 1 ↔ ‖b‖ = 1  := mem_sphere_iff_norm
+
+* Log for [2025-02-14 Fri 12:15]
+
+#check ![(1 : ℝ), (0 : ℝ)] ∈  (Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1)
+#check Circle.exp 0
+#check Complex.norm_eq_abs
+#check ‖(![(1 : ℝ), (0 : ℝ)] : (Fin 2 -> ℝ))‖
+
+example : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 = {x | ∑ i : Fin 2, x i ^ 2 = 1 ^ 2} := EuclideanSpace.sphere_zero_eq 1 sorry
+
+#check le_of_lt Real.zero_lt_one
+
+noncomputable
+def foof : ℝ -> ℝ -> ℝ
+  | x, a => if x > 0 then a else -a
+
+theorem fooff (x : ℝ) (a : ℝ) : foof x (foof x a) = a := by
+  by_cases h : x > 0
+  case pos =>
+    simp [foof, h]
+  case neg =>
+    simp [foof, h]
+
+    
+noncomputable
+def foof : ℝ -> ℝ -> ℝ
+  | x, a => if x > 0 then a else -a
+
+theorem fooff (x : ℝ) (a : ℝ) : foof x (foof x a) = a := by
+  by_cases h : x > 0
+  case pos =>
+    simp [foof, h]
+  case neg =>
+    simp [foof, h]
+
+* Log for [2025-02-17 Mon 08:38]
+
+#synth ChartedSpace (EuclideanSpace ℝ (Fin 1)) Circle
+#check (ChartedSpace.chartAt _).source
+#check (ChartedSpace.chartAt : Circle → PartialHomeomorph Circle (EuclideanSpace ℝ (Fin 1)))
+#check U.source
+#check finrank_real_complex_fact'
+#check Complex
+
