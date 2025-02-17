@@ -65,21 +65,69 @@ theorem chartAt_source (y : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1) :
     (chartAt (EuclideanSpace ℝ (Fin 1)) y).source = (stereographic' 1 (-y)).source := rfl
 
 def xh := ((⟨x, h⟩ :  Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 ))
-def ug := ((⟨x, h⟩ :  Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 ))
+def ug := ((⟨u, g⟩ :  Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 ))
 
 theorem foo : (stereographic' 1 xh).source = {xh}ᶜ := stereographic'_source xh
 
 theorem bar : {xh}ᶜ = { x | x ≠ xh } := rfl
 
-theorem baz : { x | x ≠ xh } = { a | (a.val 0)^2 + (a.val 1)^2 = 1 && (a.val 0, a.val 1) ≠ (x 0, x 1) }  := sorry
-theorem biz : { x | x ≠ ug } = { a | (a.val 0)^2 + (a.val 1)^2 = 1 && (a.val 0, a.val 1) ≠ (u 0, u 1) }  := sorry
+theorem bir : { x | x ≠ xh } = { a : EuclideanSpace ℝ (Fin 2) | (a 0)^2 + (a 1)^2 = 1 ∧ (a 0, a 1) ≠ (x 0, x 1) } := sorry
+
+theorem set_eq_mem {A B : Set α} {x : α} (h1 : A = B) (h2 : x ∈ A) : x ∈ B := by
+  rw [h1] at h2
+  exact h2
+
+theorem ric (a : EuclideanSpace ℝ (Fin 2)) : (a 0)^2 + (a 1)^2 = 1 -> a ∈  Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 := by
+  exact sorry
+
+theorem cir (a : EuclideanSpace ℝ (Fin 2)) : a ∈  Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 -> (a 0)^2 + (a 1)^2 = 1 := by
+  intro h
+  have h1 : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 = {x | ∑ i : Fin 2, x i ^ 2 = 1 ^ 2} := by
+    exact EuclideanSpace.sphere_zero_eq 1 (le_of_lt Real.zero_lt_one)
+  have h2 : a ∈ {x | ∑ i : Fin 2, x i ^ 2 = 1 ^ 2} := by
+   rw [h1] at h
+   exact h
+  have h3 : ∑ i : Fin 2, a i ^ 2 = 1 ^ 2 := by
+   rw [h2]
+  have h4 : 1 = (a 0)^2 + (a 1)^2 := by
+   calc 1 = ∑ i : Fin 2, a i ^ 2 := by simp [h3, one_pow]
+        _ = (a 0)^2 + (a 1)^2 := by simp
+  exact h4.symm
+
+theorem sphere_eq_set1 : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 ⊆ { a | (a 0)^2 + (a 1)^2 = 1 } := by
+  intro a ha
+  exact cir a ha
+
+theorem sphere_eq_set2 : { a | (a 0)^2 + (a 1)^2 = 1 } ⊆ Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 := by
+  intro a ha
+  exact ric a ha
+
+theorem dir (a : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 ) : a ≠ xh -> (a.val 0, a.val 1) ≠ (x 0, x 1) := sorry
+
+
+#check  Membership (Metric.sphere 0 1)
+
+theorem ber : {x | x ≠ xh} ⊆ {a | a ∈ Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 ∧ a ≠ xh} := sorry
+
+
+theorem ber : { x | x ≠ xh } ⊆ { a | a ∈ Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 ∧ a ≠ x } := by
+  ext a
+  simp only [Set.mem_setOf_eq]
+  exact ⟨λ h => ⟨(sorry : a ∈ Metric.sphere 0 1), (sorry : a ≠ x)⟩, λ ⟨_, h⟩ => (sorry : a ∈ Subtype.val '' {x | x ≠ xh})⟩
+
+theorem boz : { a | a ∈ Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 ∧ a ≠ x } =
+              { a : EuclideanSpace ℝ (Fin 2) | (a 0)^2 + (a 1)^2 = 1 ∧ (a 0, a 1) ≠ (x 0, x 1) }  := sorry
+
+theorem buz : { a | a ∈ Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 ∧ a ≠ x } =
+              { a : EuclideanSpace ℝ (Fin 2) | (a 0)^2 + (a 1)^2 = 1 ∧ (a 0, a 1) ≠ (u 0, u 1) }  := sorry
 
 theorem bez : { y : Fin 2 -> ℝ | (y 0)^2 + (y 1)^2 = 1 && y 1 > 0 } ∩
               { y : Fin 2 -> ℝ | (y 0)^2 + (y 1)^2 = 1 && y 1 < 0 }  = ∅ := sorry
 
 #check 1 ∉ {(1 : ℝ)}ᶜ
 
-example (cs : ChartedSpace (EuclideanSpace ℝ (Fin 1)) ((Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1))) (v : ((Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1))) :
+example (cs : ChartedSpace (EuclideanSpace ℝ (Fin 1)) ((Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1)))
+        (v : ((Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1))) :
   cs.chartAt v = stereographic' 1 (-v) := by exact sorry
 
 noncomputable
