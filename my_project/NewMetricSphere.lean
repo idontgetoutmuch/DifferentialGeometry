@@ -11,6 +11,44 @@ example : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 = {x | ∑ i : Fin 2,
 
 def x := (![1, 0] : EuclideanSpace ℝ (Fin 2))
 
+theorem bor : y ∈ Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 <->  y 0 ^ 2 + y 1 ^ 2 = 1 := by
+  have h1 : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 = {x | ∑ i : Fin 2, x i ^ 2 = 1 ^ 2} := by
+    exact EuclideanSpace.sphere_zero_eq 1 (le_of_lt Real.zero_lt_one)
+  exact sorry
+
+theorem bor1 : y 0 ^ 2 + y 1 ^ 2 = 1 -> y ∈ Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 := by
+  intro h
+  have h1 : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 = {x | ∑ i : Fin 2, x i ^ 2 = 1 ^ 2} := by
+    exact EuclideanSpace.sphere_zero_eq 1 (le_of_lt Real.zero_lt_one)
+  have h5 : (y 0)^2 + (y 1)^2 = 1 := h
+  have h6 : y ∈  {x | ∑ i : Fin 2, x i ^ 2 = 1 ^ 2} := by
+    simp [h5]
+  have h7 : y ∈  Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 := by
+   rw [h1]
+   exact h6
+  exact h7
+
+theorem bor2 : y ∈ Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 ->  y 0 ^ 2 + y 1 ^ 2 = 1 := by
+  intro h
+
+  have h1 : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 = {x | ∑ i : Fin 2, x i ^ 2 = 1 ^ 2} := by
+    exact EuclideanSpace.sphere_zero_eq 1 (le_of_lt Real.zero_lt_one)
+
+  have h2 : y ∈ {x | ∑ i : Fin 2, x i ^ 2 = 1 ^ 2} := by
+   rw [h1] at h
+   exact h
+
+  have h3 : ∑ i : Fin 2, y i ^ 2 = 1 ^ 2 := by
+    rw [Set.mem_setOf_eq] at h2
+    exact h2
+
+  have h6 :  y 0 ^ 2 + y 1 ^ 2 = 1 := by
+    calc
+      y 0 ^ 2 + y 1 ^ 2 = ∑ i : Fin 2, y i ^ 2 := by simp
+      _ = 1 := by simp [h3, one_pow]
+
+  exact h6
+
 theorem h : x ∈  Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 := by
   have h1 : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 = {x | ∑ i : Fin 2, x i ^ 2 = 1 ^ 2} := by
    exact EuclideanSpace.sphere_zero_eq 1 (le_of_lt Real.zero_lt_one)
@@ -71,12 +109,6 @@ theorem foo : (stereographic' 1 xh).source = {xh}ᶜ := stereographic'_source xh
 
 theorem bar : {xh}ᶜ = { x | x ≠ xh } := rfl
 
-theorem bir : { x | x ≠ xh } = { a : EuclideanSpace ℝ (Fin 2) | (a 0)^2 + (a 1)^2 = 1 ∧ (a 0, a 1) ≠ (x 0, x 1) } := sorry
-
-theorem set_eq_mem {A B : Set α} {x : α} (h1 : A = B) (h2 : x ∈ A) : x ∈ B := by
-  rw [h1] at h2
-  exact h2
-
 theorem ric (a : EuclideanSpace ℝ (Fin 2)) : (a 0)^2 + (a 1)^2 = 1 -> a ∈  Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 := by
   exact sorry
 
@@ -101,6 +133,28 @@ theorem sphere_eq_set1 : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 ⊆ { 
 theorem sphere_eq_set2 : { a | (a 0)^2 + (a 1)^2 = 1 } ⊆ Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 := by
   intro a ha
   exact ric a ha
+
+#check  { a : EuclideanSpace ℝ (Fin 2) | (a 0)^2 + (a 1)^2 = 1 ∧ (a 0, a 1) ≠ (x 0, x 1) }
+#check { x | x ≠ xh }
+
+theorem bir : { x | x ≠ xh } = { a : EuclideanSpace ℝ (Fin 2) | (a 0)^2 + (a 1)^2 = 1 ∧ (a 0, a 1) ≠ (x 0, x 1) } := sorry
+
+theorem bir1 : y ∈ { x | x ≠ xh } -> y.val ∈ { a : EuclideanSpace ℝ (Fin 2) | (a 0)^2 + (a 1)^2 = 1 ∧ (a 0, a 1) ≠ (x 0, x 1) } := sorry
+
+theorem bir2 : y ∈ { a : EuclideanSpace ℝ (Fin 2) | (a 0)^2 + (a 1)^2 = 1 ∧ (a 0, a 1) ≠ (x 0, x 1) } -> true := by
+  intro h
+  have h1 : y 0 ^ 2 + y 1 ^ 2 = 1 ∧ (y 0, y 1) ≠ (x 0, x 1) := by
+    rw [Set.mem_setOf_eq] at h
+    exact h
+  have h2 : y 0 ^ 2 + y 1 ^ 2 = 1 := h1.left
+  have h3 : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 = {x | ∑ i : Fin 2, x i ^ 2 = 1 ^ 2} := by
+   exact EuclideanSpace.sphere_zero_eq 1 (le_of_lt Real.zero_lt_one)
+  have h5 : y ∈ Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 := bor1 h2
+  have h4 : ⟨y, h5⟩ ∈ { x | x ≠ xh } := sorry
+  sorry
+
+#check bor1
+#check bor2
 
 theorem dir (a : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 ) : a ≠ xh -> (a.val 0, a.val 1) ≠ (x 0, x 1) := sorry
 
