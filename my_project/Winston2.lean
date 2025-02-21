@@ -71,18 +71,6 @@ theorem exp_mem_unitSphere (r : ℝ) : exp (r * I) ∈ Submonoid.unitSphere ℂ 
   have h7 : exp (r * I) ∈ Submonoid.unitSphere ℂ := h6
   exact h7
 
-variables (z : S1)
-
-#check z.1
-#check z.2
-
-#check ((λ r => ⟨exp (r * Complex.I), exp_mem_unitSphere r⟩) : ℝ → ↥(Submonoid.unitSphere ℂ))
-#check Complex.arg_exp_mul_I
-#check toIocMod (mul_pos two_pos Real.pi_pos) (-Real.pi) (Real.pi / 4) = (Real.pi / 4)
-#check toIocMod (mul_pos two_pos Real.pi_pos) (-Real.pi) (Real.pi / 4) = (Real.pi / 4)
-#check toIocMod_eq_self
-
-
 theorem arg_exp_of_range (r : ℝ) (hr : -Real.pi < r ∧ r < Real.pi) :
   arg (exp (r * I)) = r := by
   have h_in_range : r ∈ Ioo (-Real.pi) Real.pi := hr
@@ -97,26 +85,6 @@ theorem arg_exp_of_range (r : ℝ) (hr : -Real.pi < r ∧ r < Real.pi) :
   have bim : toIocMod (mul_pos two_pos Real.pi_pos) (-Real.pi) r = r := bin.mpr h_in_range
   have crk : arg (exp (r * I)) = r := by rw [bik, bim]
   exact crk
-
-noncomputable
-def chart_at_S1_excluding_1 : PartialHomeomorph S1 ℝ :=
-{
-  toFun := λ z => arg z.val,
-  invFun := λ r => ⟨exp (r * Complex.I), exp_mem_unitSphere r⟩,
-  source := {z : S1 | arg z.val ∈ Ioo 0 (2 * Real.pi)},
-  target := Ioo 0 (2 * Real.pi),
-  map_source' := λ z hz => hz,
-  map_target' := λ r hr => ⟨sorry, sorry⟩,
-                 -- λ r hr => ⟨exp (r * Complex.I), by simp; exact hr⟩,
-  -- left_inv' : ∀ ⦃x⦄, x ∈ source → invFun (toFun x) = x
-  -- left_inv' := λ z hz => Subtype.ext (by rw [baz z hz]),
-  left_inv' := λ z hz => sorry
-  right_inv' := λ r hr => sorry, -- by simp [hr],
-  open_source := sorry, -- Needs proof that {z : S1 | arg z.val ∈ Ioo 0 (2 * π)} is open
-  open_target := isOpen_Ioo,
-  continuousOn_toFun := sorry, -- Needs proof that `arg` is continuous on `source`
-  continuousOn_invFun := sorry  -- Needs proof that `exp` is continuous on `target`
-}
 
 noncomputable
 def chart_at_S1_excluding_minus_1 : PartialHomeomorph S1 ℝ :=
@@ -156,11 +124,47 @@ def chart_at_S1_excluding_minus_1 : PartialHomeomorph S1 ℝ :=
   right_inv' := λ r hr => by
    have h1 : arg (exp (r * I)) = r := arg_exp_of_range r hr
    exact h1
-  open_source := sorry,
+  open_source := by
+    exact sorry,
   open_target := isOpen_Ioo,
-  continuousOn_toFun := sorry,
+  continuousOn_toFun  := (sorry : (ContinuousOn (λ z => arg z.val)) {z : S1 | arg z.val ∈ Ioo (-Real.pi) (Real.pi)}),
   continuousOn_invFun := sorry
 }
+
+variables (z : S1)
+
+#check z.1
+#check z.2
+
+#check ((λ r => ⟨exp (r * Complex.I), exp_mem_unitSphere r⟩) : ℝ → ↥(Submonoid.unitSphere ℂ))
+#check Complex.arg_exp_mul_I
+#check toIocMod (mul_pos two_pos Real.pi_pos) (-Real.pi) (Real.pi / 4) = (Real.pi / 4)
+#check toIocMod (mul_pos two_pos Real.pi_pos) (-Real.pi) (Real.pi / 4) = (Real.pi / 4)
+#check toIocMod_eq_self
+
+noncomputable
+def chart_at_S1_excluding_1 : PartialHomeomorph S1 ℝ :=
+{
+  toFun := λ z => arg z.val,
+  invFun := λ r => ⟨exp (r * Complex.I), exp_mem_unitSphere r⟩,
+  source := {z : S1 | arg z.val ∈ Ioo 0 (2 * Real.pi)},
+  target := Ioo 0 (2 * Real.pi),
+  map_source' := λ z hz => hz,
+  map_target' := λ r hr => ⟨sorry, sorry⟩,
+                 -- λ r hr => ⟨exp (r * Complex.I), by simp; exact hr⟩,
+  -- left_inv' : ∀ ⦃x⦄, x ∈ source → invFun (toFun x) = x
+  -- left_inv' := λ z hz => Subtype.ext (by rw [baz z hz]),
+  left_inv' := λ z hz => sorry
+  right_inv' := λ r hr => sorry, -- by simp [hr],
+  open_source := sorry, -- Needs proof that {z : S1 | arg z.val ∈ Ioo 0 (2 * π)} is open
+  open_target := isOpen_Ioo,
+  continuousOn_toFun := sorry, -- Needs proof that `arg` is continuous on `source`
+  continuousOn_invFun := sorry  -- Needs proof that `exp` is continuous on `target`
+}
+
+def source : Set S1 := {z : S1 | arg z.val ∈ Ioo (-Real.pi) Real.pi}
+
+#check ContinuousAt arg
 
 noncomputable
 def joo : GBundleCore (atlas (EuclideanSpace ℝ (Fin 1)) Circle) Circle (Fin 1 -> ℝ) (orthogonalGroup (Fin 1) ℝ) where

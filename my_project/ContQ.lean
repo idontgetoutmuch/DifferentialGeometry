@@ -215,162 +215,178 @@ def MyCoordChange : Fin 2 → Fin 2 → (Metric.sphere (0 : EuclideanSpace ℝ (
       | 1, 0, x, α => if (x.val 1) > 0 then α else -α
       | 1, 1, _, α => α
 
-instance : Fact (Module.finrank ℝ ℂ = 1 + 1) := finrank_real_complex_fact'
+def fn1 : (Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1) × EuclideanSpace ℝ (Fin 1) → EuclideanSpace ℝ (Fin 1) := λ (x, y) => y
 
-theorem MyCoordChange_self : ∀ (i : Fin 2),
-    ∀ x ∈ (fun i => if i = 0 then chart_excluding_minus_1.source else chart_excluding_1.source) i,
-    ∀ (v : EuclideanSpace ℝ (Fin 1)), MyCoordChange i i x v = v := by
-    intro i x h v
-    have h : MyCoordChange i i x v = v :=
-      match i with
-        | 0 => rfl
-        | 1 => rfl
-    exact h
-
-noncomputable
-def f : (Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1) → EuclideanSpace ℝ (Fin 1) → EuclideanSpace ℝ (Fin 1)
-   | x, α => if (x.val 1) > 0 then α else -α
-
-lemma l (x : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1) : f x (f x v) = v := by
-    by_cases h : x.val 1 > 0
-    case pos =>
-      simp [f, h]
-    case neg =>
-      simp [f, h]
-
-theorem t1001 (x : (Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1)) (v : EuclideanSpace ℝ (Fin 1)) :
- MyCoordChange 1 0 x (MyCoordChange 0 1 x v) = v := by
-  have h3 : ∀ v, f x v = MyCoordChange 0 1 x v := by
-   intro h
-   rfl
-  have h4 : ∀ v, f x v = MyCoordChange 1 0 x v := by
-    intro h
-    rfl
-  have h8 : f x (f x v) = MyCoordChange 1 0 x (MyCoordChange 0 1 x v) := by rw [h3 v, h4]
-  have h9 : MyCoordChange 1 0 x (MyCoordChange 0 1 x v) = v := by rw [<-h8, l]
-  exact h9
-
-theorem t0110 (x : (Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1)) (v : EuclideanSpace ℝ (Fin 1)) :
- MyCoordChange 0 1 x (MyCoordChange 1 0 x v) = v := by
-  have h3 : ∀ v, f x v = MyCoordChange 0 1 x v := by
-   intro h
-   rfl
-  have h4 : ∀ v, f x v = MyCoordChange 1 0 x v := by
-    intro h
-    rfl
-  have h8 : f x (f x v) = MyCoordChange 1 0 x (MyCoordChange 0 1 x v) := by rw [h3 v, h4]
-  have h9 : MyCoordChange 1 0 x (MyCoordChange 0 1 x v) = v := by rw [<-h8, l]
-  exact h9
-
-theorem MyCoordChange_comp : ∀ (i j k : Fin 2),
-  ∀ x ∈ (fun i => if i = 0 then chart_excluding_minus_1.source else chart_excluding_1.source) i ∩
-        (fun i => if i = 0 then chart_excluding_minus_1.source else chart_excluding_1.source) j ∩
-        (fun i => if i = 0 then chart_excluding_minus_1.source else chart_excluding_1.source) k,
-    ∀ (v : EuclideanSpace ℝ (Fin 1)), MyCoordChange j k x (MyCoordChange i j x v) = MyCoordChange i k x v := by
-    intro i j k x h v
-    have h : MyCoordChange j k x (MyCoordChange i j x v) = MyCoordChange i k x v :=
-      match i, j, k with
-        | 0, 0, 0 => rfl
-        | 0, 0, 1 => rfl
-        | 0, 1, 0 => t1001 x v
-        | 0, 1, 1 => rfl
-        | 1, 0, 0 => rfl
-        | 1, 0, 1 => t0110 x v
-        | 1, 1, 0 => rfl
-        | 1, 1, 1 => rfl
-    exact h
-
-#check (chart_excluding_1.source ∩ chart_excluding_1.source) ×ˢ (univ : Set ℝ)
-
-theorem SulSource : chart_excluding_minus_1.source ∩ chart_excluding_1.source = { x | x.val 1 > 0 } ∪ { x | x.val 1 < 0 } := by
-  exact sorry
-
-theorem t00 : ContinuousOn (λ p => MyCoordChange 0 0 p.1 p.2) (chart_excluding_minus_1.source ×ˢ univ) := by
-  have h1 : (λ (p : (Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1) × EuclideanSpace ℝ (Fin 1)) =>
-    MyCoordChange 0 0 p.fst p.snd) = (λ p => p.snd) := by rfl
+example : ContinuousOn fn1 ((univ : Set (Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1)) ×ˢ (univ : Set (EuclideanSpace ℝ (Fin 1)))) := by
+  have h1 : fn1 = Prod.snd := rfl
   rw [h1]
   exact continuousOn_snd
 
+#check ContinuousMap.continuous_restrict
 
-#check { x : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 | x.val 1 > 0 }
-#check (univ : Set (EuclideanSpace ℝ (Fin 1)))
-#check { x : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 | x.val 1 > 0 } ×ˢ (univ : Set (EuclideanSpace ℝ (Fin 1)))
+theorem fn1Cont : ContinuousOn fn1 ({ x : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 | x.val 1 > 0 } ×ˢ (univ : Set (EuclideanSpace ℝ (Fin 1)))) := by
+  have h1 : fn1 = Prod.snd := rfl
+  rw [h1]
+  exact continuousOn_snd
 
-variable {X Y : Type*}
-(V : Set Y)
+theorem continuous_MyCoordChange_onP :
+  ContinuousOn (λ p => MyCoordChange 0 1 p.1 p.2)
+               ({ x : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 | x.val 1 > 0 } ×ˢ (univ : Set (EuclideanSpace ℝ (Fin 1)))) := by
 
-def ff : X × Y -> Y := λ ⟨x, y⟩ => y
+  have h1 : Set.EqOn (λ p => MyCoordChange 0 1 p.1 p.2) fn1
+            ({ x : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 | x.val 1 > 0 } ×ˢ (univ : Set (EuclideanSpace ℝ (Fin 1)))) := by
+    intro a ha
+    simp only [MyCoordChange]
+    have h3 : a ∈ {x | x.val 1 > 0} ×ˢ univ := ha
+    have h1 : fn1 a = a.2 := rfl
+    rw [h1]
+    have h4 : a.1.val 1 > 0 := h3.1
+    rw [if_pos h4]
 
-theorem preimage_subset_X_times_V :
-  ff ⁻¹' V ⊆ (univ : Set X) ×ˢ V := by
-  intros p hp
-  rw [Set.preimage] at hp
-  have h1 : ff p ∈ V := hp
-  have h2 : ff ⟨p.1, p.2⟩ = p.2 := rfl
-  have h3 : p.2 ∈ V := by rw [h2] at h1; exact h1
-  have h4 : p.1 ∈ (univ : Set X) := trivial
-  have h5 : ⟨p.1, p.2⟩ ∈ (univ : Set X) ×ˢ V := ⟨h4, h3⟩
-  exact h5
+  have h2 : ContinuousOn  (λ p => MyCoordChange 0 1 p.1 p.2)
+                          ({ x : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 | x.val 1 > 0 } ×ˢ (univ : Set (EuclideanSpace ℝ (Fin 1)))) :=
+    ContinuousOn.congr fn1Cont h1
 
-theorem X_times_V_subset_preimage :
-  (univ : Set X) ×ˢ V ⊆ ff ⁻¹' V:= by
-  intros p hp
-  rw [Set.preimage]
-  have h4 : p.1 ∈ (univ : Set X) := trivial
-  have h3 : p.2 ∈ V := hp.2
-  have h2 : ff ⟨p.1, p.2⟩ = p.2 := rfl
-  have h0 : ff p = p.2 := rfl
-  have hb : ff p ∈ V := by exact h3
-  have ha : p ∈ {x | ff x ∈ V} := by exact hb
-  exact ha
+  exact h2
 
-def PositiveY := Subtype (λ (p :  Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1) => p.val 1 > 0)
-
-#check (univ : Set PositiveY)
-
-def gg : PositiveY × Y -> Y := λ ⟨x, y⟩ => y
-
-example : gg ⁻¹' { y : ℝ | y > 0} ⊆ (univ : Set PositiveY) ×ˢ { y : ℝ | y > 0} := preimage_subset_X_times_V { y : ℝ | y > 0}
-
-example : (univ : Set PositiveY) = {p : PositiveY | p.val.val 1 > 0} := sorry
-
-theorem preimage_subset_X_times_Va :
-  gg ⁻¹' V ⊆ (univ : Set PositiveY) ×ˢ V := sorry
-
-theorem X_times_V_subset_preimageA :
-  (univ : Set PositiveY) ×ˢ V ⊆ gg ⁻¹' V := sorry
-
-def fn1 : (Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1) × EuclideanSpace ℝ (Fin 1) → EuclideanSpace ℝ (Fin 1) := λ (x, y) => y
-
-example : ContinuousOn fn1 ({ x : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 | x.val 1 > 0 } ×ˢ (univ : Set (EuclideanSpace ℝ (Fin 1)))) := by
-  have h1 : fn1 ⁻¹' V = (univ : Set PositiveY) ×ˢ V := sorry
+theorem continuous_MyCoordChange_onN :
+  ContinuousOn (λ p => MyCoordChange 0 1 p.1 p.2)
+               ({ x : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 | x.val 1 < 0 } ×ˢ (univ : Set (EuclideanSpace ℝ (Fin 1)))) := by
   exact sorry
 
-theorem continuous_MyCoordChange_on :
-  ContinuousOn (λ p => MyCoordChange 0 1 p.1 p.2)
-               ({ x : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 | x.val 2 > 0 } ×ˢ (univ : Set (EuclideanSpace ℝ (Fin 1)))) := by
-  intros _ _ V
+theorem SemiCircles : ({ x : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 | x.val 1 > 0 } ×ˢ (univ : Set (EuclideanSpace ℝ (Fin 1)))) ∪
+                      ({ x : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 | x.val 1 < 0 } ×ˢ (univ : Set (EuclideanSpace ℝ (Fin 1)))) =
+                      ((chart_excluding_minus_1.source ∩ chart_excluding_1.source) ×ˢ univ) := by
+  exact sorry
 
-  have hpreimage : (λ (p : (Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1) × EuclideanSpace ℝ (Fin 1)) => MyCoordChange 0 1 p.1 p.2) ⁻¹' V =
-   { x : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 | x.val 2 > 0 } ×ˢ V := by
-    ext p
-    split
-    sorry
-    sorry
+variables {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y]
+variables {S T : Set X} {f : S → Y} {g : T → Y}
 
+
+def fa : ℝ → ℝ := λ x => x
+def fb : ℝ → ℝ := λ x => -x
+noncomputable
+def fab : ℝ → ℝ := λ x => if x > 0 then fa x else fb x
+
+theorem fab_ne_0_of_x_ne_0 (x : ℝ) (hx : x ≠ 0) : fab x ≠ 0 :=
+  have h1 : x > 0 -> fab x ≠ 0 := λ h => by rw [fab]; exact sorry
+  have h2 : ¬x > 0 → fab x ≠ 0 := sorry
+  by_cases h1 h2
+
+theorem zzz : ContinuousOn fab {x | x ≠ 0} := by
+  intro x hx S hS
+  have h_preimage : fab ⁻¹' S = ({ x | x > 0 } ∩ { x | fa x ∈ S }) ∪ ({ x | x < 0 } ∩ { x | fb x ∈ S }) := by
+    ext y
+    simp only [mem_preimage, mem_inter_iff, mem_union, mem_setOf_eq]
+    have ha : fab y ∈ S -> y > 0 ∧ fa y ∈ S ∨ y < 0 ∧ fb y ∈ S := by
+      intro hy
+      dsimp [fab] at hy
+      by_cases h_pos : y > 0
+      · left
+        rw [if_pos h_pos] at hy
+        exact ⟨h_pos, hy⟩
+      · right
+        rw [if_neg h_pos] at hy
+        have h1 : x ≠ 0 := hx
+        have h2 : y ≤ 0 := le_of_not_gt h_pos
+        have h_neg : y < 0 := lt_of_le_of_ne h2 (sorry : y ≠ 0)
+        exact ⟨h_neg, hy⟩
+    have hb : y > 0 ∧ fa y ∈ S ∨ y < 0 ∧ fb y ∈ S  -> fab y ∈ S := sorry
+    exact (sorry : fab y ∈ S ↔ y > 0 ∧ fa y ∈ S ∨ y < 0 ∧ fb y ∈ S)
   sorry
 
-theorem t01 : ContinuousOn (λ p => MyCoordChange 0 1 p.1 p.2) ((chart_excluding_minus_1.source ∩ chart_excluding_1.source) ×ˢ univ) := by
-  have h1 : (chart_excluding_minus_1.source ∩ chart_excluding_1.source) = { x | x.val 1 > 0 } ∪ { x | x.val 1 < 0 } := SulSource
-  rw [h1, Set.union_prod]
+def fa1 : ℝ -> ℝ := (λ x => x)
+def fb1 : ℝ -> ℝ := (λ x => -x)
+
+noncomputable
+def fab1 : ℝ -> ℝ := (λ x => if x > 0 then fa x else fb x)
+
+theorem zzz1 : ContinuousOn fab {x | x ≠ 0} := by
+  have h1 : ContinuousOn fa {x | x > 0} := continuousOn_id
+  have h2 : ContinuousOn fb {x | x < 0} := continuousOn_neg
+  intro x hx S hS
+  have h3 : fab ⁻¹' S = ({ x | x > 0 } ∩ { x | fa x ∈ S }) ∪ ({ x | x < 0 } ∩ { x | fb x ∈ S }) := by
+    ext y
+    sorry
+  sorry
+
+#check ContinuousWithinAt.union (ContinuousOn.continuousWithinAt continuous_MyCoordChange_onP sorry)
+                                (ContinuousOn.continuousWithinAt continuous_MyCoordChange_onN sorry)
+
+#check continuousWithinAt_union
+
+theorem xxx : true := by
+  let s := ({ x : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 | x.val 1 > 0 } ×ˢ (univ : Set (EuclideanSpace ℝ (Fin 1))))
+  let t := ({ x : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 | x.val 1 < 0 } ×ˢ (univ : Set (EuclideanSpace ℝ (Fin 1))))
+  have h1 : ContinuousWithinAt fn1 (s ∪ t) sorry ↔ ContinuousWithinAt fn1 s sorry ∧ ContinuousWithinAt fn1 t sorry := continuousWithinAt_union
+  have h2 : ContinuousWithinAt fn1 s sorry := (ContinuousOn.continuousWithinAt continuous_MyCoordChange_onP sorry)
+  exact sorry
+
+theorem continuous_on_union {f : α → β} {s t : Set α} [TopologicalSpace α] [TopologicalSpace β] (hs : ContinuousOn f s) (ht : ContinuousOn f t) :
+  ContinuousOn f (s ∪ t) := by
+  intro p hp
+  -- Use the fact that p ∈ s ∪ t is equivalent to p ∈ s or p ∈ t
+  cases hp with
+  | inl hpos => exact hs hpos
+  | inr hneg => exact ht hneg
+
+theorem continuous_on_union1 {f : α → β} {s t : Set α} (p : α) [TopologicalSpace α] [TopologicalSpace β] (hs : ContinuousWithinAt f s p) (ht : ContinuousWithinAt f t p) :
+  ContinuousWithinAt f (s ∪ t) p := ContinuousWithinAt.union hs ht
+
+theorem t01PreL : ContinuousOn (λ p => MyCoordChange 0 1 p.1 p.2)
+                              ({ x : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 | x.val 1 > 0 } ×ˢ (univ : Set (EuclideanSpace ℝ (Fin 1)))) := by
+  intro p hp
+  exact ContinuousOn.continuousWithinAt continuous_MyCoordChange_onP hp
+
+theorem t01Pre : ContinuousOn (λ p => MyCoordChange 0 1 p.1 p.2)
+                              (({ x : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 | x.val 1 > 0 } ×ˢ (univ : Set (EuclideanSpace ℝ (Fin 1)))) ∪
+                              ({ x : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 | x.val 1 < 0 } ×ˢ (univ : Set (EuclideanSpace ℝ (Fin 1))))) := by
+  intro p hp
+  apply ContinuousWithinAt.union
+  · exact ContinuousOn.continuousWithinAt continuous_MyCoordChange_onP sorry -- (Or.inl hp)
+  · exact ContinuousOn.continuousWithinAt continuous_MyCoordChange_onN (Or.inr hp)
+
+theorem t01Pre : ContinuousOn (λ p => MyCoordChange 0 1 p.1 p.2)
+                              ({ x : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 | x.val 1 > 0 } ×ˢ (univ : Set (EuclideanSpace ℝ (Fin 1)))) := by
+
+
+  exact ContinuousOn.continuousWithinAt continuous_MyCoordChange_onP sorry
+
+theorem t01Pre : ContinuousOn (λ p => MyCoordChange 0 1 p.1 p.2)
+                              (({ x : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 | x.val 1 > 0 } ×ˢ (univ : Set (EuclideanSpace ℝ (Fin 1)))) ∪
+                              ({ x : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 | x.val 1 < 0 } ×ˢ (univ : Set (EuclideanSpace ℝ (Fin 1))))) := by
   intro p hp
   cases hp with
   | inl hpos =>
-    obtain ⟨h_xpos, _⟩ := hpos
-    sorry
+    exact ContinuousOn.continuousWithinAt continuous_MyCoordChange_onP hpos
+  | inr hneg =>
+    exact ContinuousOn.continuousWithinAt continuous_MyCoordChange_onN hneg
+
+
+theorem t01Pre : ContinuousOn (λ p => MyCoordChange 0 1 p.1 p.2)
+                              (({ x : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 | x.val 1 > 0 } ×ˢ (univ : Set (EuclideanSpace ℝ (Fin 1)))) ∪
+                              ({ x : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 | x.val 1 < 0 } ×ˢ (univ : Set (EuclideanSpace ℝ (Fin 1))))) := by
+  intro p hp
+  cases hp with
+  | inl hpos =>
+    have h1 : ContinuousWithinAt (fun p => MyCoordChange 0 1 p.1 p.2) ({x | x.val 1 > 0} ×ˢ univ) p:= by
+      exact ContinuousOn.continuousWithinAt continuous_MyCoordChange_onP hpos
+    exact sorry
   | inr hneg =>
     obtain ⟨h_xneg, _⟩ := hneg
-    sorry
+    exact sorry
+
+theorem t01 : ContinuousOn (λ p => MyCoordChange 0 1 p.1 p.2) ((chart_excluding_minus_1.source ∩ chart_excluding_1.source) ×ˢ univ) := by
+  intro p hp
+  rw [<-SemiCircles] at hp
+  cases hp with
+  | inl hpos =>
+    have h1 : ContinuousWithinAt (fun p => MyCoordChange 0 1 p.1 p.2) ({x | x.val 1 > 0} ×ˢ univ) p:= by
+      exact ContinuousOn.continuousWithinAt continuous_MyCoordChange_onP hpos
+    exact (sorry : ContinuousWithinAt (fun p => MyCoordChange 0 1 p.1 p.2) ((chart_excluding_minus_1.source ∩ chart_excluding_1.source) ×ˢ univ) p)
+  | inr hneg =>
+    obtain ⟨h_xneg, _⟩ := hneg
+    exact (sorry : ContinuousWithinAt (fun p => MyCoordChange 0 1 p.1 p.2) ((chart_excluding_minus_1.source ∩ chart_excluding_1.source) ×ˢ univ) p)
 
 theorem t10 : ContinuousOn (λ p => MyCoordChange 0 1 p.1 p.2) ((chart_excluding_1.source ∩ chart_excluding_minus_1.source) ×ˢ univ) := by
   exact sorry

@@ -59,8 +59,13 @@ smooth and have a smooth inverse.
     targets.
 4.  `h2`{.verbatim} and `h3`{.verbatim} state that $\phi_\beta$ and the
     inverse of $\phi_\alpha$ are smooth.
+5.  After a bit of manipulation, we can apply the chain rule to deduce
+    `h6`{.verbatim} that the transition map is smooth.
+6.  And finally a bit more manipulation proves the theorem.
 
-import Mathlib
+The only tactic used is `rw`{.verbatim} which re-writes terms if it
+finds a match. The rest of the proof is finding existing theorems. I
+found [moogle](https://www.moogle.ai/) very useful for this.
 
 ``` lean4
 import Mathlib.Geometry.Manifold.MFDeriv.Defs
