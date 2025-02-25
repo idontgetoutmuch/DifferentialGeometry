@@ -2660,5 +2660,57 @@ def hh : PR ×ˢ ℝ -> ℝ := λ (x, y) => y
     have h4 : a.1.val 1 > 0 := h3.1
     rw [if_pos h4] 
 
-have h1 : ∀ (s : Set ℝ) (h : IsOpen s), {x | g x ∈ s} = { x : ℝ | x ≠ 0 ∧ x ∈ s ∨ x ≠ 0 ∧ -x ∈ s} := by
-    intro s
+type mismatch
+  foo
+has type
+  {x | x ∈ s ∧ x > 0 ∨ x ∈ s ∧ x < 0} ∪ {x | x ∈ s ∧ x = 0} = {x | (x ∈ s ∧ x > 0 ∨ x ∈ s ∧ x < 0) ∨ x ∈ s ∧ x = 0} : Prop
+but is expected to have type
+  {x | x ∈ s ∧ x > 0 ∨ x ∈ s ∧ x < 0} ∪ {x | x ∈ s ∧ x = 0} = {x | (x ∈ s ∧ x > 0 ∨ x ∈ s ∧ x < 0) ∨ x = 0} : PropLean
+
+* Log for [2025-02-25 Tue 07:56]
+
+theorem faa {a : ℝ} (h : a < 0 ∨ a = 0 ∨ a > 0) : true := by
+    cases h with
+      | inl hl => exact -1
+      | inr hr => cases hr with
+                    | inl hrl => exact 0
+                    | inr hrr => exact 1
+
+
+variable {α : Type} -- Declare a type α for generality
+variable (s : Set α) -- s is a set of elements of type α
+variable (a b : α) -- a and b are elements of type α
+
+theorem fff a b (h1 : a = b) (h2 : b ∈ s) : a ∈ s :=  by
+  rw [h1]
+  exact h2
+
+
+
+example (h : x ∈ {x : ℝ | x ≤ 0}) : x ∉ {x : ℝ | x > 0} := by
+  intro k
+  have h1 : x > 0 := k
+  have h2 : ¬ (x > 0) := not_lt_of_le h
+  contradiction
+
+theorem fff : {x : ℝ | x ≤ 0} ∩ {x | x > 0} = ∅ := by
+  have hp : {x : ℝ | x > 0}ᶜ = {x : ℝ | x ≤ 0} := by ext x; simp
+  have hq : {x : ℝ | x > 0}ᶜ ∩ {x | x > 0} = ∅ := Set.compl_inter_self {x : ℝ | x > 0}
+  rw [hp] at hq
+  exact hq
+
+example : {x : ℝ | x ≤ 0} ∩ {x | x > 0} = ∅ := by
+  have h1 : {x : ℝ | x > 0}ᶜ = {x : ℝ | x ≤ 0} := by ext x; simp
+  have h2 : {x : ℝ | x > 0}ᶜ ∩ {x | x > 0} = ∅ := Set.compl_inter_self {x : ℝ | x > 0}
+  have h3 : {x : ℝ | x ≤ 0} ∩ {x | x > 0} = {x : ℝ | x > 0}ᶜ ∩ {x | x > 0} := by rw [h1]
+  have h4 : {x: ℝ | x ≤ 0} ∩ {x | x > 0} = ∅ :=
+    calc
+      {x : ℝ | x ≤ 0} ∩ {x | x > 0} = {x : ℝ | x > 0}ᶜ ∩ {x | x > 0} := h3
+      _ = ∅ := h2
+  exact h4
+
+example : {x : ℝ | x ≤ 0} ∩ {x : ℝ | x > 0} = ∅ := by
+  ext x
+  have h1 : x > 0 := sorry
+  have h2 : ¬ (x > 0) := not_lt_of_le sorry
+  contradiction
