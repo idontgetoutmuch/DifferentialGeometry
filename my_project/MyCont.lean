@@ -100,33 +100,6 @@ example : ∀ (t : Set ℝ), IsOpen t → IsOpen ({x | x > (0 : ℝ)} ∩ p ⁻�
 #check preimage_inter
 #check if_pos
 
-example (h : x ∈ {x : ℝ | x ≤ 0}) : x ∉ {x : ℝ | x > 0} := by
-  intro k
-  have h1 : x > 0 := k
-  have h2 : ¬ (x > 0) := not_lt_of_le h
-  contradiction
-
-theorem fff : {x : ℝ | x ≤ 0} ∩ {x | x > 0} = ∅ := by
-  have hp : {x : ℝ | x > 0}ᶜ = {x : ℝ | x ≤ 0} := by ext x; simp
-  have hq : {x : ℝ | x > 0}ᶜ ∩ {x | x > 0} = ∅ := Set.compl_inter_self {x : ℝ | x > 0}
-  rw [hp] at hq
-  exact hq
-
-example : {x : ℝ | x ≤ 0} ∩ {x | x > 0} = ∅ := by
-  have h1 : {x : ℝ | x > 0}ᶜ = {x : ℝ | x ≤ 0} := by ext x; simp
-  have h2 : {x : ℝ | x > 0}ᶜ ∩ {x | x > 0} = ∅ := Set.compl_inter_self {x : ℝ | x > 0}
-  have h3 : {x : ℝ | x ≤ 0} ∩ {x | x > 0} = {x : ℝ | x > 0}ᶜ ∩ {x | x > 0} := by rw [h1]
-  have h4 : {x: ℝ | x ≤ 0} ∩ {x | x > 0} = ∅ :=
-    calc
-      {x : ℝ | x ≤ 0} ∩ {x | x > 0} = {x : ℝ | x > 0}ᶜ ∩ {x | x > 0} := h3
-      _ = ∅ := h2
-  exact h4
-
-example : {x : ℝ | x ≤ 0} ∩ {x : ℝ | x > 0} = ∅ := by
-  ext x
-  have h1 : x > 0 := sorry
-  have h2 : ¬ (x > 0) := not_lt_of_le sorry
-  contradiction
 
 lemma qreimage_empty (p : ℝ → ℝ) (hp : ∀ x, p x = if x > 0 then 1 else -1) (t : Set ℝ) (h : 1 ∉ t ∧ -1 ∉ t) :
   p ⁻¹' t = ∅ := by
@@ -151,6 +124,36 @@ lemma qreimage_empty (p : ℝ → ℝ) (hp : ∀ x, p x = if x > 0 then 1 else -
 
 lemma preimage_nonpos (p : ℝ → ℝ) (hp : ∀ x, p x = if x > 0 then 1 else -1) (t : Set ℝ) (h : 1 ∉ t ∧ -1 ∈ t) :
   p ⁻¹' t = {x | x ≤ 0} := by
+  ext x
+  simp [hp]
+  have h0 : -1 ∈ t := h.2
+  cases lt_or_le 0 x with
+  | inl hpos => have h1 : 0 < x := hpos
+                have h2 : (if 0 < x then 1 else -1) = (1 : ℝ) := if_pos hpos
+                have h3 : 1 ∉ t := h.1
+                have h4 : (if 0 < x then 1 else -1) ∉ t := by
+                  rw [h2]
+                  exact h3
+                have h5 : ¬ ((if 0 < x then 1 else -1) ∈ t) := h4
+                have h7 : (if 0 < x then 1 else -1) ∈ t -> x ≤ 0 := by
+                  intro h_px
+                  exfalso
+                  exact h5 h_px
+                have h8 : x ≤ 0 -> (if 0 < x then 1 else -1) ∈ t := by
+                  intro hle
+                  have h9 : (if 0 < x then (1 : ℝ) else -1) = -1 := if_neg (not_lt.mpr hle)
+                  rw [h9]
+                  exact h0
+                exact ⟨h7, h8⟩
+  | inr hneg => have h1 : x ≤ 0 := hneg
+                exact sorry
+
+lemma preimage_nos (p : ℝ → ℝ) (hp : ∀ x, p x = if x > 0 then 1 else -1) (t : Set ℝ) (h : 1 ∈ t ∧ -1 ∉ t) :
+  p ⁻¹' t = {x | x > 0 } := by
+    exact sorry
+
+lemma preimage_full (p : ℝ → ℝ) (hp : ∀ x, p x = if x > 0 then 1 else -1) (t : Set ℝ) (h : 1 ∈ t ∧ -1 ∈ t) :
+  p ⁻¹' t = ℝ := by
     exact sorry
 
 example (p : ℝ → ℝ) (hp : ∀ x, p x = if x > 0 then 1 else -1) :

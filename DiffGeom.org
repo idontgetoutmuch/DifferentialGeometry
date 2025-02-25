@@ -2714,3 +2714,14 @@ example : {x : ℝ | x ≤ 0} ∩ {x : ℝ | x > 0} = ∅ := by
   have h1 : x > 0 := sorry
   have h2 : ¬ (x > 0) := not_lt_of_le sorry
   contradiction
+
+
+ lemma preimage_nonpos (p : ℝ → ℝ) (hp : ∀ x, p x = if x > 0 then 1 else -1) (t : Set ℝ) (h : 1 ∉ t ∧ -1 ∈ t) :
+  p ⁻¹' t = {x | x ≤ 0} := by
+  ext x
+  -- simp only [Set.mem_preimage, hp]
+  simp [hp]
+  -- intro hx
+  -- exact (sorry : x ∈ p ⁻¹' t ↔ x ∈ {x | x ≤ 0})
+  -- exact (sorry : (if x > 0 then 1 else -1) ∈ t ↔ x ∈ {x | x ≤ 0})
+  exact (sorry : (if 0 < x then 1 else -1) ∈ t ↔ x ≤ 0)
