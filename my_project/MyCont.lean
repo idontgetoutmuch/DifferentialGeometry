@@ -2,195 +2,59 @@ import Mathlib
 
 open Topology Set
 
-def PR := Subtype (λ (x : ℝ) => x ≠ 0)
+lemma continuous_on_union_of_open {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y]
+  (f : X → Y) :
+  ∀ (s t : Set X), IsOpen s → IsOpen t → ContinuousOn f s → ContinuousOn f t → ContinuousOn f (s ∪ t) := by
+  intro s t hso hto hcs hct
+  rw [continuousOn_open_iff (IsOpen.union hso hto)]
+  intro u hu
+  have h1 : ∀ u, IsOpen u → IsOpen (s ∩ f ⁻¹' u) := (continuousOn_open_iff hso).mp hcs
+  have h2 : ∀ u, IsOpen u → IsOpen (t ∩ f ⁻¹' u) := (continuousOn_open_iff hto).mp hct
+  rw [inter_comm, Set.inter_union_distrib_left, inter_comm]
+  have h3 : IsOpen (f ⁻¹' u ∩ t) := by rw [Set.inter_comm]; exact h2 u hu
+  exact IsOpen.union (h1 u hu) h3
 
-def f : PR -> ℝ := λx => if x > 0 then x else -x
+lemma constant_open_continuous_pre {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y]
+  (f : X → Y) (s : Set X) (u : Set Y) :
+  (∀ (x y : X), x ∈ s → y ∈ s → f x = f y) → IsOpen s → IsOpen (s ∩ f ⁻¹' u) := by
+  intros h_const h_open
+  by_cases hP : ∃ x ∈ s, f x ∈ u
+  · obtain ⟨x₀, hx₀, hx₀u⟩ := hP
+    have h_all : ∀ y ∈ s, f y ∈ u := by
+      intro y hy
+      have h_all_0 : f y =  f x₀ := h_const y x₀ hy hx₀
+      have h_all_1 : f y ∈ u := by
+        rw [<-h_all_0] at hx₀u
+        exact hx₀u
+      exact h_all_1
+    have h1 : f ⁻¹' u ∩ s = s := by
+      ext y
+      have h1a : y ∈ f ⁻¹' u ∩ s -> y ∈ s := by
+        intro hy
+        exact hy.2
+      have h1b : y ∈ s -> y ∈ f ⁻¹' u ∩ s := by
+        intro hy
+        exact ⟨h_all y hy, hy⟩
+      exact ⟨h1a, h1b⟩
+    rw [inter_comm, h1]
+    exact h_open
+  · have h1 :  ¬∃ x ∈ s, f x ∈ u := hP
+    have h1 : s ∩ f ⁻¹' u = ∅ := by
+      ext y
+      constructor
+      · intro hy
+        exfalso
+        apply h1
+        exact ⟨y, (hy.1 : y ∈ s), (hy.2 : f y ∈ u)⟩
+      · intro hy
+        exact False.elim hy
+    rw [h1]
+    exact isOpen_empty
 
--- noncomputable
--- def g : { x : ℝ | x ≠ 0} -> ℝ := λ x => if x > (0 : ℝ) then x else -x
-
-noncomputable
-def h : ℝ -> ℝ := λ x => if x > (0 : ℝ) then x else -x
-
-#check TopologicalSpace
-
-instance : TopologicalSpace PR := sorry
-
-instance : TopologicalSpace  := sorry
-
-noncomputable
-def g : { x : ℝ | x ≠ 0} -> ℝ := λ x => if x > (0 : ℝ) then x else -x
-
-example (x : ℝ) (h : ¬ (x > (0 : ℝ))) : (λ x => if x > (0 : ℝ) then x else -x) x = -x := by simp [g, h]
-example ( x : { x : ℝ | x ≠ 0}) (h : ¬ (x > (0 : ℝ))) : g x = -x := by simp [g, h]
-example ( x : { x : ℝ | x ≠ 0}) (h : (x < (0 : ℝ))) : g x = -x := by simp [g, h]
-
-example (x : { x : ℝ | x ≠ 0}) (h : x < (0 : ℝ)) : g x = -x := by
-  have h' : ¬ (x > (0 : ℝ)) := by exact not_lt.mpr (le_of_lt h)
-  simp [g, h']
-
-theorem foo {α : Type} {P Q : α → Prop} : { x | P x } ∪ { x | Q x } = { x | P x ∨ Q x } := by
-  ext x
-  simp
-
-example (s : Set ℝ) : {x | x ∈ s ∧ x > 0 ∨ x ∈ s ∧ x < 0} ∪ { x | x ∈ s ∧ x = 0} = {x | (x ∈ s ∧ x > 0 ∨ x ∈ s ∧ x < 0) ∨ x ∈ s ∧ x = 0} := by
-  have h1 : ({ x ∈ s | x > 0} ∪ { x ∈ s | x < 0}) = {x | x ∈ s ∧ x > 0 ∨ x ∈ s ∧ x < 0} := foo
-  have h2 : {x | x ∈ s ∧ x > 0 ∨ x ∈ s ∧ x < 0} ∪ { x | x ∈ s ∧ x = 0} = {x | (x ∈ s ∧ x > 0 ∨ x ∈ s ∧ x < 0) ∨ x ∈ s ∧ x = 0} := foo
-  exact h2
-
-#check lt_or_gt_of_ne
-
-example (s : Set ℝ) :
-  { x ∈ s | x > 0 ∨ x < 0 ∨ x = 0 } = s := by
-  ext x
-  simp
-  exact sorry
-
-example (s : Set ℝ) :
-  ({ x ∈ s | x > 0} ∪ { x ∈ s | x < 0}) ∪ { x ∈ s | x = 0 } = { x ∈ s | x > 0 ∨ x < 0 ∨ x = 0 } := by
-  sorry
-
-example (x : ℝ) : (x < 0) ∨ ¬ (x < 0) := by exact em (x < 0)
-
-#check ContinuousOn
-
-example : Continuous g := by
-  have h0 : ∀ s, g ⁻¹' s = {x | g x ∈ s} := by
-    intro s
-    have h0a : g ⁻¹' s = {x | g x ∈ s} := rfl
-    exact h0a
-  have h2a (x : { x : ℝ | x ≠ 0}) (h : x > (0 : ℝ)) : g x = x := by simp [g, h]
-  have h2b (x : { x : ℝ | x ≠ 0}) (h : x < (0 : ℝ)) : g x = -x := by
-    have h' : ¬ (x > (0 : ℝ)) := by exact not_lt.mpr (le_of_lt h)
-    simp [g, h']
-  have h3 : ∀ s, s = { x ∈ s | x > 0} ∪ {x ∈ s | x < 0} ∪ {x ∈ s | x = 0} := sorry
-  have h4a : ∀ (s : Set ℝ), g ⁻¹' ({ x ∈ s | x > 0} ∪ {x ∈ s | x < (0 : ℝ)})  =  g ⁻¹' { x ∈ s | x > 0} ∪  g ⁻¹' {x ∈ s | x < 0}  := by
-    intro s
-    exact Set.preimage_union
-  have h4 : ∀ s, g ⁻¹' s =  g ⁻¹' { x ∈ s | x > 0} ∪  g ⁻¹' {x ∈ s | x < 0} ∪  g ⁻¹' {x ∈ s | x = 0}:= sorry
-  have h5 : ∀ (s : Set ℝ), g ⁻¹' { x ∈ s | x > 0} = { x ∈ s | x > (0 : ℝ)} ∪ { x ∈ s | x < (0 : ℝ)} := sorry
-  have h6 : ∀ (s : Set ℝ), g ⁻¹' { x ∈ s | x < 0} = ∅ := sorry
-  have h7 : ∀ (s : Set ℝ), g ⁻¹' {x ∈ s | x = 0} = ∅ := sorry
-  have h8 : ∀ s, g ⁻¹' s = { x ∈ s | x > 0} ∪ { x ∈ s | x < 0} := sorry
-  have h9 : ∀ (s : Set ℝ), IsOpen { x ∈ s | x > 0} := sorry
-  have ha : ∀ (s : Set ℝ), IsOpen { x ∈ s | x < 0} := sorry
-  have h2 : ∀ s, IsOpen s → IsOpen (g ⁻¹' s) := by
-    exact sorry
-  have hb : ∀ s, IsOpen s → IsOpen (g ⁻¹' s) <-> Continuous g := sorry
-  exact sorry
-
-#check continuousOn_open_iff
--- ContinuousOn f s ↔ ∀ (t : Set β), IsOpen t → IsOpen (s ∩ f ⁻¹' t)
-
-noncomputable
-def p : ℝ -> ℝ := λ x => if x > (0 : ℝ) then 1 else -1
-
-example : ∀ (t : Set ℝ), IsOpen t → IsOpen ({x | x > (0 : ℝ)} ∩ p ⁻¹' t) := by
-  intro t ho x hx
-  have h1 : 1 ∉ t ∧ -1 ∉ t -> p ⁻¹' t = ∅ := sorry
-  have h2 : 1 ∉ t ∧ -1 ∈ t -> p ⁻¹' t = {x | x ≤ 0} := sorry
-  have h3 : 1 ∈ t ∧ -1 ∉ t -> p ⁻¹' t = {x | x > 0} := sorry
-  have h4 : 1 ∈ t ∧ -1 ∈ t -> p ⁻¹' t = ℝ := sorry
-  have h1a : 1 ∉ t ∧ -1 ∉ t -> {x | x > (0 : ℝ)} ∩ p ⁻¹' t = ∅ := sorry
-  have h2a : 1 ∉ t ∧ -1 ∈ t -> {x | x > (0 : ℝ)} ∩ p ⁻¹' t = ∅ := sorry
-  have h3a : 1 ∈ t ∧ -1 ∉ t -> {x | x > (0 : ℝ)} ∩ p ⁻¹' t = {x | x > 0} := sorry
-  have h4a : 1 ∈ t ∧ -1 ∈ t -> {x | x > (0 : ℝ)} ∩ p ⁻¹' t = {x | x > 0} := sorry
-  exact sorry
-
-#check preimage_inter
-#check if_pos
-
-
-lemma qreimage_empty (p : ℝ → ℝ) (hp : ∀ x, p x = if x > 0 then 1 else -1) (t : Set ℝ) (h : 1 ∉ t ∧ -1 ∉ t) :
-  p ⁻¹' t = ∅ := by
-  ext x
-  simp [hp]
-  intro hx
-  cases lt_or_le 0 x with
-  | inl hpos => have h1 : 1 ∉ t := h.1
-                have h2 : (1 : ℝ) = (if 0 < x then 1 else -1) := (if_pos hpos).symm
-                have h3 : (if 0 < x then 1 else -1) ∈ t := hx
-                have h4 : 1 ∈ t := by
-                  rw [h2]
-                  exact h3
-                contradiction
-  | inr hneg => have h1 : -1 ∉ t := h.2
-                have h2 : (-1 : ℝ) = (if 0 < x then 1 else -1) := (if_neg (not_lt_of_le hneg)).symm
-                have h3 : (if 0 < x then 1 else -1) ∈ t := hx
-                have h4 : -1 ∈ t := by
-                  rw [h2]
-                  exact h3
-                contradiction
-
-lemma preimage_nonpos (p : ℝ → ℝ) (hp : ∀ x, p x = if x > 0 then 1 else -1) (t : Set ℝ) (h : 1 ∉ t ∧ -1 ∈ t) :
-  p ⁻¹' t = {x | x ≤ 0} := by
-  ext x
-  simp [hp]
-  have h0 : -1 ∈ t := h.2
-  cases lt_or_le 0 x with
-  | inl hpos => have h1 : 0 < x := hpos
-                have h2 : (if 0 < x then 1 else -1) = (1 : ℝ) := if_pos hpos
-                have h3 : 1 ∉ t := h.1
-                have h4 : (if 0 < x then 1 else -1) ∉ t := by
-                  rw [h2]
-                  exact h3
-                have h5 : ¬ ((if 0 < x then 1 else -1) ∈ t) := h4
-                have h7 : (if 0 < x then 1 else -1) ∈ t -> x ≤ 0 := by
-                  intro h_px
-                  exfalso
-                  exact h5 h_px
-                have h8 : x ≤ 0 -> (if 0 < x then 1 else -1) ∈ t := by
-                  intro hle
-                  have h9 : (if 0 < x then (1 : ℝ) else -1) = -1 := if_neg (not_lt.mpr hle)
-                  rw [h9]
-                  exact h0
-                exact ⟨h7, h8⟩
-  | inr hneg => have h1 : x ≤ 0 := hneg
-                exact sorry
-
-lemma preimage_nos (p : ℝ → ℝ) (hp : ∀ x, p x = if x > 0 then 1 else -1) (t : Set ℝ) (h : 1 ∈ t ∧ -1 ∉ t) :
-  p ⁻¹' t = {x | x > 0 } := by
-    exact sorry
-
-lemma preimage_full (p : ℝ → ℝ) (hp : ∀ x, p x = if x > 0 then 1 else -1) (t : Set ℝ) (h : 1 ∈ t ∧ -1 ∈ t) :
-  p ⁻¹' t = ℝ := by
-    exact sorry
-
-example (p : ℝ → ℝ) (hp : ∀ x, p x = if x > 0 then 1 else -1) :
-  ∀ (t : Set ℝ), IsOpen t → IsOpen ({x | x > (0 : ℝ)} ∩ p ⁻¹' t) := by
-  intro t ho
-  have h_cases :
-    (1 ∉ t ∧ -1 ∉ t) ∨ (1 ∉ t ∧ -1 ∈ t) ∨ (1 ∈ t ∧ -1 ∉ t) ∨ (1 ∈ t ∧ -1 ∈ t) := by
-    tauto
-  cases h_cases with
-  | inl h1 =>
-      have : p ⁻¹' t = ∅ := qreimage_empty p hp t h1
-      rw [this, inter_empty]
-      exact isOpen_empty
-  | inr h2 => cases h2 with
-              | inl h3 => have h1 : p ⁻¹' t = {x | x ≤ 0} := preimage_nonpos p hp t h3
-                          have hf : {x : ℝ | x ≤ 0} ∩ {x | x > 0} = ∅ := by
-                            have hp : {x : ℝ | x > 0}ᶜ = {x : ℝ | x ≤ 0} := by ext x; simp
-                            have hq : {x : ℝ | x > 0}ᶜ ∩ {x | x > 0} = ∅ := Set.compl_inter_self {x : ℝ | x > 0}
-                            rw [hp] at hq
-                            exact hq
-                          have h2 : {x : ℝ | x ≤ 0} ∩ { x : ℝ  | x > 0 } = ∅ := hf
-                          have h3 : p ⁻¹' t ∩ { x | x > 0 } = ∅ := by
-                            rw [h1]
-                            exact h2
-                          rw [h1, Set.inter_comm, h2]
-                          exact isOpen_empty
-              | inr h4 => cases h4 with
-                          | inl h5 => exact sorry
-                          | inr h6 => exact sorry
-
-example : ContinuousOn h {x | x > 0} := by
-  have h1: ∀ (t : Set ℝ), IsOpen t → IsOpen ({x | x > (0 : ℝ)} ∩ h ⁻¹' t) := by
-    exact sorry
-  exact sorry
-
-
-theorem eq_or_succ_le_of_le {a b : ℕ} (h : a ≤ b) : a = b ∨ Nat.succ a ≤ b := by
-  cases Nat.eq_or_lt_of_le h with
-  | inl h_eq => left; assumption
-  | inr h_lt => right; assumption
+lemma constant_open_continuous {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y]
+  (f : X → Y) (s : Set X) :
+  (∀ (x y : X), x ∈ s → y ∈ s → f x = f y) → IsOpen s → ContinuousOn f s := by
+  intros h_const h_open
+  rw [continuousOn_open_iff h_open]
+  intro u hu
+  exact constant_open_continuous_pre f s u h_const h_open
