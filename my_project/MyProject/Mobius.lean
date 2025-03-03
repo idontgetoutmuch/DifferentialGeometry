@@ -1,5 +1,5 @@
+import MyProject.MyCont
 import Mathlib
--- import MyCont
 
 def x := (![1, 0] : EuclideanSpace ℝ (Fin 2))
 
@@ -43,6 +43,16 @@ theorem tOpen : IsOpen { x : (Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1) 
   have U_eq : U = (fun x ↦ x.val) ⁻¹' V := rfl
   exact isOpen_induced_iff.mpr ⟨V, h4, rfl⟩
 
+theorem tOpen' : IsOpen { x : (Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1) | x.val 1 < 0 } := by
+  let V := { x : EuclideanSpace ℝ (Fin 2) | x 1 < 0 }
+  have h1 : Continuous (λ (x: EuclideanSpace ℝ (Fin 2)) => (0 : (fun x => ℝ) 1)) := continuous_const
+  have h2 :  ∀ (i : Fin 2), Continuous fun (x : EuclideanSpace ℝ (Fin 2)) => x i := continuous_apply
+  have h3 : Continuous fun (x : EuclideanSpace ℝ (Fin 2)) => x 1 := h2 1
+  have h4 : IsOpen V := isOpen_lt h3 h1
+  let U := { x : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 | x.val 1 < 0 }
+  have U_eq : U = (fun x ↦ x.val) ⁻¹' V := rfl
+  exact isOpen_induced_iff.mpr ⟨V, h4, rfl⟩
+
 noncomputable def U := chartAt (EuclideanSpace ℝ (Fin 1)) (⟨x, h⟩ : ((Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1)))
 noncomputable def V := chartAt (EuclideanSpace ℝ (Fin 1)) (⟨u, g⟩ : ((Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1)))
 
@@ -78,19 +88,80 @@ theorem SulSource : chart_excluding_minus_1.source ∩ chart_excluding_1.source 
   exact sorry
 
 #check chart_excluding_minus_1.source
+open Topology
+
+#check Continuous.uncurry_right
+#check Continuous.uncurry_left
+
+open Function
+
+theorem my_Continuous.uncurry_left.{u, v, u_1} {X : Type u} {Y : Type v} {Z : Type u_1} [TopologicalSpace X] [TopologicalSpace Y]
+  [TopologicalSpace Z] {f : X → Y → Z} (x : X) (h : Continuous (Function.uncurry f)) : Continuous (f x) := h.comp (Continuous.Prod.mk _)
+
 
 theorem t01 : ContinuousOn (λ p => MyCoordChange 0 1 p.1 p.2) ((chart_excluding_minus_1.source ∩ chart_excluding_1.source) ×ˢ univ) := by
   have h1 : (chart_excluding_minus_1.source ∩ chart_excluding_1.source) = { x | x.val 1 > 0 } ∪ { x | x.val 1 < 0 } := SulSource
-  have h2 : IsOpen { x : (Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1) | x.val 1 > 0 } := tOpen
-  rw [h1, Set.union_prod]
-  intro p hp
-  cases hp with
-  | inl hpos =>
-    obtain ⟨h_xpos, _⟩ := hpos
+  let U := { x : (Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1) | x.val 1 > 0 }
+  have h2 : IsOpen U := tOpen
+  have h4 : ∀ (x y : ↑(Metric.sphere 0 1)), x ∈ U → y ∈ U → MyCoordChange 0 1 x = MyCoordChange 0 1 y := by
+    intro x y hx hy
+    have h4b : ∀ α, MyCoordChange 0 1 x α = α := by
+      intro α
+      exact if_pos hx
+    have h4c : ∀ α, MyCoordChange 0 1 y α = α := by
+      intro α
+      exact if_pos hy
+    ext α
+    rw [h4b, h4c]
+  have h3 : ContinuousOn (MyCoordChange 0 1) U := constant_open_continuous (MyCoordChange 0 1) U h4 h2
+  let V := { x : (Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1) | x.val 1 < 0 }
+  have ha2 : IsOpen V := tOpen'
+  have ha4 : ∀ (x y : ↑(Metric.sphere 0 1)), x ∈ V → y ∈ V → MyCoordChange 0 1 x = MyCoordChange 0 1 y := by
+    intro x y hx hy
+    have ha4b : ∀ α, MyCoordChange 0 1 x α = -α := by
+      intro α
+      have hz : x.val 1 < 0 := hx
+      have hu :  ¬(0 < x.val 1)  := not_lt_of_gt hz
+      have hq : (if x.val 1 > 0 then α else -α) = -α := by exact if_neg hu
+      exact hq
+    have ha4c : ∀ α, MyCoordChange 0 1 y α = -α := by
+      intro α
+      have hz : y.val 1 < 0 := hy
+      have hu : ¬ (y.val 1 > 0) := by exact not_lt_of_gt hz
+      have hq : (if y.val 1 > 0 then α else -α) = -α := by exact if_neg hu
+      exact hq
+    ext α
+    rw [ha4b, ha4c]
+  have ha3 : ContinuousOn (MyCoordChange 0 1) V := constant_open_continuous (MyCoordChange 0 1) V ha4 ha2
+
+  have h5 : ContinuousOn (MyCoordChange 0 1) (U ∪ V) := continuous_on_union_of_open (MyCoordChange 0 1) U V h2 ha2 h3 ha3
+  rw [h1]
+
+  have h17 : ContinuousOn ((MyCoordChange 0 1) : ↑(Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1) → EuclideanSpace ℝ (Fin 1) → EuclideanSpace ℝ (Fin 1))
+                          ({ x | x.val 1 > 0 } ∪ { x | x.val 1 < 0 }) := h5
+  have h18 : ContinuousOn (Function.uncurry (MyCoordChange 0 1)) (({ x | x.val 1 > 0 } ∪ { x | x.val 1 < 0 }) ×ˢ univ ) := sorry
+
+  exact h18
+
+  have h6 : ContinuousOn Prod.fst ((U ∪ V) ×ˢ univ) := continuousOn_fst
+
+  have hz : Prod.fst '' ((U ∪ V) ×ˢ univ) ⊆ (U ∪ V) := by
+    intro z h
+    obtain ⟨⟨x, y⟩, hxy, hx_eq⟩ := h
+    rw [← hx_eq]
+    exact hxy.1
+  have hu : Set.MapsTo Prod.fst ((U ∪ V) ×ˢ univ) (U ∪ V) := Set.mapsTo'.mpr hz
+  have h7 : ContinuousOn (MyCoordChange 0 1 ∘ Prod.fst) ((U ∪ V) ×ˢ univ) := ContinuousOn.comp h5 h6 hu
+  let f : ((U ∪ V) ×ˢ univ) → EuclideanSpace ℝ (Fin 1) := λ p : (U ∪ V) ×ˢ univ => MyCoordChange 0 1 p.val.1 p.val.2
+  let g : ((U ∪ V) ×ˢ univ) → EuclideanSpace ℝ (Fin 1) → EuclideanSpace ℝ (Fin 1) := λ p : (U ∪ V) ×ˢ univ => MyCoordChange 0 1 (Prod.fst p.val)
+  have heq : (λ p : (Metric.sphere 0 1) × EuclideanSpace ℝ (Fin 1) => MyCoordChange 0 1 p.1 p.2) = (λ p : (Metric.sphere 0 1) × EuclideanSpace ℝ (Fin 1) => (MyCoordChange 0 1 ∘ Prod.fst) p p.2) := by
+    exact funext (λ p => rfl)
+  rw [heq]
+  -- rw [h1]
+  let foo : (Metric.sphere 0 1) × EuclideanSpace ℝ (Fin 1) -> EuclideanSpace ℝ (Fin 1) := (MyCoordChange 0 1 ∘ Prod.fst)
+  have h7' : ContinuousOn (fun p ↦ (MyCoordChange 0 1 ∘ Prod.fst) p p.2) ((U ∪ V) ×ˢ univ) := by
     sorry
-  | inr hneg =>
-    obtain ⟨h_xneg, _⟩ := hneg
-    sorry
+  exact h7'
 
 theorem t10 : ContinuousOn (λ p => MyCoordChange 0 1 p.1 p.2) ((chart_excluding_1.source ∩ chart_excluding_minus_1.source) ×ˢ univ) := by
   exact sorry
