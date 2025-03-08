@@ -119,6 +119,8 @@ lemma myNeg (a b : ℝ) : -!₂[a, b] = !₂[-a, -b] := by
   have flarq : !₂[-a, -b] = -!₂[a, b] := by exact florg
   exact flarq.symm
 
+#check or_comm
+
 theorem SulSource : chart_excluding_minus_1.source ∩ chart_excluding_1.source = { x | x.val 1 > 0 } ∪ { x | x.val 1 < 0 } := by
   let xh := ((⟨x, h⟩ :  Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 ))
   let ug := ((⟨u, g⟩ :  Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 ))
@@ -224,14 +226,45 @@ theorem SulSource : chart_excluding_minus_1.source ∩ chart_excluding_1.source 
                       . simp [hy1, h4]
                     have h6 : y.val = xh.val ∨ y.val = ug.val := Or.inl h5
                     exact h6
-      | inr hneg => exact sorry
+      | inr hneg => have h2 : y.val = !₂[y.val 0, y.val 1] := by
+                      ext i
+                      fin_cases i
+                      . simp
+                      . simp
+                    have h3 : ug.val 0 = -1 := rfl
+                    have h4 : ug.val 1 = 0 := rfl
+                    have h5 : y.val = ug.val := by
+                      ext i
+                      fin_cases i
+                      . simp [hneg, h3]
+                      . simp [hy1, h4]
+                    have h6 : y.val = xh.val ∨ y.val = ug.val := Or.inr h5
+                    exact h6
 
-    have bar5 : y.val 1 = 0 <-> y.val = xh.val ∨ y.val = ug.val := sorry
+    have bar5b : y.val = xh.val ∨ y.val = ug.val -> y.val 1 = 0 := by
+      intro h
+      cases h with
+      | inl left => have h2 : y.val 1 = xh.val 1 := by rw [left]
+                    have h3 : xh.val 1 = 0 :=rfl
+                    have h4 : y.val 1 = 0 := by
+                      calc y.val 1 = xh.val 1 := h2
+                           _ = 0 := h3
+                    exact h4
+      | inr right => have h2 : y.val 1 = ug.val 1 := by rw [right]
+                     have h3 : ug.val 1 = 0 :=rfl
+                     have h4 : y.val 1 = 0 := by
+                      calc y.val 1 = ug.val 1 := h2
+                           _ = 0 := h3
+                     exact h4
+
+    have bar5 : y.val 1 = 0 <-> y.val = xh.val ∨ y.val = ug.val := ⟨bar5a, bar5b⟩
     have fooo1 : y.val = (xh).val -> y = xh := Subtype.eq
     have fooo2 : y.val = (ug).val -> y = ug := Subtype.eq
     have barr1 : y = xh -> y.val = (xh).val := by intro h; rw[h]
     have barr2 : y = ug -> y.val = (ug).val := by intro h; rw [h]
     have bar6 : -xh.val = ug.val := by rw [bar1, bar2]; exact bar3
+    have bar7 : -xh = ug := Subtype.eq bar6
+    have bar8 : xh = -ug := by rw [<-bar7]; simp
     have chat1 : y.val 1 = 0 ↔ y = xh ∨ y = ug := by
       rw [bar5]
       constructor
@@ -244,39 +277,32 @@ theorem SulSource : chart_excluding_minus_1.source ∩ chart_excluding_1.source 
         | inl hxh => left; rw [← barr1 hxh]
         | inr hug => right; rw [← barr2 hug]
 
-    exact (sorry : y.val 1 = 0 ↔ y = -xh ∨ y = -ug)
+    have chat2 : y.val 1 = 0 ↔ y = -xh ∨ y = -ug := by
+      rw [chat1]
+      constructor
+      · intro h
+        have chit : y = -ug ∨ y = -xh := by cases h with
+        | inl hxh => left; rw [bar8] at hxh; exact hxh
+        | inr hug => right; rw [<-bar7] at hug; exact hug
+        have chot :  y = -xh ∨ y = -ug := or_comm.mp chit
+        exact chot
+      · intro h
+        cases h with
+        | inl hxh_neg => right; rw [bar7] at hxh_neg; exact hxh_neg
+        | inr hug_neg => left; rw [← bar7, neg_neg] at hug_neg; exact hug_neg
 
-  have h4 : { x : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 | x ≠ -xh } ∩ { x | x ≠ -ug } = { x | x.val 1 > 0 } ∪ { x | x.val 1 < 0 } := by
-    exact sorry
-  exact sorry
+    exact chat2
 
-open scoped BigOperators
-open Fin
+  have hz : { x | x.val 1 = 0 }ᶜ = { -xh, -ug }ᶜ := by rw [h3]
 
--- variable {𝕜 : Type*} [NormedField 𝕜] {n : ℕ}
+  have hq : chart_excluding_minus_1.source ∩ chart_excluding_1.source = { x : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 | x.val 1 > 0 } ∪ { x | x.val 1 < 0 } := by
+    calc chart_excluding_minus_1.source ∩ chart_excluding_1.source = { x | x ≠ -xh } ∩ { x | x ≠ -ug } := ha
+         _ = { -xh, -ug }ᶜ := h2
+         _ = { x | x.val 1 = 0 }ᶜ := hz.symm
+         _ =  { x : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 | x.val 1 > 0 } ∪ { x | x.val 1 < 0 } := h1.symm
 
--- def LpFin2 := EuclideanSpace 𝕜 (Fin 2)
 
--- notation " !₂[" x ", " y "]" => (WithLp.equiv 2 _ _).symm ![x, y]
-def foo := !₂[(1 : ℝ), 0]
-def bar := (WithLp.equiv 2 ((Fin 2 → ℝ))).symm (![(0 : ℝ), 0])
-
-  lemma neg_Lp_eq_componentwise_neg (a b : ℝ) :
-    -!₂[a, b] = !₂[-a, -b] :=
-  by
-
-    let x := ![a, b]
-    let y := ![-a, -b]
-    have fleeg : -(![a, b]) = ![-a, -b] := by simp
-    have flarg : -x = y := by rw [fleeg]
-
-    have flurg : (WithLp.equiv 2 (Fin 2 → ℝ)) (-x) = -(WithLp.equiv 2 (Fin 2 → ℝ)) x := WithLp.equiv_neg 2 x
-    have flurg : (WithLp.equiv 2 (Fin 2 → ℝ)) (-x) = -(WithLp.equiv 2 (Fin 2 → ℝ)) x := WithLp.equiv_neg 2 x
-
-    have florg : (WithLp.equiv 2 (Fin 2 → ℝ)) y = -(WithLp.equiv 2 (Fin 2 → ℝ)) x := by rw [flarg] at flurg; exact flurg
-    have flarq : !₂[-a, -b] = -!₂[a, b] := by exact florg
-    exact flarq.symm
-
+  simp [hq]
 
 def s1 : Set ((Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1) × EuclideanSpace ℝ (Fin 1)) := { x | 0 < x.1.val 1 }
 
