@@ -3237,3 +3237,11 @@ If y.val = ug.val then y.val 1 = 0
 --     have florg : (WithLp.equiv 2 (Fin 2 → ℝ)) y = -(WithLp.equiv 2 (Fin 2 → ℝ)) x := by rw [flarg] at flurg; exact flurg
 --     have flarq : !₂[-a, -b] = -!₂[a, b] := by exact florg
 --     exact flarq.symm
+
+* Log for [2025-03-09 Sun 11:49]
+
+instance : Fact (Module.finrank ℝ (EuclideanSpace ℝ (Fin 2)) = 1 + 1) :=
+  ⟨(finrank_euclideanSpace_fin : Module.finrank ℝ (EuclideanSpace ℝ (Fin 2)) = 2)⟩
+
+theorem chartAt_source (y : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1) :
+    (chartAt (EuclideanSpace ℝ (Fin 1)) y).source = (stereographic' 1 (-y)).source := rfl
