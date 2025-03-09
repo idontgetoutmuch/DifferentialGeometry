@@ -3,10 +3,6 @@ import Mathlib
 
 open Function Set
 
-#check ![1, 0]
-#check !₂[1, 0]
-#check (((WithLp.equiv 2 _ ).symm ![(1 : ℝ), 0]) : EuclideanSpace ℝ (Fin 2))
-
 def x := (!₂[1, 0]  : EuclideanSpace ℝ (Fin 2))
 
 theorem h : x ∈  Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 := by
@@ -90,10 +86,6 @@ theorem t00 : ContinuousOn (λ p => MyCoordChange 0 0 p.1 p.2) (chart_excluding_
   rw [h1]
   exact continuousOn_snd
 
-#check (ChartedSpace.chartAt ((⟨x, h⟩ : ((Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1))))).source
-
-#check (⟨x, h⟩ : ((Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1)))
-
 instance : Fact (Module.finrank ℝ (EuclideanSpace ℝ (Fin 2)) = 1 + 1) :=
   ⟨(finrank_euclideanSpace_fin : Module.finrank ℝ (EuclideanSpace ℝ (Fin 2)) = 2)⟩
 
@@ -119,14 +111,26 @@ lemma myNeg (a b : ℝ) : -!₂[a, b] = !₂[-a, -b] := by
   have flarq : !₂[-a, -b] = -!₂[a, b] := by exact florg
   exact flarq.symm
 
-#check or_comm
+def xh := ((⟨x, h⟩ :  Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 ))
+def ug := ((⟨u, g⟩ :  Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 ))
+
+
+lemma h8 : chart_excluding_minus_1.source = { x | x ≠ -xh} := by
+    calc chart_excluding_minus_1.source = (chartAt (EuclideanSpace ℝ (Fin 1)) xh).source := rfl
+         _ = (stereographic' 1 (-xh)).source := rfl
+         _ = {-xh}ᶜ := stereographic'_source (-xh)
+         _ = { x | x ≠ -xh } := rfl
+
+lemma h9 : chart_excluding_1.source = { x | x ≠ -ug} := by
+    calc chart_excluding_1.source = (chartAt (EuclideanSpace ℝ (Fin 1)) ug).source := rfl
+         _ = (stereographic' 1 (-ug)).source := rfl
+         _ = {-ug}ᶜ := stereographic'_source (-ug)
+         _ = { x | x ≠ -ug } := rfl
 
 theorem SulSource : chart_excluding_minus_1.source ∩ chart_excluding_1.source = { x | x.val 1 > 0 } ∪ { x | x.val 1 < 0 } := by
   let xh := ((⟨x, h⟩ :  Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 ))
   let ug := ((⟨u, g⟩ :  Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1 ))
   ext y
-  -- simp only [chart_excluding_minus_1, chart_excluding_1, U, V]
-  -- simp [chartAt]
 
   have h7 : (chartAt (EuclideanSpace ℝ (Fin 1)) y).source = { x | x ≠ -y } := by
     calc (chartAt (EuclideanSpace ℝ (Fin 1)) y).source = (stereographic' 1 (-y)).source := rfl
@@ -457,7 +461,6 @@ def Mobius : FiberBundleCore (Fin 2) (Metric.sphere (0 : EuclideanSpace ℝ (Fin
   baseSet := λ i => if i = 0 then chart_excluding_minus_1.source
                              else chart_excluding_1.source,
 
-  -- isOpen_baseSet : ∀ i, IsOpen (baseSet i)
   isOpen_baseSet := by
     intro i
     dsimp only
@@ -465,10 +468,49 @@ def Mobius : FiberBundleCore (Fin 2) (Metric.sphere (0 : EuclideanSpace ℝ (Fin
     · exact chart_excluding_minus_1.open_source
     · exact chart_excluding_1.open_source
 
-  indexAt := λ x => if (x.val 0) < 0 then 0 else 1,
+  indexAt := λ x => if (x.val 0) > 0 then 0 else 1,
 
-  -- mem_baseSet_at : ∀ x, x ∈ baseSet (indexAt x)
-  mem_baseSet_at := sorry,
+  mem_baseSet_at := by
+    intro x
+    by_cases h : (x.val 0) > 0
+    case pos => have h5 : xh.val 0 = 1 := rfl
+                have h7 : x ≠ -xh := by
+                  intro h_eq
+                  have h_val_eq : x.val = -xh.val := congrArg Subtype.val h_eq
+                  have h_contra : x.val 0 = -xh.val 0 := congrFun h_val_eq 0
+                  rw [h5] at h_contra
+                  linarith
+                have h2 : (fun x ↦ if x.val 0 > 0 then (0 : Fin 2) else 1) x = 0 := if_pos h
+                have h3 : (fun (i : Fin 2) ↦ if i = 0 then chart_excluding_minus_1.source else chart_excluding_1.source) ((fun x ↦ if x.val 0 > 0 then 0 else 1) x) =
+                          chart_excluding_minus_1.source := by
+                            rw [h2]
+                            have h1 : (fun i ↦ if i = 0 then chart_excluding_minus_1.source else chart_excluding_1.source) 0 =
+                                      chart_excluding_minus_1.source := if_pos rfl
+                            exact h1
+                have hz : x ∈ (fun (i : Fin 2) ↦ if i = 0 then chart_excluding_minus_1.source else chart_excluding_1.source) ((fun x ↦ if x.val 0 > 0 then 0 else 1) x) := by
+                  rw [h3]
+                  rw [h8]
+                  exact h7
+                exact hz
+    case neg => have h1 : ug.val 0 = -1 := rfl
+                have h7 : x ≠ -ug := by
+                  intro h_eq
+                  have h_val_eq : x.val = -ug.val := congrArg Subtype.val h_eq
+                  have h_contra : x.val 0 = -ug.val 0 := congrFun h_val_eq 0
+                  rw [h1] at h_contra
+                  linarith
+                have h2 : (fun x ↦ if x.val 0 > 0 then (0 : Fin 2) else 1) x = 1 := if_neg h
+                have h3 : (fun (i : Fin 2) ↦ if i = 0 then chart_excluding_minus_1.source else chart_excluding_1.source) ((fun x ↦ if x.val 0 > 0 then 0 else 1) x) =
+                          chart_excluding_1.source := by
+                            rw [h2]
+                            have h1 : (fun i ↦ if (i : Fin 2) = 0 then chart_excluding_minus_1.source else chart_excluding_1.source) 1 =
+                                      chart_excluding_1.source := if_neg (by exact one_ne_zero)
+                            exact h1
+                have hz : x ∈ (fun (i : Fin 2) ↦ if i = 0 then chart_excluding_minus_1.source else chart_excluding_1.source) ((fun x ↦ if x.val 0 > 0 then 0 else 1) x) := by
+                  rw [h3]
+                  rw [h9]
+                  exact h7
+                exact hz,
 
   coordChange := MyCoordChange,
   coordChange_self := MyCoordChange_self,
