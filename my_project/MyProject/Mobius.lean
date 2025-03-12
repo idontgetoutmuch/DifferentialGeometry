@@ -235,12 +235,7 @@ theorem SulSource : U.source ∩ V.source = { x | x.val 1 > 0 } ∪ { x | x.val 
       intro hy1
       have h1 : y.val 0 = 1 ∨ y.val 0 = -1 := bar4.mp hy1
       cases h1 with
-      | inl hpos => have h2 : y.val = !₂[y.val 0, y.val 1] := by
-                      ext i
-                      fin_cases i
-                      . simp
-                      . simp
-                    have h3 : xh.val 0 = 1 := rfl
+      | inl hpos => have h3 : xh.val 0 = 1 := rfl
                     have h4 : xh.val 1 = 0 := rfl
                     have h5 : y.val = xh.val := by
                       ext i
@@ -249,12 +244,7 @@ theorem SulSource : U.source ∩ V.source = { x | x.val 1 > 0 } ∪ { x | x.val 
                       . simp [hy1, h4]
                     have h6 : y.val = xh.val ∨ y.val = ug.val := Or.inl h5
                     exact h6
-      | inr hneg => have h2 : y.val = !₂[y.val 0, y.val 1] := by
-                      ext i
-                      fin_cases i
-                      . simp
-                      . simp
-                    have h3 : ug.val 0 = -1 := rfl
+      | inr hneg => have h3 : ug.val 0 = -1 := rfl
                     have h4 : ug.val 1 = 0 := rfl
                     have h5 : y.val = ug.val := by
                       ext i

@@ -3245,3 +3245,280 @@ instance : Fact (Module.finrank ℝ (EuclideanSpace ℝ (Fin 2)) = 1 + 1) :=
 
 theorem chartAt_source (y : Metric.sphere (0 : EuclideanSpace ℝ (Fin 2)) 1) :
     (chartAt (EuclideanSpace ℝ (Fin 1)) y).source = (stereographic' 1 (-y)).source := rfl
+
+* Log for [2025-03-11 Tue 09:36]
+
+open Complex
+
+def S1 : Type := Submonoid.unitSphere ℂ
+deriving TopologicalSpace
+
+theorem exp_mem_unitSphere (r : ℝ) : exp (r * I) ∈ Submonoid.unitSphere ℂ := by
+  have h1 : abs (exp (r * I)) = 1 := abs_exp_ofReal_mul_I r
+  have h2 : exp (r * I) ∈ Metric.sphere 0 1 ↔ ‖exp (r * I)‖ = 1 := mem_sphere_zero_iff_norm
+  have h3 : ‖exp (r * I)‖ = abs (exp (r * I)) := rfl
+  have h5 : ‖exp (r * I)‖ = 1 := by
+    rw [h3, h1]
+  have h6 : exp (r * I) ∈ Metric.sphere 0 1 := h2.2 h5
+  have h7 : exp (r * I) ∈ Submonoid.unitSphere ℂ := h6
+  exact h7
+
+theorem arg_exp_of_range (r : ℝ) (hr : -Real.pi < r ∧ r < Real.pi) :
+  arg (exp (r * I)) = r := by
+  have h_in_range : r ∈ Ioo (-Real.pi) Real.pi := hr
+  have h_in_range : r ∈ Ioc (-Real.pi) Real.pi := by
+    exact Ioo_subset_Ioc_self h_in_range
+  have bik : arg (exp (r * I)) = toIocMod (mul_pos two_pos Real.pi_pos) (-Real.pi) r := Complex.arg_exp_mul_I r
+  have bil : toIocMod (mul_pos two_pos Real.pi_pos) (-Real.pi) r = r ↔ r ∈ Ioc (-Real.pi) ((-Real.pi) + (2 * Real.pi)) :=
+    toIocMod_eq_self (mul_pos two_pos Real.pi_pos)
+  have h_eq : -Real.pi + 2 * Real.pi = Real.pi := by ring
+  have bin : toIocMod (mul_pos two_pos Real.pi_pos) (-Real.pi) r = r ↔ r ∈ Ioc (-Real.pi) Real.pi := by
+    rwa [h_eq] at bil
+  have bim : toIocMod (mul_pos two_pos Real.pi_pos) (-Real.pi) r = r := bin.mpr h_in_range
+  have crk : arg (exp (r * I)) = r := by rw [bik, bim]
+  exact crk
+
+noncomputable
+def chart_at_S1_excluding_minus_1 : PartialHomeomorph S1 ℝ :=
+{
+  toFun := λ z => arg z.val,
+  invFun := λ r => ⟨exp (r * Complex.I), exp_mem_unitSphere r⟩,
+  source := {z : S1 | arg z.val ∈ Ioo (-Real.pi) (Real.pi)},
+  target := Ioo (-Real.pi) (Real.pi),
+  map_source' := λ z hz => hz,
+  map_target' := λ r hr => by
+    have h1 : (exp (r * I)).arg = r := arg_exp_of_range r hr
+    have h2a : (-Real.pi) < r := hr.1
+    have h2b : r < Real.pi := hr.2
+    have h3a : (-Real.pi) < (exp (r * I)).arg := by
+      rw [h1]
+      exact h2a
+    have h3b : (exp (r * I)).arg < (Real.pi) := by
+      rw [h1]
+      exact h2b
+    exact ⟨(h3a : (-Real.pi) < (exp (r * I)).arg), (h3b : (exp (r * I)).arg < (Real.pi))⟩,
+  left_inv' := λ z hz => by
+    have h0 : (Complex.abs z.val) * exp ((z.val).arg * I) = z.val := by exact abs_mul_exp_arg_mul_I z.val
+    have h4 : z.val ∈ Submonoid.unitSphere ℂ := by exact z.prop
+    have h5 : z.val ∈ Metric.sphere 0 1 ↔ ‖z.val‖ = 1 := mem_sphere_zero_iff_norm
+    have h7 : z.val ∈ Metric.sphere 0 1 := h4
+    have h6 : ‖z.val‖ = 1 := by rwa [h5] at h7
+    have h8 : ‖z.val‖ * exp ((z.val).arg * I) = z.val := by exact abs_mul_exp_arg_mul_I z.val
+    have h9 : z.val = exp ((z.val).arg * I) := by
+      calc z.val = ‖z.val‖ * exp ((z.val).arg * I) := by rw [h8]
+                _ = (1 : ℝ) *  exp ((z.val).arg * I) := by rw [h6]
+                _ = (1 : ℂ) * exp ((z.val).arg * I) := by norm_cast
+                _ = exp ((z.val).arg * I) := by rw [one_mul]
+    have h3 : (fun r => ⟨exp (r * I), by exact exp_mem_unitSphere r⟩) (z.val).arg = z := by
+      apply Subtype.ext
+      exact h9.symm
+    exact h3
+  right_inv' := λ r hr => by
+   have h1 : arg (exp (r * I)) = r := arg_exp_of_range r hr
+   exact h1
+  open_source := by
+    exact sorry,
+  open_target := isOpen_Ioo,
+  continuousOn_toFun  := (sorry : (ContinuousOn (λ z => arg z.val)) {z : S1 | arg z.val ∈ Ioo (-Real.pi) (Real.pi)}),
+  continuousOn_invFun := sorry
+}
+
+variables (z : S1)
+
+#check z.1
+#check z.2
+
+#check ((λ r => ⟨exp (r * Complex.I), exp_mem_unitSphere r⟩) : ℝ → ↥(Submonoid.unitSphere ℂ))
+#check Complex.arg_exp_mul_I
+#check toIocMod (mul_pos two_pos Real.pi_pos) (-Real.pi) (Real.pi / 4) = (Real.pi / 4)
+#check toIocMod (mul_pos two_pos Real.pi_pos) (-Real.pi) (Real.pi / 4) = (Real.pi / 4)
+#check toIocMod_eq_self
+
+noncomputable
+def chart_at_S1_excluding_1 : PartialHomeomorph S1 ℝ :=
+{
+  toFun := λ z => arg z.val,
+  invFun := λ r => ⟨exp (r * Complex.I), exp_mem_unitSphere r⟩,
+  source := {z : S1 | arg z.val ∈ Ioo 0 (2 * Real.pi)},
+  target := Ioo 0 (2 * Real.pi),
+  map_source' := λ z hz => hz,
+  map_target' := λ r hr => ⟨sorry, sorry⟩,
+                 -- λ r hr => ⟨exp (r * Complex.I), by simp; exact hr⟩,
+  -- left_inv' : ∀ ⦃x⦄, x ∈ source → invFun (toFun x) = x
+  -- left_inv' := λ z hz => Subtype.ext (by rw [baz z hz]),
+  left_inv' := λ z hz => sorry
+  right_inv' := λ r hr => sorry, -- by simp [hr],
+  open_source := sorry, -- Needs proof that {z : S1 | arg z.val ∈ Ioo 0 (2 * π)} is open
+  open_target := isOpen_Ioo,
+  continuousOn_toFun := sorry, -- Needs proof that `arg` is continuous on `source`
+  continuousOn_invFun := sorry  -- Needs proof that `exp` is continuous on `target`
+}
+
+def source : Set S1 := {z : S1 | arg z.val ∈ Ioo (-Real.pi) Real.pi}
+
+#check ContinuousAt arg
+
+noncomputable
+def joo : GBundleCore (atlas (EuclideanSpace ℝ (Fin 1)) Circle) Circle (Fin 1 -> ℝ) (orthogonalGroup (Fin 1) ℝ) where
+  baseSet i := i.1.source
+  isOpen_baseSet i := i.1.open_source
+  indexAt := achart (EuclideanSpace ℝ (Fin 1))
+  mem_baseSet_at := mem_chart_source (EuclideanSpace ℝ (Fin 1))
+  coordChange i j x v := v
+  coordChange_self _ _ _ _ := rfl
+  continuousOn_coordChange i j := continuous_snd.continuousOn
+  coordChange_comp _ _ _ _ _ _ := rfl
+  coordChange_structure_group := by sorry
+
+
+  coordChange_structure_group i j := by
+    intro x hx
+    have h0 : x ∈ (fun i ↦ if i = 0 then U.source else V.source) i ∩ (fun i ↦ if i = 0 then U.source else V.source) j := hx
+    fin_cases i
+    · fin_cases j
+      . have h11 : x ∈ U.source := by
+          simp only [ite_true, if_pos rfl, inter_self] at h0
+          exact h0
+        have h1 : ∃ g : (orthogonalGroup (Fin 1) ℝ), ∀ v : (EuclideanSpace ℝ (Fin 1)), v = g • v := by
+            existsi 1
+            intro v
+            have h2 : (1 : (orthogonalGroup (Fin 1) ℝ)) • v = v := one_smul (orthogonalGroup (Fin 1) ℝ) v
+            exact h2.symm
+        exact h1
+      · have h12 : x ∈ U.source ∩ V.source := by
+          simp only [ite_true, if_pos rfl, inter_self] at h0
+          exact h0
+        have h1 : ∃ g : (orthogonalGroup (Fin 1) ℝ), ∀ v : (EuclideanSpace ℝ (Fin 1)), v = g • v := by
+            existsi 1
+            intro v
+            have h2 : (1 : (orthogonalGroup (Fin 1) ℝ)) • v = v := one_smul (orthogonalGroup (Fin 1) ℝ) v
+            exact h2.symm
+        have h2 : ∃ (g : ↥(orthogonalGroup (Fin 1) ℝ)), ∀ (v : EuclideanSpace ℝ (Fin 1)), MyCoordChange ((fun i ↦ i) 0) ((fun i ↦ i) 1) x v = g • v := sorry
+        exact h2
+    · fin_cases j
+      · exact sorry
+      · exact sorry
+
+noncomputable
+def joo : GBundleCore (atlas (EuclideanSpace ℝ (Fin 1)) Circle) Circle (Fin 1 -> ℝ) (orthogonalGroup (Fin 1) ℝ) where
+  baseSet i := i.1.source
+  isOpen_baseSet i := i.1.open_source
+  indexAt := achart (EuclideanSpace ℝ (Fin 1))
+  mem_baseSet_at := mem_chart_source (EuclideanSpace ℝ (Fin 1))
+  coordChange i j x v := v
+  coordChange_self _ _ _ _ := rfl
+  continuousOn_coordChange i j := continuous_snd.continuousOn
+  coordChange_comp _ _ _ _ _ _ := rfl
+  coordChange_structure_group := by sorry
+
+
+example (a₁₁ a₁₂ a₂₁ a₂₂ b₁₁ b₁₂ b₂₁ b₂₂ : ℝ) :
+  !![a₁₁, a₁₂;
+     a₂₁, a₂₂] * !![b₁₁, b₁₂;
+                    b₂₁, b₂₂] =
+  !![a₁₁*b₁₁ + a₁₂*b₂₁, a₁₁*b₁₂ + a₁₂*b₂₂;
+     a₂₁*b₁₁ + a₂₂*b₂₁, a₂₁*b₁₂ + a₂₂*b₂₂] :=
+(mulᵣ_eq _ _).symm
+
+example [AddCommMonoid α] [Mul α] (a₁₁ a₁₂ a₂₁ a₂₂ b₁₁ b₁₂ b₂₁ b₂₂ : α) :
+  !![a₁₁, a₁₂;
+     a₂₁, a₂₂] * !![b₁₁, b₁₂;
+                    b₂₁, b₂₂] =
+  !![a₁₁*b₁₁ + a₁₂*b₂₁, a₁₁*b₁₂ + a₁₂*b₂₂;
+     a₂₁*b₁₁ + a₂₂*b₂₁, a₂₁*b₁₂ + a₂₂*b₂₂] :=
+(mulᵣ_eq _ _).symm
+
+#check Matrix.mem_orthogonalGroup_iff (Fin 1) ℝ
+
+variable {𝕜 : Type*} [Field 𝕜] {n : Type*} [Fintype n] [DecidableEq n]
+
+example (M : Matrix (Fin 2) (Fin 2) ℝ) :
+  M ∈ Matrix.orthogonalGroup (Fin 2) ℝ ↔ M * star M = 1 := Matrix.mem_orthogonalGroup_iff (Fin 2) ℝ
+
+example (M : Matrix (Fin 1) (Fin 1) ℝ) :
+  M ∈ Matrix.orthogonalGroup (Fin 1) ℝ ↔ M * star M = 1 := Matrix.mem_orthogonalGroup_iff (Fin 1) ℝ
+
+example (M : Matrix (Fin 1) (Fin 1) ℝ) : true := by
+  have h1 : M * star M = 1 <-> M 0 0 * M 0 0 = 1 := by
+    exact sorry
+  have h3 : (M * star M) 0 0 = ∑ j : Fin 1, M 0 j * (star M) j 0 := mul_apply
+  have h4 : star M = Mᴴ := star_eq_conjTranspose M
+  trivial
+
+example (a₁₁ b₁₁ : ℝ) :
+  !![a₁₁] * !![b₁₁] = !![a₁₁*b₁₁] := (mulᵣ_eq _ _).symm
+
+example (M : Matrix (Fin 1) (Fin 1) ℝ) :
+  M ∈ Matrix.orthogonalGroup (Fin 1) ℝ ↔ M * star M = 1 := Matrix.mem_orthogonalGroup_iff (Fin 1) ℝ
+
+#check etaExpand
+
+example (A : Matrix (Fin 2) (Fin 2) ℝ) : !![A 0 0, A 0 1;  A 1 0, A 1 1] = A := etaExpand_eq A
+
+example (A : Matrix (Fin 1) (Fin 1) ℝ) : !![A 0 0] = A := etaExpand_eq A
+
+example (A : Matrix (Fin 1) (Fin 1) ℝ) : !![1] = (1 : Matrix (Fin 1) (Fin 1) ℝ):= etaExpand_eq 1
+
+#check NoZeroDivisors
+
+#check Zero
+
+#check SpecialLinearGroup
+#check GeneralLinearGroup
+
+#synth NoZeroDivisors (GeneralLinearGroup (Fin 2) ℝ)
+
+
+example (a : ℝ) :
+  !![a] * (star !![a]) = !![a*a] := (mulᵣ_eq _ _).symm
+
+#check ((x ∈ orthogonalGroup (Fin 1) ℝ ↔ x * star x = (1 : orthogonalGroup (Fin 1) ℝ).1) Matrix.mem_orthogonalGroup_iff (Fin 1) ℝ)
+
+example (x : (orthogonalGroup (Fin 1) ℝ)) : x = 1 ∨ x = -1 := by
+  have h1 : x ∈ (orthogonalGroup (Fin 1) ℝ) <-> x * star x = 1 := Matrix.mem_orthogonalGroup_iff (Fin 1) ℝ
+  exact sorry
+
+variable {v : (EuclideanSpace ℝ (Fin 1))}
+
+example : (1 : (orthogonalGroup (Fin 1) ℝ)) • v = v := by
+  have h1 : (1 : orthogonalGroup (Fin 1) ℝ).1.mulVec v = v := by
+      simp [Matrix.mulVec_one]
+  exact h1
+
+example : (1 : (orthogonalGroup (Fin 1) ℝ)) • v = v := one_smul (orthogonalGroup (Fin 1) ℝ) v
+
+
+-(1 • v) = -1 • v
+
+-1 • 1 • v = (-1 * 1) • v = -1 • v
+
+      · have h12 : x ∈ U.source ∩ V.source := by
+          simp only [ite_true, if_pos rfl, inter_self] at h0
+          exact h0
+
+lemma orthGroup1 (a : ℝ) : !![a] ∈ Matrix.orthogonalGroup (Fin 1) ℝ <-> a = 1 ∨ a = -1 := by
+  have h1 : !![a] ∈ Matrix.orthogonalGroup (Fin 1) ℝ ↔ !![a] * star !![a] = 1 := Matrix.mem_orthogonalGroup_iff (Fin 1) ℝ
+  have h2 : !![a] ∈ Matrix.orthogonalGroup (Fin 1) ℝ <-> !![a * a] = 1 := by
+    rw [(mulᵣ_eq _ _).symm] at h1
+    exact h1
+  have h3 : !![1] = (1 : Matrix (Fin 1) (Fin 1) ℝ) := etaExpand_eq 1
+  have h4 : !![a] ∈ Matrix.orthogonalGroup (Fin 1) ℝ <-> !![a * a] = !![1] := by
+    rw [h3.symm] at h2
+    exact h2
+  have h5 : !![a * a] = !![1] ↔ a * a = 1 := by
+    apply Iff.intro
+    · intro h
+      have := Matrix.ext_iff.mpr h 0 0
+      exact this
+    · intro h
+      apply Matrix.ext
+      intros i j
+      fin_cases i; fin_cases j
+      exact h
+  have he : !![a] ∈ orthogonalGroup (Fin 1) ℝ ↔ a * a = 1 := Iff.trans h4 h5
+  have hd : a * a = 1 ↔ a = 1 ∨ a = -1 := mul_self_eq_one_iff
+  have hf : !![a] ∈ orthogonalGroup (Fin 1) ℝ ↔ a = 1 ∨ a = -1 := Iff.trans he hd
+  exact hf
+
+lemma orthGroup1' {m} : m ∈ Matrix.orthogonalGroup (Fin 1) ℝ <-> m = 1 ∨ m = -1 := sorry
+
