@@ -1,6 +1,5 @@
-import Mathlib
-
-open Bundle Topology MulAction Set
+import Mathlib.Analysis.Normed.Ring.Basic
+import Mathlib.LinearAlgebra.UnitaryGroup
 
 structure GBundleCore (ι : Type*) (B : Type*) [TopologicalSpace B] (F : Type*)
     [TopologicalSpace F] (G : Type*) [Group G] [MulAction G F] where
@@ -20,7 +19,7 @@ open MulAction Set
 
 open LinearMap Matrix UnitaryGroup
 
-instance : MulAction (orthogonalGroup (Fin n) ℝ) (Fin n -> ℝ) where
+instance {n : ℕ}: MulAction (orthogonalGroup (Fin n) ℝ) (Fin n -> ℝ) where
   smul := λ g x => g.1.mulVec x
   one_smul := λ x => by
     have h1 : (1 : orthogonalGroup (Fin n) ℝ).1.mulVec x = x := by
@@ -29,3 +28,5 @@ instance : MulAction (orthogonalGroup (Fin n) ℝ) (Fin n -> ℝ) where
   mul_smul := λ f g x => by
     show (f * g).1.mulVec x = f.1.mulVec (g.1.mulVec x)
     simp [Matrix.mulVec_mulVec]
+
+#min_imports

@@ -3522,3 +3522,105 @@ lemma orthGroup1 (a : ℝ) : !![a] ∈ Matrix.orthogonalGroup (Fin 1) ℝ <-> a 
 
 lemma orthGroup1' {m} : m ∈ Matrix.orthogonalGroup (Fin 1) ℝ <-> m = 1 ∨ m = -1 := sorry
 
+* Log for [2025-03-14 Fri 08:40]
+
+file:///Users/dom/DifferentialGeometry/my_project/2024-12-23-cotangent-prep.html
+
+(i.1).symm ≫ₕ j.1  ≫ₕ (j.1).symm ≫ₕ i.1
+
+* Log for [2025-03-18 Tue 10:00]
+
+i : ↑(atlas H M)
+i : ↑(atlas (EuclideanSpace ℝ (Fin n)) ↑(Metric.sphere 0 1))
+
+example : true := by
+  let I := (𝓡 n)
+  let sI := range I
+  let iext := a.1.extend I
+  let jext := a.1.extend I
+  let ji := jext ∘ iext.symm
+  let dji := fderivWithin ℝ ji sI (iext x)
+  let ji1 := (a.1).symm ≫ₕ a.1
+  have hx : (a.1 x) ∈ ji1.source := sorry
+
+  have h2 : PartialHomeomorph.MDifferentiable I I ji1 := sorry
+  have h3 : MDifferentiableAt I I ji1 (a.1 x) :=
+    PartialHomeomorph.MDifferentiable.mdifferentiableAt h2 hx
+  have hz : PartialHomeomorph.MDifferentiable I I ji1 := sorry
+  have hx : (a.1 x) ∈ ji1.source := sorry
+  have h0 : LinearMap.ker (mfderiv I I ji1 (a.1 x)) = ⊥ := ker_mfderiv_eq_bot hz hx
+  have h1 : LinearMap.ker dji = ⊥ := sorry
+  let B := Pi.basisFun ℝ (Fin n)
+  let tm := LinearMap.toMatrix B B dji.toLinearMap
+  have h1 : Matrix.det tm ≠ 0 := sorry
+  trivial /- exact h1 -/
+
+I want to construct the frame bundle. The fibres are elements of
+GL(n). The question is then what are the co-ordinate change maps. For
+any change of basis we have the jacobian. So we can transform an
+element of GL(n) by composing it with the jacobian. This should
+satisfy all the requirements to be a `FiberBundleCore`.
+
+Here's where I got to.
+
+* Log for [2025-03-19 Wed 17:41]
+
+https://profoundphysics.com/christoffel-symbols-a-complete-guide-with-examples/
+
+https://math.stackexchange.com/questions/639039/moebius-strip-as-a-fibre-bundle
+https://math.stackexchange.com/questions/4109814/what-distinguished-the-m%C3%B6bius-strip-from-the-cylinder-as-fibre-bundles
+
+* Log for [2025-03-21 Fri 12:18]
+
+
+have hc : fderivWithin ℝ (f ≫ₕ g) f.source x = (fderiv ℝ g (f x)).comp (fderivWithin ℝ f f.source x)
+have h5 : fderivWithin ℝ (f ≫ₕ g) f.source x = fderivWithin ℝ (PartialHomeomorph.ofSet f.source f.open_source) f.source x
+have h8 : fderivWithin ℝ (PartialHomeomorph.ofSet f.source f.open_source) f.source x = ContinuousLinearMap.id ℝ (EuclideanSpace ℝ (Fin 3))
+
+Thus
+
+(fderiv ℝ g (f x)).comp (fderivWithin ℝ f f.source x) = ContinuousLinearMap.id ℝ (EuclideanSpace ℝ (Fin 3))
+
+(fderiv ℝ f (g x)).comp (fderivWithin ℝ g g.source x) = ContinuousLinearMap.id ℝ (EuclideanSpace ℝ (Fin 3))
+
+or maybe
+
+(fderiv ℝ g (f x)).comp (fderivWithin ℝ f f.source x) = ContinuousLinearMap.id ℝ (EuclideanSpace ℝ (Fin 3))
+
+
+sorry : fderivWithin ℝ (↑f) s x = L ∧ fderivWithin ℝ (↑g) t (↑f x) = L' ∧
+        L.comp L' = ContinuousLinearMap.id ℝ F ∧
+	L'.comp L = ContinuousLinearMap.id ℝ E
+
+sorry : fderivWithin ℝ (↑f) s x = L ∧ fderivWithin ℝ (↑g) t (↑f x) = L' ∧
+        L.comp L' = (fderiv ℝ (↑g) (↑f x)).comp (fderivWithin ℝ (↑f) f.source x) ∧
+        L'.comp L = (fderiv ℝ (↑g) (↑f x)).comp (fderivWithin ℝ (↑f) f.source x)
+
+
+type mismatch
+  ha
+has type
+(fderiv ℝ (↑f) (↑g (↑f x))).comp (fderivWithin ℝ (↑g) f.target (↑f x)) = ContinuousLinearMap.id ℝ (EuclideanSpace ℝ (Fin n))
+(fderiv ℝ (↑f) x          ).comp (fderivWithin ℝ (↑g) t (↑f x))        = ContinuousLinearMap.id ℝ (EuclideanSpace ℝ (Fin n))
+
+* Log for [2025-03-22 Sat 11:44]
+
+have h1 : (f ≫ₕ g).source = f.source ∩ f ⁻¹' g.source := f.trans_source g
+  rw [hf] at h1
+  have h3 : f.source = f.source ∩ f ⁻¹' g.source := by
+   rw [<-h1]
+   exact rfl
+  have h4 : (f.trans g).source = f.source := by
+    calc (f.trans g).source = f.source ∩ f ⁻¹' g.source := f.trans_source g
+         _ = f.source := by rw [<-h3]
+  have h1 : (f.trans g).target = g.target ∩ g.symm ⁻¹' f.target := f.trans_target g
+  rw [hf] at h1
+  have h2 :   (PartialHomeomorph.ofSet f.source f.open_source).target = g.target ∩ ↑g.symm ⁻¹' f.target := h1
+  have h3 : g.target = g.target ∩ g.symm ⁻¹' f.target := by
+   rw [<-h1]
+   exact sorry
+  have h4 : (f.trans g).source = f.source := by
+    calc (f.trans g).source = f.source ∩ f ⁻¹' g.source := f.trans_source g
+         _ = f.source := by rw [<-h3]
+  exact sorry
+

@@ -9,16 +9,16 @@ import Mathlib
 
 open Manifold
 
-open SmoothManifoldWithCorners
+open IsManifold
 
 theorem mfderivWithin_congr_of_eq_on_open
   {m n : ℕ} {M N : Type*}
   [TopologicalSpace M]
   [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
-  [SmoothManifoldWithCorners (𝓡 m) M]
+  [IsManifold (𝓡 m) ⊤ M]
   [TopologicalSpace N]
   [ChartedSpace (EuclideanSpace ℝ (Fin n)) N]
-  [SmoothManifoldWithCorners (𝓡 n) N]
+  [IsManifold (𝓡 n) ⊤ N]
   (f g : M → N) (s : Set M)
   (ho : IsOpen s)
   (he : ∀ x ∈ s, f x = g x) :
@@ -38,11 +38,11 @@ theorem contMDiffAt_chart_transition
   (m : ℕ) {M : Type*}
   [TopologicalSpace M]
   [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
-  [SmoothManifoldWithCorners (𝓡 m) M]
+  [IsManifold (𝓡 m) ⊤  M]
   (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
-  (hΦ_Α : φ_α ∈ maximalAtlas (𝓡 m) M)
+  (hΦ_Α : φ_α ∈ maximalAtlas (𝓡 m) ⊤ M)
   (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
-  (hΦ_Β : φ_β ∈ maximalAtlas (𝓡 m) M)
+  (hΦ_Β : φ_β ∈ maximalAtlas (𝓡 m) ⊤ M)
   (x : M)  (hx : x ∈  φ_α.source ∩ φ_β.source) :
    ContMDiffAt (𝓡 m) (𝓡 m) ⊤ (φ_α.symm.trans φ_β) (φ_α x) := by
     have h1 : (φ_α.symm.trans φ_β) = φ_β ∘ φ_α.symm :=
@@ -66,11 +66,11 @@ theorem contDiffAt_chart_transition
   (m : ℕ) {M : Type*}
   [TopologicalSpace M]
   [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
-  [SmoothManifoldWithCorners (𝓡 m) M]
+  [IsManifold (𝓡 m) ⊤  M]
   (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
-  (hΦ_Α : φ_α ∈ maximalAtlas (𝓡 m) M)
+  (hΦ_Α : φ_α ∈ maximalAtlas (𝓡 m) ⊤  M)
   (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
-  (hΦ_Β : φ_β ∈ maximalAtlas (𝓡 m) M)
+  (hΦ_Β : φ_β ∈ maximalAtlas (𝓡 m) ⊤  M)
   (x : M) (hx : x ∈ φ_α.source ∩ φ_β.source) :
     ContDiffAt ℝ (⊤ : ENat) (φ_α.symm.trans φ_β) (φ_α x) := by
     have h_contMDiff : ContMDiffAt (𝓡 m) (𝓡 m) ⊤ (φ_α.symm.trans φ_β) (φ_α x) :=
@@ -81,7 +81,7 @@ theorem open_image_of_inter_sources
   (m : ℕ) {M : Type*}
   [TopologicalSpace M]
   [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
-  [SmoothManifoldWithCorners (𝓡 m) M]
+  [IsManifold (𝓡 m) ⊤  M]
   (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
   (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m))) :
    IsOpen (φ_α.toFun '' (φ_α.source ∩ φ_β.source)) := by
@@ -101,7 +101,7 @@ noncomputable def Dab
   {M : Type*}
   [TopologicalSpace M]
   [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
-  [SmoothManifoldWithCorners (𝓡 m) M]
+  [IsManifold (𝓡 m) ⊤  M]
   (φ_α φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
   (x : M) :
   (EuclideanSpace ℝ (Fin m)) →L[ℝ] (EuclideanSpace ℝ (Fin m)) :=
@@ -110,7 +110,7 @@ noncomputable def Dab
 theorem h_equiv (m : ℕ) {M : Type*}
   [TopologicalSpace M]
   [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
-  [SmoothManifoldWithCorners (𝓡 m) M]
+  [IsManifold (𝓡 m) ⊤  M]
   (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
   (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
   (x : M) (hx : x ∈  φ_α.source ∩ φ_β.source) :
@@ -123,7 +123,7 @@ theorem inverse_of_chart_transition
   (m : ℕ) {M : Type*}
   [TopologicalSpace M]
   [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
-  [SmoothManifoldWithCorners (𝓡 m) M]
+  [IsManifold (𝓡 m) ⊤  M]
   (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
   (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
   (x : M) (hx : x ∈  φ_α.source ∩ φ_β.source) :
@@ -159,11 +159,11 @@ theorem inverse_transition_of_transition
   (m : ℕ) {M : Type*}
   [TopologicalSpace M]
   [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
-  [SmoothManifoldWithCorners (𝓡 m) M]
+  [IsManifold (𝓡 m) ⊤  M]
   (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
-  (hΦ_Α : φ_α ∈ maximalAtlas (𝓡 m) M)
+  (hΦ_Α : φ_α ∈ maximalAtlas (𝓡 m) ⊤  M)
   (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
-  (hΦ_Β : φ_β ∈ maximalAtlas (𝓡 m) M)
+  (hΦ_Β : φ_β ∈ maximalAtlas (𝓡 m) ⊤  M)
 
   (x : M) (hx : x ∈  φ_α.source ∩ φ_β.source) :
 
@@ -258,11 +258,11 @@ theorem zero_mderiv_change_of_coords
   (m : ℕ) {M : Type*}
   [TopologicalSpace M]
   [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
-  [SmoothManifoldWithCorners (𝓡 m) M]
+  [IsManifold (𝓡 m) ⊤  M]
   (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
-  (hΦ_Α : φ_α ∈ maximalAtlas (𝓡 m) M)
+  (hΦ_Α : φ_α ∈ maximalAtlas (𝓡 m) ⊤  M)
   (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
-  (hΦ_Β : φ_β ∈ maximalAtlas (𝓡 m) M)
+  (hΦ_Β : φ_β ∈ maximalAtlas (𝓡 m) ⊤  M)
   (g : EuclideanSpace ℝ (Fin m) -> EuclideanSpace ℝ (Fin 1))
   (x : M) (hx : x ∈  φ_α.source ∩ φ_β.source)
   (hαβ : MDifferentiableAt (𝓡 m) (𝓡 m) (φ_β ∘ ↑φ_α.symm) (φ_α x))
@@ -325,13 +325,13 @@ example
   (m : ℕ) {M : Type*}
   [TopologicalSpace M]
   [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
-  [SmoothManifoldWithCorners (𝓡 m) M]
+  [IsManifold (𝓡 m) ⊤  M]
   (f : M → (EuclideanSpace ℝ (Fin 1)))
   (hs : ContMDiff (𝓡 m) (𝓡 1) ⊤ f)
   (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
-  (hΦ_Α : φ_α ∈ maximalAtlas (𝓡 m) M)
+  (hΦ_Α : φ_α ∈ maximalAtlas (𝓡 m) ⊤  M)
   (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
-  (hΦ_Β : φ_β ∈ maximalAtlas (𝓡 m) M)
+  (hΦ_Β : φ_β ∈ maximalAtlas (𝓡 m) ⊤  M)
 
   (x : M) (hx : x ∈  φ_α.source ∩ φ_β.source) :
     fderiv ℝ (f ∘ φ_α.invFun) (φ_α.toFun x) = 0 →
@@ -346,13 +346,13 @@ example
   (m : ℕ) {M : Type*}
   [TopologicalSpace M]
   [ChartedSpace (EuclideanSpace ℝ (Fin m)) M]
-  [SmoothManifoldWithCorners (𝓡 m) M]
+  [IsManifold (𝓡 m) ⊤  M]
   (f : M → (EuclideanSpace ℝ (Fin 1)))
   (hs : ContMDiff (𝓡 m) (𝓡 1) ⊤ f)
   (φ_α : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
-  (hΦ_Α : φ_α ∈ maximalAtlas (𝓡 m) M)
+  (hΦ_Α : φ_α ∈ maximalAtlas (𝓡 m) ⊤  M)
   (φ_β : PartialHomeomorph M (EuclideanSpace ℝ (Fin m)))
-  (hΦ_Β : φ_β ∈ maximalAtlas (𝓡 m) M)
+  (hΦ_Β : φ_β ∈ maximalAtlas (𝓡 m) ⊤  M)
 
   (x : M) (hx : x ∈  φ_α.source ∩ φ_β.source) :
     mfderiv (𝓡 m) (𝓡 1) (f ∘ φ_α.invFun) (φ_α.toFun x) = 0 →
